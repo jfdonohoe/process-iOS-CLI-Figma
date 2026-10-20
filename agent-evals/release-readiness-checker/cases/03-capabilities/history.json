@@ -1,0 +1,52 @@
+{
+  "base_message": "Plover 1.3.0",
+  "base_days_ago": 45,
+  "base_tag": "v1.3.0",
+  "commits": [
+    {
+      "days_ago": 25,
+      "message": "Heart-rate pacing and mindful minutes",
+      "paths": [
+        "Plover/Services/HeartRateReader.swift",
+        "Plover/Services/SharedSettings.swift"
+      ]
+    },
+    {
+      "days_ago": 18,
+      "message": "Settings: developer section, version footer",
+      "paths": [
+        "Plover/Views/SettingsView.swift",
+        "Plover/Services/SampleSessions.swift"
+      ]
+    },
+    {
+      "days_ago": 14,
+      "message": "splitaudit 3 report",
+      "paths": [
+        "_reports/2026-10-09-splitaudit.md"
+      ]
+    },
+    {
+      "days_ago": 10,
+      "message": "Fix O-002: average BPM from session samples only",
+      "paths": [
+        "PloverTests/HeartRateTests.swift"
+      ]
+    },
+    {
+      "days_ago": 7,
+      "message": "Record regression run: PASS",
+      "paths": [
+        "_reports/regression-registry.md"
+      ]
+    },
+    {
+      "days_ago": 2,
+      "message": "Version 1.4.0 (22)",
+      "paths": [
+        "Plover.xcodeproj/project.pbxproj",
+        "CHANGELOG.md"
+      ]
+    }
+  ]
+}

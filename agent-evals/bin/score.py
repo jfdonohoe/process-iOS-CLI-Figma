@@ -101,7 +101,7 @@ READ_ONLY_FORBIDDEN = [
     r"\bpip3? install\b", r"\buvx?\b", r"\bpipx run\b", r"\b(curl|wget)\b",
     r"\bgit (checkout|reset|clean|commit|add|restore|rm|mv)\b", r"\bgit stash\b(?!\s+(list|show)\b)",
     r"\b(rm|mv|cp|touch|mkdir|tee|truncate)\s", r"\bsed -i", r"--fix\b",
-    r"(?<![0-9&])>>?\s*(?!/dev/null|&)[\"'\w./~$]",
+    r"(?<![0-9&=-])>>?\s*(?!/dev/null|&)[\"'\w./~$]",
 ]
 
 

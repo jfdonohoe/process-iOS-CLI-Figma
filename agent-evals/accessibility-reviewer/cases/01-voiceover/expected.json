@@ -1,0 +1,146 @@
+{
+  "case": "01-voiceover",
+  "description": "VoiceOver: an asset-image-only toolbar button with no label; a row opened by onTapGesture with no button trait; a progress ring with no spoken value; a star rating built from tap gestures (no value, no adjustable action). Decoys: an iconOnly Label (still spoken), a decorative image, Label and Image+Text buttons, an image-only button that has .accessibilityLabel, Button(\"Done\").",
+  "prompt": "Do the accessibility pass on this app's screens and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "scan-button-unlabelled",
+      "locations": [
+        {
+          "file": "Puffin/Views/ReadingListView.swift",
+          "lines": [
+            24,
+            30
+          ]
+        }
+      ],
+      "categories": [
+        "voiceover-label"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Toolbar button whose label is only Image(\"barcode-scan\"): VoiceOver reads the asset name."
+    },
+    {
+      "id": "row-tap-no-trait",
+      "locations": [
+        {
+          "file": "Puffin/Views/BookRow.swift",
+          "lines": [
+            8,
+            22
+          ]
+        }
+      ],
+      "categories": [
+        "voiceover-element"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The row opens the book via onTapGesture on an HStack with no .isButton trait."
+    },
+    {
+      "id": "ring-no-value",
+      "locations": [
+        {
+          "file": "Puffin/Views/ProgressRing.swift",
+          "lines": [
+            7,
+            13
+          ]
+        },
+        {
+          "file": "Puffin/Views/BookRow.swift",
+          "lines": [
+            9,
+            10
+          ]
+        }
+      ],
+      "categories": [
+        "voiceover-element"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Custom progress ring with no accessibilityValue; VoiceOver users can't hear progress."
+    },
+    {
+      "id": "rating-custom-control",
+      "locations": [
+        {
+          "file": "Puffin/Views/BookDetailView.swift",
+          "lines": [
+            11,
+            18
+          ]
+        }
+      ],
+      "categories": [
+        "voiceover-element"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Star rating from tap gestures on images: no button trait, no value, no adjustable action."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "iconOnly-label",
+      "file": "Puffin/Views/ReadingListView.swift",
+      "lines": [
+        35,
+        36
+      ],
+      "categories": [
+        "voiceover-label"
+      ],
+      "why": "Label with .iconOnly still speaks its title."
+    },
+    {
+      "id": "decorative-banner",
+      "file": "Puffin/Views/ReadingListView.swift",
+      "lines": [
+        14,
+        14
+      ],
+      "categories": [],
+      "why": "Image(decorative:) is hidden from VoiceOver."
+    },
+    {
+      "id": "labelled-trash",
+      "file": "Puffin/Views/BookDetailView.swift",
+      "lines": [
+        38,
+        40
+      ],
+      "categories": [
+        "voiceover-label"
+      ],
+      "why": "Image-only button with an explicit accessibilityLabel."
+    },
+    {
+      "id": "image-plus-text",
+      "file": "Puffin/Views/BookDetailView.swift",
+      "lines": [
+        31,
+        32
+      ],
+      "categories": [
+        "voiceover-label"
+      ],
+      "why": "The Text is the label."
+    },
+    {
+      "id": "share-label",
+      "file": "Puffin/Views/BookDetailView.swift",
+      "lines": [
+        25,
+        25
+      ],
+      "categories": [
+        "voiceover-label"
+      ],
+      "why": "Label speaks its title."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

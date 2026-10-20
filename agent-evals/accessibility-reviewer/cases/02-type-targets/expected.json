@@ -1,0 +1,158 @@
+{
+  "case": "02-type-targets",
+  "description": "Dynamic Type and targets: body text with .system(size: 15); a quote with .custom(fixedSize:); the screen capped with .dynamicTypeSize(...large); a 24×24 close button (P1); a 36×36 shelf toggle (P2). Decoys: .custom(size:) and .system(.title2, design:) scale; a @ScaledMetric size; a fixed-size decorative symbol; a 44×44 button with contentShape.",
+  "prompt": "Do the accessibility pass on this app's screens and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "fixed-system-size",
+      "locations": [
+        {
+          "file": "Puffin/Views/BookNotesView.swift",
+          "lines": [
+            18,
+            18
+          ]
+        }
+      ],
+      "categories": [
+        "dynamic-type"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Body text at .system(size: 15) doesn't scale."
+    },
+    {
+      "id": "custom-fixed-size",
+      "locations": [
+        {
+          "file": "Puffin/Views/BookNotesView.swift",
+          "lines": [
+            21,
+            21
+          ]
+        }
+      ],
+      "categories": [
+        "dynamic-type"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": ".custom(_:fixedSize:) on reading text doesn't scale."
+    },
+    {
+      "id": "type-size-cap",
+      "locations": [
+        {
+          "file": "Puffin/Views/BookNotesView.swift",
+          "lines": [
+            29,
+            29
+          ]
+        }
+      ],
+      "categories": [
+        "dynamic-type"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The notes screen caps text at .large, below the accessibility sizes."
+    },
+    {
+      "id": "close-24pt",
+      "locations": [
+        {
+          "file": "Puffin/Views/BookNotesView.swift",
+          "lines": [
+            31,
+            39
+          ]
+        }
+      ],
+      "categories": [
+        "hit-target"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The close button is 24×24 pt with no larger content shape (P1, under 30)."
+    },
+    {
+      "id": "toggle-36pt",
+      "locations": [
+        {
+          "file": "Puffin/Views/ShelfView.swift",
+          "lines": [
+            24,
+            31
+          ]
+        }
+      ],
+      "categories": [
+        "hit-target"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The finished toggle is 36×36 pt (P2)."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "custom-size-scales",
+      "file": "Puffin/Views/BookNotesView.swift",
+      "lines": [
+        23,
+        23
+      ],
+      "categories": [
+        "dynamic-type"
+      ],
+      "why": ".custom(_:size:) scales relative to .body."
+    },
+    {
+      "id": "title2-serif",
+      "file": "Puffin/Views/BookNotesView.swift",
+      "lines": [
+        16,
+        16
+      ],
+      "categories": [
+        "dynamic-type"
+      ],
+      "why": "A text style with a design scales."
+    },
+    {
+      "id": "scaled-metric",
+      "file": "Puffin/Views/BookNotesView.swift",
+      "lines": [
+        25,
+        25
+      ],
+      "categories": [
+        "dynamic-type"
+      ],
+      "why": "The size comes from @ScaledMetric."
+    },
+    {
+      "id": "hero-symbol",
+      "file": "Puffin/Views/BookNotesView.swift",
+      "lines": [
+        11,
+        14
+      ],
+      "categories": [
+        "dynamic-type"
+      ],
+      "why": "Fixed size on a decorative symbol, hidden from VoiceOver."
+    },
+    {
+      "id": "clear-44",
+      "file": "Puffin/Views/ShelfView.swift",
+      "lines": [
+        35,
+        37
+      ],
+      "categories": [
+        "hit-target"
+      ],
+      "why": "44×44 with a content shape."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

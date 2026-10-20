@@ -1,0 +1,56 @@
+{
+  "case": "06-p2-only",
+  "description": "Only P2 problems: a 34×34 info button (P2 band 30–43) and a count and its unit read as two elements. Overall must be PASS (NEEDS-WORK only on P1).",
+  "prompt": "Do the accessibility pass on this app's screens and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "info-34pt",
+      "locations": [
+        {
+          "file": "Puffin/Views/StatsView.swift",
+          "lines": [
+            25,
+            32
+          ]
+        }
+      ],
+      "categories": [
+        "hit-target"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "34×34 pt info button (P2)."
+    },
+    {
+      "id": "count-unit-split",
+      "locations": [
+        {
+          "file": "Puffin/Views/StatsView.swift",
+          "lines": [
+            11,
+            15
+          ]
+        }
+      ],
+      "categories": [
+        "voiceover-element"
+      ],
+      "why": "The count and 'books finished' are separate elements (P2)."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "list-row-text",
+      "file": "Puffin/Views/StatsView.swift",
+      "lines": [
+        24,
+        24
+      ],
+      "categories": [],
+      "why": "Plain list row text."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "PASS"
+}

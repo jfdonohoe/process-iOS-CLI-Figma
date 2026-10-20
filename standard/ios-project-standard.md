@@ -105,6 +105,8 @@ One Figma file per app, named `<App> – App Screens`. Record its file key in th
 5. **Sync:** replace the matching Production frames with the built design, matching real copy and real states. Re-stack Production and check for overlaps.
 6. **Archive** the Approved section. Approved goes back to holding only what is still waiting to be built.
 
+**Accessibility fixes that change how a screen looks go through this loop too,** whether or not `accessibility-reviewer` found them: new colours or token values, a visibly bigger control, a text-style change or a layout that reflows at large sizes, a label or symbol added beside a colour-only state, the reduced form of an animation. Step 1 is a WIP section named `Accessibility - <screen> (<YYYY-MM-DD>)` with frames `<screen> - Before` and `<screen> - After (accessibility)`, and a note beside each After frame, one line per change: what changed, why (who it helps and the problem), and the measurement against the rule (contrast ratio from `tools/contrast-ratio.sh` against 4.5:1 or 3:1, or the target size against 44 pt). Spoken-only fixes (labels, traits, values, grouping, hiding decorative images, an invisible larger hit area) go straight to code. [suggested] (John, 2026-10-20)
+
 ### 2.4 Design system
 - **`Theme.swift` ⇄ Figma variables, one to one.** A new token is added to both in the same piece of work.
 - **Colour meanings are rules,** recorded the first time they come up, with exceptions written down (e.g. green is also allowed for pass states).
@@ -166,14 +168,14 @@ Global agents that come along automatically:
 - **Audit procedure:** `splitaudit` (global CLAUDE.md). Reports go in `_reports/YYYY-MM-DD-<topic>.md`.
 
 ### 3.3 Suggested additions to the baseline [suggested]
-Each fills a gap the current four leave open. They're listed in the order I'd add them. `schema-migration-reviewer` and `design-sync-reviewer` have been built; the others are unbuilt and unbenchmarked:
+Each fills a gap the current four leave open. They're listed in the order I'd add them. All four have been built:
 
 | Agent | Gap it fills | Trigger |
 |---|---|---|
 | `design-sync-reviewer` **[built 2026-10-20]** | `agents/ios-baseline/`, benchmarked in `agent-evals/design-sync-reviewer/` (6 cases). Compares built SwiftUI with a frame spec exported by `tools/figma-frame-spec.js` (it never calls Figma): copy, order, missing/extra elements, colour tokens and backgrounds, text styles, component variants, states, demo-state coverage. Before it, the check was by eye in steps 2.3.4–5 | After building an Approved section, and before the sync step |
 | `schema-migration-reviewer` **[built 2026-10-19]** | `agents/ios-baseline/`, benchmarked in `agent-evals/schema-migration-reviewer/` (5 cases). Any change to a `@Model`: is it a new `VersionedSchema`, is there a migration stage, does the export DTO cover the new fields, is there a test that opens the previous store? (Audit H1 and the export data-loss report were both this class of bug) | Proactively when a file in `Models/` or `Persistence/` changes |
-| `release-readiness-checker` | Runs the §9 checklist: the version from `/ios-version` (§10), privacy manifest, usage strings, entitlements, `.fig` export checks, registry count, a clean `regression-reviewer` result | When John asks for a release push |
-| `accessibility-reviewer` | Dynamic Type, VoiceOver labels on icon-only buttons, hit targets, contrast against the theme tokens | Before release, and on new screens |
+| `release-readiness-checker` **[built 2026-10-20]** | `agents/ios-baseline/`, benchmarked in `agent-evals/release-readiness-checker/` (4 cases). Runs the §9 checklist statically: the recorded `regression-reviewer` run is PASS and current, the latest `splitaudit` P0/P1 items are resolved, the migration test exists when a `@Model` changed since the last tag, version and build are consistent and new with a CHANGELOG entry (§10), the privacy manifest covers the required-reason APIs used, every requested permission has a Release usage string, entitlements and background modes match the code, no debug-only data tool reaches Release, and the `.fig` export is present and fresh (§2.5). Lists the items only a person can check (Figma Production, wiki stamp, App Store privacy answers, accessibility) | When John asks for a release push, after `/ios-version` |
+| `accessibility-reviewer` **[built 2026-10-20]** | `agents/ios-baseline/`, benchmarked in `agent-evals/accessibility-reviewer/` (6 cases). Static review of the SwiftUI views and colour tokens: spoken labels on icon-only controls, button traits and values on tap gestures and custom controls, Dynamic Type (fixed sizes, caps), hit targets under 44 pt, WCAG contrast in light and dark computed with `tools/contrast-ratio.sh` from `Theme.swift` and the colorsets, state shown by colour alone, and looping motion that ignores Reduce Motion. Tags each finding `visual_change`; its first recommendation for a visual fix (colour, size, text style, added label, reduced motion) is a before/after section on 🚧 WIP named `Accessibility - <screen> (<date>)`, with a note on each After frame saying what changed, why and the measurement behind it, for John to approve (§2.3), while spoken-only fixes go straight to code. Lists the VoiceOver and largest-text checks only the running app can settle | Before release (the §9 accessibility pass), and on new screens |
 
 ### 3.4 Project-specific specialists
 When a project grows a subsystem with its own ways of failing, propose a specialist reviewer for it instead of stretching the baseline agents. [Senstream] SenstreamRingKit2 has six, covering BLE/concurrency, the capture pipeline, DSP/ML, architecture/API, regression, and upstream sync.
@@ -263,7 +265,7 @@ Name specialists `<project>-<area>-reviewer`. Benchmark each one before relying 
 - [ ] The wiki describes the version being released and is stamped with it (§11)
 - [ ] Version number suggested by `/ios-version` and approved by John, set in every configuration, entered in CHANGELOG.md, and tagged `vX.Y.Z` (§10)
 - [ ] Privacy manifest (`PrivacyInfo.xcprivacy`) and App Store privacy answers done [general]
-- [ ] Accessibility pass [general]
+- [ ] Accessibility pass: `accessibility-reviewer` PASS, then VoiceOver and the largest text size on a device [general]
 - [ ] Fresh `.fig` export committed in the release commit (§2.5)
 
 ---

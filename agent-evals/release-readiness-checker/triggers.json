@@ -1,0 +1,30 @@
+{
+  "fixture": "cases/04-clean",
+  "note": "Prompts deliberately differ from the agent's description wording.",
+  "prompts": [
+    {
+      "prompt": "the version's been signed off. go through everything that has to be true before this goes to TestFlight and the store",
+      "expect": true
+    },
+    {
+      "prompt": "is the repo in shape to ship 2.1 today, or is something still missing?",
+      "expect": true
+    },
+    {
+      "prompt": "what should the next version number be?",
+      "expect": false
+    },
+    {
+      "prompt": "I added a transcript field to Entry, will existing users' journals still open?",
+      "expect": false
+    },
+    {
+      "prompt": "review my last commit for bugs",
+      "expect": false
+    },
+    {
+      "prompt": "does the Today screen still match the Production frames in Figma?",
+      "expect": false
+    }
+  ]
+}

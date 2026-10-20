@@ -1,0 +1,30 @@
+{
+  "fixture": "cases/04-clean",
+  "note": "Prompts deliberately differ from the agent's description wording.",
+  "prompts": [
+    {
+      "prompt": "would someone who's blind be able to get around this app? check the screens",
+      "expect": true
+    },
+    {
+      "prompt": "my mum has her iPhone text size turned way up. will the library screen still work for her, and is the purple text readable?",
+      "expect": true
+    },
+    {
+      "prompt": "review my last commit for bugs",
+      "expect": false
+    },
+    {
+      "prompt": "does the Library screen still match the Production frames in Figma?",
+      "expect": false
+    },
+    {
+      "prompt": "I added a dueBack field to Book, will existing users' libraries still open?",
+      "expect": false
+    },
+    {
+      "prompt": "why does the progress dial show 0% after I log pages?",
+      "expect": false
+    }
+  ]
+}

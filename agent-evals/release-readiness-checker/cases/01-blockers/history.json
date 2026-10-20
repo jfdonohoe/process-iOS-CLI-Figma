@@ -1,0 +1,45 @@
+{
+  "base_message": "Kestrel 1.2.0",
+  "base_days_ago": 40,
+  "base_tag": "v1.2.0",
+  "commits": [
+    {
+      "days_ago": 20,
+      "message": "Trail photos from the detail screen",
+      "paths": [
+        "Kestrel/Views/TrailPhotoCapture.swift",
+        "Kestrel.xcodeproj/project.pbxproj",
+        "Kestrel/Views/TrailDetailView.swift"
+      ]
+    },
+    {
+      "days_ago": 12,
+      "message": "GPX library: newest import first",
+      "paths": [
+        "Kestrel/Services/GPXLibrary.swift"
+      ]
+    },
+    {
+      "days_ago": 9,
+      "message": "splitaudit 3 report",
+      "paths": [
+        "_reports/2026-10-11-splitaudit.md"
+      ]
+    },
+    {
+      "days_ago": 8,
+      "message": "Fix O-001: delete from search results deletes that hike",
+      "paths": [
+        "Kestrel/Views/HikeListView.swift",
+        "KestrelTests/HikeTests.swift"
+      ]
+    },
+    {
+      "days_ago": 6,
+      "message": "Record regression run: PASS",
+      "paths": [
+        "_reports/regression-registry.md"
+      ]
+    }
+  ]
+}

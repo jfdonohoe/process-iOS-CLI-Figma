@@ -1,0 +1,57 @@
+{
+  "base_message": "Marten 1.0.0",
+  "base_days_ago": 50,
+  "base_tag": "v1.0.0",
+  "commits": [
+    {
+      "days_ago": 20,
+      "message": "Habit reminders",
+      "paths": [
+        "Marten/Models/Habit.swift",
+        "Marten/Services/ReminderScheduler.swift"
+      ]
+    },
+    {
+      "days_ago": 15,
+      "message": "Build settings: align Release with Debug; version 1.1.0 (8)",
+      "paths": [
+        "Marten.xcodeproj/project.pbxproj"
+      ]
+    },
+    {
+      "days_ago": 12,
+      "message": "splitaudit 3 report",
+      "paths": [
+        "_reports/2026-10-08-splitaudit.md"
+      ]
+    },
+    {
+      "days_ago": 8,
+      "message": "Fix O-001: pausing keeps history",
+      "paths": [
+        "MartenTests/HabitStoreTests.swift"
+      ]
+    },
+    {
+      "days_ago": 6,
+      "message": "Record regression run: PASS",
+      "paths": [
+        "_reports/regression-registry.md"
+      ]
+    },
+    {
+      "days_ago": 3,
+      "message": "Archive habits instead of deleting them",
+      "paths": [
+        "Marten/Services/HabitStore.swift"
+      ]
+    },
+    {
+      "days_ago": 2,
+      "message": "CHANGELOG for 1.1.0",
+      "paths": [
+        "CHANGELOG.md"
+      ]
+    }
+  ]
+}

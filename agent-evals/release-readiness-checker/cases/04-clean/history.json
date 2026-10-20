@@ -1,0 +1,45 @@
+{
+  "base_message": "Wren 2.0.0",
+  "base_days_ago": 60,
+  "base_tag": "v2.0.0",
+  "commits": [
+    {
+      "days_ago": 14,
+      "message": "Transcripts: schema V2 with a lightweight stage",
+      "paths": [
+        "Wren/Models/Entry.swift"
+      ]
+    },
+    {
+      "days_ago": 10,
+      "message": "splitaudit 3 report",
+      "paths": [
+        "_reports/2026-10-10-splitaudit.md"
+      ]
+    },
+    {
+      "days_ago": 6,
+      "message": "Fix O-001 and O-002: resume recording; migration test with a 2.0.0 store",
+      "paths": [
+        "Wren/Services/Recorder.swift",
+        "WrenTests/MigrationTests.swift",
+        "WrenTests/Fixtures/Wren-2.0.0.store"
+      ]
+    },
+    {
+      "days_ago": 2,
+      "message": "Record regression run: PASS",
+      "paths": [
+        "_reports/regression-registry.md"
+      ]
+    },
+    {
+      "days_ago": 1,
+      "message": "Version 2.1.0 (31)",
+      "paths": [
+        "Wren.xcodeproj/project.pbxproj",
+        "CHANGELOG.md"
+      ]
+    }
+  ]
+}

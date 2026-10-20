@@ -89,11 +89,15 @@ def build_history(repo, case_dir):
         shutil.copyfile(base_dir / rel, repo / rel)
         git(repo, "add", "--", str(rel))
     git(repo, "commit", "-q", "-m", hist.get("base_message", "initial"), days_ago=hist.get("base_days_ago", 365))
+    if hist.get("base_tag"):
+        git(repo, "tag", "-a", hist["base_tag"], "-m", hist["base_tag"], days_ago=hist.get("base_days_ago", 365))
     for rel in base_files:
         shutil.copyfile(case_dir / "repo" / rel, repo / rel)
     for c in hist["commits"]:
         git(repo, "add", "--", *c["paths"])
         git(repo, "commit", "-q", "-m", c["message"], days_ago=c["days_ago"])
+        if c.get("tag"):
+            git(repo, "tag", "-a", c["tag"], "-m", c["tag"], days_ago=c["days_ago"])
 
 
 def one_run(agent, case_dir, prompt, run_dir, tools, timeout, keep, context, inline_agents=None):

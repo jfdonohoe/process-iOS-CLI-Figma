@@ -1,0 +1,199 @@
+{
+  "case": "01-blockers",
+  "description": "Figma-driven app after a point release's work. Planted: camera key only in Debug (P0 at the access), FileTimestamp API used but not declared, MARKETING_VERSION split Debug 1.3.0 / Release 1.2.0 (= last tag), build number 12 reused from v1.2.0, no CHANGELOG entry for 1.3.0, a three-day-old .fig. Gates that are met: fresh PASS registry, audit P1 resolved, no @Model change, location key in both configs, notifications need no key, UserDefaults declared, seeder inside #if DEBUG.",
+  "prompt": "We're about to push this release. Check the repo against the release checklist and report what's ready and what isn't.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "camera-key-debug-only",
+      "locations": [
+        {
+          "file": "Kestrel/Views/TrailPhotoCapture.swift",
+          "lines": [
+            21,
+            21
+          ]
+        },
+        {
+          "file": "Kestrel.xcodeproj/project.pbxproj",
+          "lines": [
+            36,
+            36
+          ]
+        }
+      ],
+      "categories": [
+        "usage-string"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "NSCameraUsageDescription is set only in the Debug configuration; the Release build terminates on first camera access."
+    },
+    {
+      "id": "file-timestamp-undeclared",
+      "locations": [
+        {
+          "file": "Kestrel/PrivacyInfo.xcprivacy",
+          "lines": [
+            11,
+            11
+          ]
+        },
+        {
+          "file": "Kestrel/Services/GPXLibrary.swift",
+          "lines": [
+            11,
+            18
+          ]
+        }
+      ],
+      "categories": [
+        "privacy-manifest"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "contentModificationDateKey is a FileTimestamp required-reason API; the manifest declares only UserDefaults."
+    },
+    {
+      "id": "marketing-version-split",
+      "locations": [
+        {
+          "file": "Kestrel.xcodeproj/project.pbxproj",
+          "lines": [
+            39,
+            39
+          ]
+        },
+        {
+          "file": "Kestrel.xcodeproj/project.pbxproj",
+          "lines": [
+            53,
+            53
+          ]
+        }
+      ],
+      "categories": [
+        "version"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Debug says 1.3.0, Release says 1.2.0, which is the v1.2.0 tag's version."
+    },
+    {
+      "id": "build-number-reused",
+      "locations": [
+        {
+          "file": "Kestrel.xcodeproj/project.pbxproj",
+          "lines": [
+            34,
+            34
+          ]
+        },
+        {
+          "file": "Kestrel.xcodeproj/project.pbxproj",
+          "lines": [
+            49,
+            49
+          ]
+        }
+      ],
+      "categories": [
+        "version"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Build 12 is the build number at v1.2.0; App Store Connect rejects a reused build."
+    },
+    {
+      "id": "changelog-no-entry",
+      "locations": [
+        {
+          "file": "CHANGELOG.md",
+          "lines": null
+        }
+      ],
+      "categories": [
+        "version"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "CHANGELOG's latest entry is 1.2.0."
+    },
+    {
+      "id": "fig-stale",
+      "locations": [
+        {
+          "file": "design/Kestrel-App-Screens.fig",
+          "lines": null
+        }
+      ],
+      "categories": [
+        "fig-export"
+      ],
+      "why": "The export is three days old; the project rule and \u00a72.5 need one under an hour old."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "location-key-both-configs",
+      "file": "Kestrel/Services/LocationTracker.swift",
+      "lines": null,
+      "categories": [
+        "usage-string"
+      ],
+      "why": "NSLocationWhenInUseUsageDescription is set for Release."
+    },
+    {
+      "id": "notifications-no-key",
+      "file": "Kestrel/Services/HikeReminders.swift",
+      "lines": null,
+      "categories": [
+        "usage-string"
+      ],
+      "why": "Notifications need no usage string."
+    },
+    {
+      "id": "userdefaults-declared",
+      "file": "Kestrel/Views/SettingsView.swift",
+      "lines": null,
+      "categories": [
+        "privacy-manifest"
+      ],
+      "why": "@AppStorage is UserDefaults, which the manifest declares."
+    },
+    {
+      "id": "seeder-gated",
+      "file": "Kestrel/Debug/SampleTrails.swift",
+      "lines": null,
+      "categories": [
+        "debug-leak"
+      ],
+      "why": "Inside #if DEBUG."
+    },
+    {
+      "id": "registry-fresh",
+      "file": "_reports/regression-registry.md",
+      "lines": null,
+      "categories": [
+        "regression"
+      ],
+      "why": "The registry commit is after the last code commit and records PASS."
+    },
+    {
+      "id": "audit-resolved",
+      "file": "_reports/2026-10-11-splitaudit.md",
+      "lines": null,
+      "categories": [
+        "audit"
+      ],
+      "why": "Three rounds; the only P1 (O-001) is registry row R-031, fixed."
+    },
+    {
+      "id": "model-unchanged",
+      "file": "Kestrel/Models/Hike.swift",
+      "lines": null,
+      "categories": [
+        "migration-test"
+      ],
+      "why": "Hike is unchanged since v1.2.0, so no migration test is needed."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

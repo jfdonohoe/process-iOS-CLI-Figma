@@ -1,0 +1,11 @@
+{
+  "case": "04-clean",
+  "description": "Clean: every rule followed, including the tricky-but-correct shapes (iconOnly Label, decorative image, a combined row, a dial with label and value, .custom(size:), @ScaledMetric hero, a 30 pt glyph inside a 44 pt content shape, Heather text and a Plum fill passing in both appearances, a status shown by label + icon, a repeating glow gated on Reduce Motion). Exhaustive; PASS.",
+  "prompt": "Do the accessibility pass on this app's screens and report your findings.",
+  "exhaustive": true,
+  "read_only": true,
+  "must_find": [],
+  "must_not_flag": [],
+  "forbidden_strings": [],
+  "expected_overall": "PASS"
+}

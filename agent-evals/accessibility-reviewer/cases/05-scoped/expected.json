@@ -1,0 +1,64 @@
+{
+  "case": "05-scoped",
+  "description": "Scope: the prompt names only the new Goals screen. Goals has a fixed .system(size: 14) explanation and an asset-only edit button. Settings has its own defects (fixed size, Mist on a white row, an unlabelled help button) and must not be reported.",
+  "prompt": "I've just built the new Goals screen (GoalsView). Check it for accessibility problems before I move on.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "goals-fixed-size",
+      "locations": [
+        {
+          "file": "Puffin/Views/GoalsView.swift",
+          "lines": [
+            14,
+            14
+          ]
+        }
+      ],
+      "categories": [
+        "dynamic-type"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Explanation text at a fixed 14 pt."
+    },
+    {
+      "id": "goals-edit-unlabelled",
+      "locations": [
+        {
+          "file": "Puffin/Views/GoalsView.swift",
+          "lines": [
+            20,
+            26
+          ]
+        }
+      ],
+      "categories": [
+        "voiceover-label"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Toolbar button whose label is only an asset image."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "settings-out-of-scope",
+      "file": "Puffin/Views/SettingsView.swift",
+      "lines": null,
+      "categories": [],
+      "why": "Settings isn't the screen under review."
+    },
+    {
+      "id": "theme-mist-out-of-scope",
+      "file": "Puffin/Theme.swift",
+      "lines": [
+        9,
+        9
+      ],
+      "categories": [],
+      "why": "Mist is only used on the out-of-scope Settings screen."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

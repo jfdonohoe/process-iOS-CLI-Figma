@@ -1,0 +1,172 @@
+{
+  "case": "03-contrast-motion",
+  "description": "Contrast and motion: Color.mist footnote on white 2.46:1; Moss link (no dark variant) on black 3.29:1 in dark mode; white label on the Apricot fill 2.07:1; an overdue/on-time dot shown only by colour; a repeatForever pulse with no Reduce Motion check. Decoys: a 28 pt title in Color.slate (3.95:1 white, 5.32:1 black, passes the large-text bar); Ink text both ways; a seal icon with a Finished label; a repeating spin gated on accessibilityReduceMotion; a one-shot spring on tap; a Plum-tinted borderedProminent button.",
+  "prompt": "Do the accessibility pass on this app's screens and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "mist-footnote",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            36,
+            37
+          ]
+        },
+        {
+          "file": "Puffin/Theme.swift",
+          "lines": [
+            9,
+            9
+          ]
+        }
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Color.mist on white is 2.46:1, below 4.5:1 for footnote text."
+    },
+    {
+      "id": "moss-dark",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            49,
+            51
+          ]
+        },
+        {
+          "file": "Puffin/Theme.swift",
+          "lines": [
+            6,
+            6
+          ]
+        }
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Moss has no dark value; on the dark background it is 3.29:1."
+    },
+    {
+      "id": "apricot-button",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            55,
+            59
+          ]
+        }
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "White 17 pt Semibold on Apricot is 2.07:1."
+    },
+    {
+      "id": "overdue-dot",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            28,
+            30
+          ]
+        }
+      ],
+      "categories": [
+        "color-only"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Overdue vs on time is shown only by the dot's colour."
+    },
+    {
+      "id": "pulse-motion",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            19,
+            25
+          ]
+        }
+      ],
+      "categories": [
+        "reduce-motion"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "repeatForever pulse with no accessibilityReduceMotion check."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "slate-title-large",
+      "file": "Puffin/Views/NowReadingView.swift",
+      "lines": [
+        12,
+        14
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "28 pt .title passes 3:1 in both appearances."
+    },
+    {
+      "id": "ink-body",
+      "file": "Puffin/Views/NowReadingView.swift",
+      "lines": [
+        32,
+        34
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "Ink passes in light and dark."
+    },
+    {
+      "id": "finished-seal",
+      "file": "Puffin/Views/NowReadingView.swift",
+      "lines": [
+        41,
+        43
+      ],
+      "categories": [
+        "color-only"
+      ],
+      "why": "The state has a text label."
+    },
+    {
+      "id": "gated-spin",
+      "file": "Puffin/Views/GoalCelebration.swift",
+      "lines": [
+        13,
+        14
+      ],
+      "categories": [
+        "reduce-motion"
+      ],
+      "why": "The repeating spin is removed under Reduce Motion."
+    },
+    {
+      "id": "spring-on-tap",
+      "file": "Puffin/Views/GoalCelebration.swift",
+      "lines": [
+        20,
+        20
+      ],
+      "categories": [
+        "reduce-motion"
+      ],
+      "why": "One-shot animation in response to a tap."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

@@ -1,0 +1,68 @@
+{
+  "case": "04-clean",
+  "description": "Clean release, no Figma: every static gate met. Decoys a checker might trip on: the version-only commit after the regression run, the missing v2.1.0 tag (expected), an open registry row, P2 audit items, aps-environment development, notifications and PhotosPicker without usage strings, DEBUG in the Debug configuration, a seeder in #if DEBUG && simulator, and an out-of-scope try? save().",
+  "prompt": "We're about to push this release. Check the repo against the release checklist and report what's ready and what isn't.",
+  "exhaustive": true,
+  "read_only": true,
+  "must_find": [],
+  "must_not_flag": [
+    {
+      "id": "version-only-commit",
+      "file": "Wren.xcodeproj/project.pbxproj",
+      "lines": null,
+      "categories": [],
+      "why": "Only version lines changed after the regression run; version is 2.1.0 (31) over 2.0.0 (30)."
+    },
+    {
+      "id": "open-row",
+      "file": "_reports/regression-registry.md",
+      "lines": null,
+      "categories": [],
+      "why": "An open known bug; list it, don't flag it."
+    },
+    {
+      "id": "audit-p2s",
+      "file": "_reports/2026-10-10-splitaudit.md",
+      "lines": null,
+      "categories": [],
+      "why": "Both P1s are fixed rows; the rest are P2."
+    },
+    {
+      "id": "aps-development",
+      "file": "Wren/Wren.entitlements",
+      "lines": null,
+      "categories": [],
+      "why": "Set by Xcode at export."
+    },
+    {
+      "id": "today-view",
+      "file": "Wren/Views/TodayView.swift",
+      "lines": null,
+      "categories": [],
+      "why": "Notifications and PhotosPicker need no usage string; @AppStorage is declared; try? save() is out of scope."
+    },
+    {
+      "id": "seeder-gated",
+      "file": "Wren/Debug/SampleEntries.swift",
+      "lines": null,
+      "categories": [],
+      "why": "#if DEBUG && targetEnvironment(simulator)."
+    },
+    {
+      "id": "migration-tested",
+      "file": "Wren/Models/Entry.swift",
+      "lines": null,
+      "categories": [],
+      "why": "MigrationTests opens a checked-in 2.0.0 store."
+    },
+    {
+      "id": "microphone-key",
+      "file": "Wren/Services/Recorder.swift",
+      "lines": null,
+      "categories": [],
+      "why": "NSMicrophoneUsageDescription is in Info.plist."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "PASS"
+}

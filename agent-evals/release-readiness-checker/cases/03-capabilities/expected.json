@@ -1,0 +1,184 @@
+{
+  "case": "03-capabilities",
+  "description": "No Figma. Gates met (fresh PASS, audit P1 fixed, version bumped with CHANGELOG, model unchanged). Planted: HealthKit used with no healthkit entitlement, an App Group id in code that the entitlements don't list, a 'TODO' NSHealthUpdateUsageDescription, an unused 'location' background mode, a Release-reachable button that seeds sample rows into the real store, a hard-coded version footer against a project release rule. Decoys: accelerometer needs no key, aps-environment development, audio background mode is used, the version-only commit after the regression run.",
+  "prompt": "We're about to push this release. Check the repo against the release checklist and report what's ready and what isn't.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "healthkit-entitlement-missing",
+      "locations": [
+        {
+          "file": "Plover/Services/HeartRateReader.swift",
+          "lines": [
+            5,
+            11
+          ]
+        }
+      ],
+      "categories": [
+        "entitlement"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "HKHealthStore is used and the entitlements have no com.apple.developer.healthkit."
+    },
+    {
+      "id": "app-group-mismatch",
+      "locations": [
+        {
+          "file": "Plover/Services/SharedSettings.swift",
+          "lines": [
+            5,
+            5
+          ]
+        }
+      ],
+      "categories": [
+        "entitlement"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "group.com.example.plover.widget isn't in application-groups (only group.com.example.plover); the force unwrap makes it a crash."
+    },
+    {
+      "id": "health-update-string-todo",
+      "locations": [
+        {
+          "file": "Plover/Info.plist",
+          "lines": [
+            13,
+            15
+          ]
+        }
+      ],
+      "categories": [
+        "usage-string"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The app writes mindful sessions, and its purpose string is a placeholder."
+    },
+    {
+      "id": "unused-location-mode",
+      "locations": [
+        {
+          "file": "Plover/Info.plist",
+          "lines": [
+            18,
+            18
+          ]
+        }
+      ],
+      "categories": [
+        "entitlement"
+      ],
+      "expected_verdict": "PLAUSIBLE",
+      "why": "No Core Location anywhere; the background mode invites a 2.5.4 rejection."
+    },
+    {
+      "id": "sample-button-in-release",
+      "locations": [
+        {
+          "file": "Plover/Views/SettingsView.swift",
+          "lines": [
+            14,
+            14
+          ]
+        }
+      ],
+      "categories": [
+        "debug-leak"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "One tap inserts 30 fake sessions into the user's real store; not in #if DEBUG, no confirmation."
+    },
+    {
+      "id": "hardcoded-version-footer",
+      "locations": [
+        {
+          "file": "Plover/Views/SettingsView.swift",
+          "lines": [
+            18,
+            18
+          ]
+        }
+      ],
+      "categories": [
+        "project-rule"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The project rule says read it from Bundle.main; it's hard-coded and already wrong for 1.4.0 (22)."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "accelerometer-no-key",
+      "file": "Plover/Services/BreathMotion.swift",
+      "lines": null,
+      "categories": [
+        "usage-string"
+      ],
+      "why": "CMMotionManager accelerometer updates need no NSMotionUsageDescription."
+    },
+    {
+      "id": "aps-development",
+      "file": "Plover/Plover.entitlements",
+      "lines": [
+        5,
+        7
+      ],
+      "categories": [
+        "entitlement"
+      ],
+      "why": "Xcode sets aps-environment at export; registerForRemoteNotifications has it."
+    },
+    {
+      "id": "audio-mode-used",
+      "file": "Plover/Info.plist",
+      "lines": [
+        17,
+        17
+      ],
+      "categories": [
+        "entitlement"
+      ],
+      "why": "GuidePlayer plays .playback audio."
+    },
+    {
+      "id": "registry-fresh",
+      "file": "_reports/regression-registry.md",
+      "lines": null,
+      "categories": [
+        "regression"
+      ],
+      "why": "Only a version-number commit follows the registry commit."
+    },
+    {
+      "id": "version-ok",
+      "file": "Plover.xcodeproj/project.pbxproj",
+      "lines": null,
+      "categories": [
+        "version"
+      ],
+      "why": "1.4.0 (22) over 1.3.0 (21), one value each."
+    },
+    {
+      "id": "audit-resolved",
+      "file": "_reports/2026-10-09-splitaudit.md",
+      "lines": null,
+      "categories": [
+        "audit"
+      ],
+      "why": "The P1 is registry R-040, fixed."
+    },
+    {
+      "id": "model-unchanged",
+      "file": "Plover/Models/BreathSession.swift",
+      "lines": null,
+      "categories": [
+        "migration-test"
+      ],
+      "why": "Unchanged since v1.3.0."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

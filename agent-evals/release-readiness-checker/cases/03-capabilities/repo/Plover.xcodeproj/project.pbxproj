@@ -1,0 +1,73 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		AA0000000000000000000010 /* Plover */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Plover;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA0000000000000000000020 /* Plover */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000000040 /* Build configuration list for PBXNativeTarget "Plover" */;
+			fileSystemSynchronizedGroups = (
+				AA0000000000000000000010 /* Plover */,
+			);
+			name = Plover;
+			productName = Plover;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin XCBuildConfiguration section */
+		AA0000000000000000000031 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Plover/Plover.entitlements;
+				CURRENT_PROJECT_VERSION = 22;
+				INFOPLIST_FILE = Plover/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.4.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.plover;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AA0000000000000000000032 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Plover/Plover.entitlements;
+				CURRENT_PROJECT_VERSION = 22;
+				INFOPLIST_FILE = Plover/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.4.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.plover;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA0000000000000000000040 /* Build configuration list for PBXNativeTarget "Plover" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000031 /* Debug */,
+				AA0000000000000000000032 /* Release */,
+			);
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AA0000000000000000000001 /* Project object */;
+}

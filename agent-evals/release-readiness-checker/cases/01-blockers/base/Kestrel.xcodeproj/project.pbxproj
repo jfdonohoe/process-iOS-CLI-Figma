@@ -1,0 +1,73 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		AA0000000000000000000010 /* Kestrel */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Kestrel;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA0000000000000000000020 /* Kestrel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000000040 /* Build configuration list for PBXNativeTarget "Kestrel" */;
+			fileSystemSynchronizedGroups = (
+				AA0000000000000000000010 /* Kestrel */,
+			);
+			name = Kestrel;
+			productName = Kestrel;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin XCBuildConfiguration section */
+		AA0000000000000000000031 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 12;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Kestrel records your route while a hike is running.";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.kestrel;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AA0000000000000000000032 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 12;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Kestrel records your route while a hike is running.";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.kestrel;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA0000000000000000000040 /* Build configuration list for PBXNativeTarget "Kestrel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000031 /* Debug */,
+				AA0000000000000000000032 /* Release */,
+			);
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AA0000000000000000000001 /* Project object */;
+}

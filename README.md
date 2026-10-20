@@ -24,6 +24,7 @@ The project wiki is a Google Doc (the repository is private, standard §11): [iO
 | `agents/global/` | Cross-project agents: `dead-code-finder`, `review-agent-evaluator` |
 | `agents/ios-baseline/` | The §3.1 baseline reviewer set to copy into a new app's `.claude/agents/` |
 | `agent-evals/` | Seeded-defect benchmarks for the agents (run outputs are not committed) |
+| `tests/hooks-test.sh` | Fixed-input tests for every hook (standard §14.1) |
 
 ## Install
 
@@ -43,3 +44,7 @@ It symlinks everything into `~/.claude` (backing up real files it replaces) and 
 6. Sonnet or lower effort for mechanical work; Opus for design, diagnosis and data-safety calls.
 7. A Figma approval is not a build order (§2.3).
 8. `splitaudit`: one round by default.
+
+## Guardrails and evaluation
+
+Standard §13 turns the must-always rules into hooks (`ios-guard.sh` always on; `swift-lint.sh` and `build-gate.sh` opt in per project) and adds spec-before-code and modern-Swift preferences. §14 is how the process itself is measured: hook tests, a per-task log, a benchmark task and a monthly review.

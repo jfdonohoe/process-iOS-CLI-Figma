@@ -18,6 +18,8 @@ The standard is in **`~/.claude/ios-project-standard.md`**. That file is the sin
    | `check` (default) | §1, §2.1, §3.1–3.2 (the Day one items) |
    | `figma` | §2 |
    | `cost` | §12 |
+   | `guardrails` | §13 (hooks, spec-before-code, modern Swift) |
+   | `evaluate` | §14 (how to measure the process) |
    | `agents` | §3, including a §3.4 scan for subsystems that would justify a project-specific agent |
    | `device` | §8 and the sections it references |
    | `release` | §9 and the sections it references |

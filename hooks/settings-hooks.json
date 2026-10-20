@@ -10,6 +10,16 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/john/.claude/hooks/swift-lint.sh",
+            "timeout": 30
+          }
+        ]
       }
     ],
     "SessionStart": [
@@ -30,6 +40,29 @@
             "type": "command",
             "command": "/Users/john/.claude/hooks/standard-unreviewed-scan.sh",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/john/.claude/hooks/ios-guard.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/john/.claude/hooks/build-gate.sh",
+            "timeout": 600
           }
         ]
       }

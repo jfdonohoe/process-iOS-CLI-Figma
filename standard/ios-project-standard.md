@@ -34,6 +34,10 @@ Each item is tagged with where it comes from:
 | `~/.claude/ios-project-standard.ledger` | Every candidate John has been asked about, with his answer |
 | Git repo `~/Documents/Claude/Projects/ios-best-practices` | Source of truth for this standard, its skills, hooks, tools, global agents and evals. `~/.claude` paths are symlinks into it (`install.sh`), so every edit shows in `git status`. Commit changes to the standard there |
 | `~/.claude/tools/` | Simulator driver and SF Symbol vector pipeline (§2.4, §2.6) |
+| `hooks/ios-guard.sh` (PreToolUse) | Asks before `git push` and before edits to `@Model` files; denies hand edits to `project.pbxproj` in XcodeGen projects (§13.1) |
+| `hooks/swift-lint.sh` (PostToolUse, opt-in) | swift-format findings on the edited file when the repo has a `.swift-format` (§13.2) |
+| `hooks/build-gate.sh` (Stop, opt-in) | Blocks ending a turn with a failing build when the repo has `.claude/build-gate` (§13.3) |
+| `tests/hooks-test.sh` | Fixed-input tests for every hook; run after any hook edit (§14) |
 
 ---
 
@@ -103,6 +107,7 @@ One Figma file per app, named `<App> – App Screens`. Record its file key in th
 ### 2.4 Design system
 - **`Theme.swift` ⇄ Figma variables, one to one.** A new token is added to both in the same piece of work.
 - **Colour meanings are rules,** recorded the first time they come up, with exceptions written down (e.g. green is also allowed for pass states).
+- **Use iOS semantic colours, not hex.** Text, backgrounds, separators and fills bind to Figma variables named for the iOS system colours (`label`, `secondaryLabel`, `tertiaryLabel`, `systemBackground`, `systemGroupedBackground`, `secondarySystemGroupedBackground`, `separator`, `systemBlue`…), which map to `Color(.label)` etc. in SwiftUI. Only brand colours live in `Theme.swift`. A hex value on a Production frame is a defect. [general] (Figma's SwiftUI guidance; Breathe screens hard-coded hex.)
 - **Changing components safely:** before restructuring components, take a render signature of every Production screen. Diff it after each step and throw inside `use_figma` to roll back on any difference. Known traps (variant bindings, `removeOverrides`, deleting component properties) are in the WorkoutApp memory `figma-plugin-api-lessons`.
 - **Splash screen:** follow `~/.claude/ios-splash-standard.md`.
 - **Icons are SF Symbol vectors,** never screenshot crops. Get them with `~/.claude/tools/sf-symbol-match` (finds the code point) and `sf-symbol-export` (outline SVG at weight 400, 590 for tab icons); custom symbols come from the app's `.symbolset` via `sf-symbolset-extract.py`. See `~/.claude/tools/README.md`. [Breathe]
@@ -146,6 +151,7 @@ Global agents that come along automatically:
 - **Shared finding scheme:** P0–P3 severity and a CONFIRMED/PLAUSIBLE verdict, using the same keys in every agent. Reports from different agents and different apps then merge and compare. Write it in `.claude/agents/README.md`. [Sets]
 - **Clear ownership:** each concern has one owner, and the others refer to it in one line rather than reporting it (dead code → `dead-code-finder`, style and performance → the auditor). This avoids duplicate findings. [Sets]
 - **Audit, then fix, as separate steps.** Auditors are read-only and stop at the report. Fixes happen in a separate run, after approval. [Sets, Senstream]
+- **Triage findings; don't chase them all.** A reviewer asked for gaps always reports some. Fix what affects correctness, data or a stated requirement (P0–P1, and P2 that touch data); log the rest without acting. Every reviewer prompt says to report only those, and to mark anything else optional. [general] (Anthropic best practices.)
 - **No project state in agent prompts.** Prompts hold method and the shapes of past failures. Test counts, bug statuses and versions are worked out at run time or read from the project's documents. If a prompt and the source disagree, the agent reports it and trusts the source. [Senstream] (`~/.claude/senstream-agent-rules.md` §2–4)
 - **Documents the agents read** (the project's single source of current state):
   - `README.md`: product rules and testing
@@ -224,6 +230,7 @@ Name specialists `<project>-<area>-reviewer`. Benchmark each one before relying 
 - **A unit-test target exists from the first model.** Every data-integrity fix comes with a regression test and a registry row. [Sets]
 - **The full suite passes, and `regression-reviewer` returns PASS, before anything is called done.** [Sets]
 - **A green suite isn't the same as working:** check the feature in the running app before you commit. [Sets]
+- **Cheapest visual check first.** A single view: SwiftUI preview via Apple's Xcode MCP `RenderPreview` (Xcode open). A screen in a real state: simulator with the demo-state launch arguments (§2.6). Only a full flow needs a click-through. Every view gets a `#Preview` that uses sample data, so previews work without the app running. [general]
 - **Device truth comes from the device.** Have the app report its own `Bundle.main` contents and read them with `devicectl … --console`. [Sets]
 - **Never debug launch artwork by eye.** Freeze the launch and measure. [Sets]
 - **Hardware-dependent behaviour gets a physical-device checklist** in the repo. [Senstream]
@@ -346,7 +353,7 @@ Added 2026-10-19 after two expensive days of Figma and standard work. In rough o
    xcodebuild test -project App.xcodeproj -scheme App -destination 'id=<udid>' -resultBundlePath /tmp/t.xcresult >/dev/null 2>&1
    xcrun xcresulttool get test-results summary --path /tmp/t.xcresult   # result, passed/failed/skipped counts
    ```
-   Open failures only when the summary shows any. Run long builds and tests in the background and keep working.
+   Open failures only when the summary shows any. Run long builds and tests in the background and keep working. **Use XcodeBuildMCP's structured tools** (`build_sim`, `test_sim`) for builds and targeted tests during work, since errors come back with file and line; use the result-bundle summary for the full regression run, where only counts matter.
 4. **Reuse tools** from `~/.claude/tools/` rather than re-deriving them.
 5. **Read only what's needed.** The `/ios-project-standard` skill reads only the sections its argument names. Always-loaded CLAUDE.md files hold rules and pointers; procedures live in referenced files (`~/.claude/splitaudit.md`, `Senstream/DATA_SAFETY.md`).
 6. **Match the model to the work.** Mechanical work (Figma syncs, captures, renames, re-stacking) runs on Sonnet or at lower `/effort`; keep Opus for design decisions, diagnosis and data-safety calls.
@@ -354,4 +361,62 @@ Added 2026-10-19 after two expensive days of Figma and standard work. In rough o
 8. **`splitaudit`** costs about 1.2M tokens a round: one round by default, three only before migrations or releases.
 9. **Subagents only for parallel or isolated work.** A subagent starts cold and its brief and report both cost tokens; do lookups and small checks inline. Give a subagent a narrow brief and a file list, and ask for findings in a short table, not prose.
 10. **Upload, don't paste.** Large assets (SVGs, images) go to Figma with `upload_assets`, not inside `use_figma` code.
+11. **Parallel sessions for independent work.** Two pieces of work that don't touch the same files run in separate sessions on separate git worktrees (`claude --worktree` or `git worktree add`), each with its own small context, rather than one long session. Name sessions with `/rename` so they can be resumed.
+12. **Measure it** (§14).
+
+---
+
+## 13. Guardrails and quality gates [general]
+
+Added 2026-10-19 to close the gaps found by comparing this standard with published Claude Code iOS practice (Anthropic's best-practices guide, Indragie Karunaratne, Blake Crosley, Figma's SwiftUI guidance). Rules that must hold every time are hooks, because CLAUDE.md text is advisory and hooks are deterministic. Hook sources live in the `ios-best-practices` repo; `tests/hooks-test.sh` checks them.
+
+### 13.1 Guard (always on): `hooks/ios-guard.sh`, PreToolUse
+- **`git push` asks.** Pushes happen only when John asks; the hook makes Claude Code prompt before any push.
+- **`@Model` edits ask.** Any edit to a Swift file that contains or adds `@Model` prompts first, so a SwiftData schema change can't slip through without the Data Safety confirmation (§4).
+- **`project.pbxproj` edits are denied** in a project generated by XcodeGen: edit `project.yml` and run `xcodegen`.
+
+### 13.2 Lint (opt-in): `hooks/swift-lint.sh`, PostToolUse
+Add a `.swift-format` config at the repo root to turn it on. After each Swift edit the hook feeds back at most 12 swift-format findings for that file. Projects without the config get nothing, so turning it on is a deliberate choice (and a one-time clean-up).
+
+### 13.3 Build gate (opt-in): `hooks/build-gate.sh`, Stop
+Add `.claude/build-gate` whose first line is the quiet build command, e.g.
+```bash
+xcodebuild build -project App.xcodeproj -scheme App -destination 'id=<udid>' -quiet
+```
+When Swift files have changed and that exact change hasn't already built, the hook builds at the end of the turn and, on failure, blocks the turn from ending with the first error lines. It never blocks twice in a row and caches a passing change, so it costs one build per new change. Add `.claude/.build-gate-pass` to `.gitignore`.
+
+### 13.4 Spec before code for non-UI work
+Figma decides screens (§2). Logic, data and integration work gets a spec instead: for anything bigger than a one-sentence diff, Claude interviews John (AskUserQuestion), writes `specs/YYYY-MM-DD-<topic>.md` naming the files and interfaces involved, what is out of scope, and an end-to-end verification step, then implementation starts in a **fresh session** from that spec. Small, clear fixes skip this. Like a Figma approval, approving a spec is not an instruction to build it.
+
+### 13.5 Modern Swift preferences
+Claude's known weak spots on Apple platforms are Swift Concurrency, choosing legacy APIs, and over-large SwiftUI bodies. Each app's CLAUDE.md carries this list (or points to it):
+- **Concurrency:** Swift 6 strict mode. UI state is `@MainActor`. Prefer `async`/`await` and structured tasks (`.task`, `async let`, task groups) to `DispatchQueue` and completion handlers. No `@unchecked Sendable` or `nonisolated(unsafe)` without a comment saying why it is safe. Default arguments that read main-actor state are optional and resolved inside the body (Breathe hit this).
+- **State:** `@Observable` models, not `ObservableObject`/`@Published`. `@State` for view-owned values, `@Bindable` to bind into `@Observable`, `@Environment` for shared services.
+- **SwiftUI:** `NavigationStack`, not `NavigationView`. `.foregroundStyle`, not `.foregroundColor`. Swift Testing (`@Test`, `#expect`) for new tests. SF Symbols for icons.
+- **Size:** split a view body as soon as it nears the compiler's type-check limit; extract subviews rather than adding `AnyView`.
+- **Prefer SwiftUI;** reach for UIKit/AppKit only for something SwiftUI can't do, and say why.
+
+---
+
+## 14. Evaluating the process [general]
+
+The process is a product too: measure it, and change it on evidence. Three levels, cheapest first.
+
+### 14.1 Mechanical checks (every change to the process)
+- `tests/hooks-test.sh` passes after any hook edit (16 checks today).
+- `review-agent-evaluator` benchmarks any reviewer agent after its prompt changes (§3.2).
+- After editing an always-loaded file, `/context` in a fresh session shows its size; it should not grow without a reason.
+
+### 14.2 A per-task log (every piece of work)
+Append one line per finished task to `_reports/process-log.md` in the app repo:
+
+`date | task | session tokens (/cost or /context) | turns | corrections by John | rework (reverted changes) | escaped defects found later | rule or hook that fired`
+
+From it, track the four numbers that matter: **tokens per task**, **corrections per task**, **rework events**, and **escaped defects** (bugs found after John was told "done"). A rule earns its place when the related number improves; a rule that never fires and never would have prevented anything is a candidate to cut.
+
+### 14.3 A benchmark task (quarterly, or after a big process change)
+Keep one fixed, representative change in the ios-best-practices repo, e.g. "add a setting with a new screen, a model field and a test" against a small sample app. Run it end to end in a fresh session with the current process and record tokens, wall-clock time, turns, test result, Figma and code match, and whether every gate fired as designed. Compare with the previous run. Model updates move the numbers, so re-run the previous configuration the same day when comparing a process change (same rule as §3.2's agent benchmarks).
+
+### 14.4 Review
+Once a month, read the process log and the ledger: cut rules that never fire, promote advisory rules that keep being broken into hooks, and record each change in the ledger. Re-run the online comparison (Anthropic's guide and current iOS practitioner write-ups) twice a year.
 

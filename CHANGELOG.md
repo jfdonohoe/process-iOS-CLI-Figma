@@ -5,6 +5,7 @@ Every merge to `main` adds an entry here, in the same merge, and the wiki's Chan
 ## 2026-10-20
 
 ### Added
+- Standard §4: check in a fixture store for every schema version (synthetic rows, opened through the versioned container on every test run), and mark a V1 that points at the live model types beside the models. From Breathe.
 - `tools/tool-usage-report.py`: counts what a Claude Code setup actually uses, from its session transcripts.
 - `SETUP.md`: everything a fresh Mac needs for the process (accounts, apps, CLI tools, MCP servers, claude.ai connectors, plugins, hooks, permissions), each marked required, situational or optional from transcript usage. Linked from the README. (7495f4d)
 - `install.sh` checks the prerequisites and warns about missing ones, and links the four built §3.3 reviewers into `~/.claude/agents/` (they had been linked by hand). (7495f4d)

@@ -227,6 +227,7 @@ Name specialists `<project>-<area>-reviewer`. Benchmark each one before relying 
 - **`VersionedSchema` + `SchemaMigrationPlan` from day one.** Each shipped schema change gets a new version. Don't keep adding fields in place to V1. [Sets] (audit 2026-10-17, H1)
 - **Never `fatalError` when the store fails to open.** Show a recovery screen that offers export or a reset. [Sets]
 - **Migration test:** open a store created by the last released build, using the current code. [Sets]
+- **Check in a fixture store for every schema version.** Write it with that version's build, using synthetic rows only (never personal or research data), and open a copy through the versioned container in a test that runs on every suite. An opt-in test can do the same against a copy of a real device store, never the original. When versioning is added to an app that already has data, V1 is usually the live model types: say so in a comment beside the models, because from then on even an optional property added in place may leave existing stores matching no version (a reviewer finding, not yet reproduced). Freeze V1 into nested copies before the next stored change. [Breathe] (2026-10-20)
 - **Recorded history is append-only.** A correction is a new record; a locked record is never overwritten. [Sets]
 - **Backup/export early, with a completeness test written by reflection.** [Sets] The v1 export dropped 9 of 20 properties and one whole model (`_reports/2026-09-08-export-data-loss.md`).
 - **No silent `try? context.save()`.** [Sets] (audit L6)

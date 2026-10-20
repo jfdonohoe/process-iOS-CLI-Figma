@@ -11,6 +11,7 @@ Every merge to `main` adds an entry here, in the same merge, and the wiki's Chan
 - `design-sync-reviewer` (6-case benchmark), which compares built SwiftUI with a Figma frame spec, and `tools/figma-frame-spec.js`, the read-only export it reads (§2.3 step 4). (d8f6575)
 
 ### Changed
+- The wiki uses no names: "the developer" for the person running the process, "the author" for the standard's owner (§11.2).
 - `README.md` and `tools/README.md` list the preview-tracker report and all four hook events. (ba9b48d)
 - Simulator UI automation (§2.6): check XcodeBuildMCP's `ui-automation` workflow first and lead John through enabling it; `tools/sim-drive.py` only as a fallback. (d4e070d)
 - Accessibility reviews run only before a full (major) release, including the first; point and dot releases and new screens skip them (§3.3, §9, §12). (2741807)

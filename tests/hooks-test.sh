@@ -35,4 +35,8 @@ echo 'exit 0' > "$T/.claude/build-gate"
 check "gate passes good build"  "$(b false)" none
 echo 'exit 1' > "$T/.claude/build-gate"
 check "gate caches a passed change" "$(b false)" none
+# --- preview-candidate (logs every sim run, asks Claude to judge it)
+pc() { PREVIEW_CANDIDATE_LOG="$T/pc.jsonl" "$H/preview-candidate.sh" <<<'{"cwd":"/x/App","tool_input":{"launchArgs":["-demo"]}}' | jq -r '.hookSpecificOutput.additionalContext // "none"' | grep -q 'Preview tracker' && echo context || echo none; }
+check "preview tracker asks"    "$(pc)" context
+check "preview tracker logs run" "$(jq -r 'select(.kind=="sim-run") | .launchArgs[0]' "$T/pc.jsonl")" -demo
 rm -rf "$T"; echo "hooks-test: $pass passed, $fail failed"; [ $fail -eq 0 ]

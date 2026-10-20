@@ -237,7 +237,7 @@ Name specialists `<project>-<area>-reviewer`. Benchmark each one before relying 
 - **A unit-test target exists from the first model.** Every data-integrity fix comes with a regression test and a registry row. [Sets]
 - **The full suite passes, and `regression-reviewer` returns PASS, before anything is called done.** [Sets]
 - **A green suite isn't the same as working:** check the feature in the running app before you commit. [Sets]
-- **Cheapest visual check first.** A single view: SwiftUI preview via Apple's Xcode MCP `RenderPreview` (Xcode open). A screen in a real state: simulator with the demo-state launch arguments (§2.6). Only a full flow needs a click-through. Every view gets a `#Preview` that uses sample data, so previews work without the app running. [general]
+- **Cheapest visual check first.** A screen in a real state: simulator with the demo-state launch arguments (§2.6). Only a full flow needs a click-through. Every view gets a `#Preview` that uses sample data, so John can check a single view in Xcode's canvas. Apple's Xcode MCP (`xcrun mcpbridge`, with `RenderPreview`) was removed on 2026-10-20 because Xcode re-asks for access every session and it had never been called; `hooks/preview-candidate.sh` (§13.6) logs the simulator runs a preview would have replaced, so the decision can be revisited on evidence. [general]
 - **Device truth comes from the device.** Have the app report its own `Bundle.main` contents and read them with `devicectl … --console`. [Sets]
 - **Never debug launch artwork by eye.** Freeze the launch and measure. [Sets]
 - **Hardware-dependent behaviour gets a physical-device checklist** in the repo. [Senstream]
@@ -404,6 +404,9 @@ Claude's known weak spots on Apple platforms are Swift Concurrency, choosing leg
 - **Size:** split a view body as soon as it nears the compiler's type-check limit; extract subviews rather than adding `AnyView`.
 - **Prefer SwiftUI;** reach for UIKit/AppKit only for something SwiftUI can't do, and say why.
 
+### 13.6 Preview tracker (always on): `hooks/preview-candidate.sh`, PostToolUse
+Apple's Xcode MCP was removed on 2026-10-20 (§6). After each XcodeBuildMCP `build_run_sim`, the hook logs the run to `~/.claude/preview-candidates.jsonl` and asks Claude whether a `#Preview` of one view would have been enough. If so, Claude appends a `preview-would-do` line with the reason and tells John in one line. `tools/preview-candidates-report.sh` totals the log for the monthly review (§14.4): if previews would often have replaced simulator runs, reinstate the Xcode MCP through `xcodecli` (one prompt per Xcode launch) rather than raw `mcpbridge`.
+
 ---
 
 ## 14. Evaluating the process [general]
@@ -411,7 +414,7 @@ Claude's known weak spots on Apple platforms are Swift Concurrency, choosing leg
 The process is a product too: measure it, and change it on evidence. Three levels, cheapest first.
 
 ### 14.1 Mechanical checks (every change to the process)
-- `tests/hooks-test.sh` passes after any hook edit (16 checks today).
+- `tests/hooks-test.sh` passes after any hook edit (18 checks today).
 - `review-agent-evaluator` benchmarks any reviewer agent after its prompt changes (§3.2).
 - After editing an always-loaded file, `/context` in a fresh session shows its size; it should not grow without a reason.
 
@@ -426,5 +429,5 @@ From it, track the four numbers that matter: **tokens per task**, **corrections 
 Keep one fixed, representative change in the ios-best-practices repo, e.g. "add a setting with a new screen, a model field and a test" against a small sample app. Run it end to end in a fresh session with the current process and record tokens, wall-clock time, turns, test result, Figma and code match, and whether every gate fired as designed. Compare with the previous run. Model updates move the numbers, so re-run the previous configuration the same day when comparing a process change (same rule as §3.2's agent benchmarks).
 
 ### 14.4 Review
-Once a month, read the process log and the ledger: cut rules that never fire, promote advisory rules that keep being broken into hooks, and record each change in the ledger. Re-run the online comparison (Anthropic's guide and current iOS practitioner write-ups) twice a year.
+Once a month, read the process log, the ledger and `tools/preview-candidates-report.sh` (§13.6): cut rules that never fire, promote advisory rules that keep being broken into hooks, and record each change in the ledger. Re-run the online comparison (Anthropic's guide and current iOS practitioner write-ups) twice a year.
 

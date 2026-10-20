@@ -20,6 +20,16 @@
             "timeout": 30
           }
         ]
+      },
+      {
+        "matcher": "mcp__xcodebuildmcp__build_run_sim",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/john/.claude/hooks/preview-candidate.sh",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "SessionStart": [

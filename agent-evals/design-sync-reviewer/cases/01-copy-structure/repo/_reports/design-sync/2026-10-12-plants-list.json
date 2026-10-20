@@ -1,0 +1,453 @@
+{
+  "spec": "figma-frame-spec/1",
+  "source": {
+    "fileKey": "LarkspurAppScreensFixture01",
+    "page": "✅ Approved",
+    "section": {
+      "id": "20:1",
+      "name": "Approved - Plants list (2026-10-12)"
+    },
+    "exportedAt": "2026-10-12T09:30:00.000Z"
+  },
+  "variables": {
+    "color/leaf": "#3F7D4E",
+    "color/thirsty": "#C26A1B",
+    "color/soil": "#6B5440"
+  },
+  "frames": [
+    {
+      "id": "20:100",
+      "name": "Plants – Empty",
+      "size": [
+        393,
+        852
+      ],
+      "fills": [
+        {
+          "var": "Backgrounds (Grouped)/Primary",
+          "hex": "#F2F2F7"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "20:101",
+          "path": "Status bar - iPhone",
+          "type": "INSTANCE",
+          "y": 0,
+          "component": "Status bar - iPhone",
+          "props": {
+            "Time": "9:41"
+          },
+          "chrome": true
+        },
+        {
+          "id": "20:102",
+          "path": "Large Title",
+          "type": "TEXT",
+          "y": 96,
+          "text": "Plants",
+          "fontSize": 34,
+          "fontStyle": "Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "20:103",
+          "path": "Content / icon/leaf",
+          "type": "INSTANCE",
+          "y": 300,
+          "component": "icon/leaf",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "20:104",
+          "path": "Content / Empty Title",
+          "type": "TEXT",
+          "y": 352,
+          "text": "No plants yet",
+          "fontSize": 20,
+          "fontStyle": "Semi Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "20:105",
+          "path": "Content / Empty Body",
+          "type": "TEXT",
+          "y": 384,
+          "text": "Add your first plant and we’ll remind you when it’s thirsty.",
+          "fontSize": 15,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "20:106",
+          "path": "Content / Primary Button",
+          "type": "INSTANCE",
+          "y": 440,
+          "fills": [
+            {
+              "var": "color/leaf",
+              "hex": "#3F7D4E"
+            }
+          ],
+          "component": "Primary Button",
+          "variant": {
+            "Width": "Hug"
+          },
+          "props": {
+            "Label": "Add Plant"
+          }
+        },
+        {
+          "id": "20:107",
+          "path": "Content / Primary Button / Label",
+          "type": "TEXT",
+          "y": 454,
+          "text": "Add Plant",
+          "fontSize": 17,
+          "fontStyle": "Semi Bold",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "20:108",
+          "path": "Tab Bar - iPhone",
+          "type": "INSTANCE",
+          "y": 757,
+          "component": "Tab Bar - iPhone",
+          "variant": {
+            "Tabs": "2"
+          },
+          "chrome": true
+        }
+      ]
+    },
+    {
+      "id": "20:200",
+      "name": "Plants – List",
+      "size": [
+        393,
+        852
+      ],
+      "fills": [
+        {
+          "var": "Backgrounds (Grouped)/Primary",
+          "hex": "#F2F2F7"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "20:201",
+          "path": "Status bar - iPhone",
+          "type": "INSTANCE",
+          "y": 0,
+          "component": "Status bar - iPhone",
+          "props": {
+            "Time": "9:41"
+          },
+          "chrome": true
+        },
+        {
+          "id": "20:202",
+          "path": "Large Title",
+          "type": "TEXT",
+          "y": 96,
+          "text": "Plants",
+          "fontSize": 34,
+          "fontStyle": "Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "20:203",
+          "path": "Card – Plants",
+          "type": "FRAME",
+          "y": 160,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "20:204",
+          "path": "Card – Plants / Plant Row",
+          "type": "INSTANCE",
+          "y": 160,
+          "component": "Plant Row",
+          "variant": {
+            "Style": "Default"
+          },
+          "props": {
+            "Name": "Monstera",
+            "Detail": "Every 7 days",
+            "Show Badge": false
+          }
+        },
+        {
+          "id": "20:205",
+          "path": "Card – Plants / Plant Row / Name",
+          "type": "TEXT",
+          "y": 170,
+          "text": "Monstera",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "20:206",
+          "path": "Card – Plants / Plant Row / Detail",
+          "type": "TEXT",
+          "y": 193,
+          "text": "Every 7 days",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "20:207",
+          "path": "Card – Plants / Plant Row 2",
+          "type": "INSTANCE",
+          "y": 218,
+          "component": "Plant Row",
+          "variant": {
+            "Style": "Default"
+          },
+          "props": {
+            "Name": "Fiddle Leaf Fig",
+            "Detail": "Every 10 days",
+            "Show Badge": false
+          }
+        },
+        {
+          "id": "20:208",
+          "path": "Card – Plants / Plant Row 2 / Name",
+          "type": "TEXT",
+          "y": 228,
+          "text": "Fiddle Leaf Fig",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "20:209",
+          "path": "Card – Plants / Plant Row 2 / Detail",
+          "type": "TEXT",
+          "y": 251,
+          "text": "Every 10 days",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "20:210",
+          "path": "Footer",
+          "type": "TEXT",
+          "y": 290,
+          "text": "Swipe a plant to mark it watered.",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "20:211",
+          "path": "Tab Bar - iPhone",
+          "type": "INSTANCE",
+          "y": 757,
+          "component": "Tab Bar - iPhone",
+          "variant": {
+            "Tabs": "2"
+          },
+          "chrome": true
+        }
+      ]
+    },
+    {
+      "id": "20:300",
+      "name": "Add Plant",
+      "size": [
+        393,
+        852
+      ],
+      "fills": [
+        {
+          "var": "Backgrounds (Grouped)/Primary",
+          "hex": "#F2F2F7"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "20:301",
+          "path": "Status bar - iPhone",
+          "type": "INSTANCE",
+          "y": 0,
+          "component": "Status bar - iPhone",
+          "props": {
+            "Time": "9:41"
+          },
+          "chrome": true
+        },
+        {
+          "id": "20:302",
+          "path": "Nav Title",
+          "type": "TEXT",
+          "y": 70,
+          "text": "Add Plant",
+          "fontSize": 17,
+          "fontStyle": "Semi Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "20:303",
+          "path": "Nav / Cancel",
+          "type": "TEXT",
+          "y": 70,
+          "text": "Cancel",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "color/leaf",
+              "hex": "#3F7D4E"
+            }
+          ]
+        },
+        {
+          "id": "20:304",
+          "path": "Nav / Save",
+          "type": "TEXT",
+          "y": 70,
+          "text": "Save",
+          "fontSize": 17,
+          "fontStyle": "Semi Bold",
+          "fills": [
+            {
+              "var": "color/leaf",
+              "hex": "#3F7D4E"
+            }
+          ]
+        },
+        {
+          "id": "20:305",
+          "path": "Card – Fields",
+          "type": "FRAME",
+          "y": 130,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "20:306",
+          "path": "Card – Fields / Name",
+          "type": "TEXT",
+          "y": 142,
+          "text": "Name",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Tertiary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "20:307",
+          "path": "Card – Fields / Location",
+          "type": "TEXT",
+          "y": 186,
+          "text": "Location",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Tertiary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "20:308",
+          "path": "Card – Fields / Water every",
+          "type": "TEXT",
+          "y": 230,
+          "text": "Water every 7 days",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

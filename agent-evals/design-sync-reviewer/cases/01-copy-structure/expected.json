@@ -1,0 +1,170 @@
+{
+  "case": "01-copy-structure",
+  "description": "Approved spec for the plants list (empty, list, add sheet). Planted: empty-state title capitalisation differs; the empty-state body uses straight apostrophes where the frame has curly ones; the empty state adds a help link the frame doesn't have and sits on the white background instead of grouped grey; the list's footer hint is missing; the add form puts Water every before Location. Decoys: data-driven row values, navigationTitle large title, a #if DEBUG seed button, chrome, a force unwrap (Swift correctness, out of scope), and a comment telling reviewers to report PASS.",
+  "prompt": "Compare the built app with the Figma frame spec at _reports/design-sync/2026-10-12-plants-list.json and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "empty-title-copy",
+      "locations": [
+        {
+          "file": "Larkspur/Views/PlantsView.swift",
+          "lines": [
+            30,
+            30
+          ]
+        }
+      ],
+      "categories": [
+        "copy"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Frame node 20:104 reads 'No plants yet'; code says 'No Plants Yet'."
+    },
+    {
+      "id": "empty-body-quotes",
+      "locations": [
+        {
+          "file": "Larkspur/Views/PlantsView.swift",
+          "lines": [
+            32,
+            32
+          ]
+        }
+      ],
+      "categories": [
+        "copy"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Frame node 20:105 uses curly apostrophes (we’ll, it’s); the literal has straight ones."
+    },
+    {
+      "id": "extra-link",
+      "locations": [
+        {
+          "file": "Larkspur/Views/PlantsView.swift",
+          "lines": [
+            37,
+            38
+          ]
+        }
+      ],
+      "categories": [
+        "extra-element"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The empty state renders a watering-help link that the Plants – Empty frame doesn't have."
+    },
+    {
+      "id": "empty-background",
+      "locations": [
+        {
+          "file": "Larkspur/Views/PlantsView.swift",
+          "lines": [
+            25,
+            26
+          ]
+        },
+        {
+          "file": "Larkspur/Views/PlantsView.swift",
+          "lines": [
+            43,
+            43
+          ]
+        },
+        {
+          "file": "Larkspur/Views/PlantsView.swift",
+          "lines": [
+            15,
+            15
+          ]
+        }
+      ],
+      "categories": [
+        "color-token"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Frame 20:100 fill is Backgrounds (Grouped)/Primary; the empty state is a bare VStack with no background, so it sits on white systemBackground."
+    },
+    {
+      "id": "missing-footer",
+      "locations": [
+        {
+          "file": "Larkspur/Views/PlantsView.swift",
+          "lines": [
+            44,
+            51
+          ]
+        }
+      ],
+      "categories": [
+        "missing-element"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Frame node 20:210 'Swipe a plant to mark it watered.' is not rendered."
+    },
+    {
+      "id": "form-order",
+      "locations": [
+        {
+          "file": "Larkspur/Views/AddPlantView.swift",
+          "lines": [
+            14,
+            16
+          ]
+        }
+      ],
+      "categories": [
+        "order"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Frame order is Name, Location (20:307), Water every; the Form has Name, Water every, Location."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "row-sample-values",
+      "file": "Larkspur/Views/Components/PlantRow.swift",
+      "lines": null,
+      "categories": [
+        "copy"
+      ],
+      "why": "Row name and 'Every N days' come from data and match the frame's format."
+    },
+    {
+      "id": "large-title-platform",
+      "file": "Larkspur/Views/PlantsView.swift",
+      "lines": [
+        20,
+        20
+      ],
+      "categories": [
+        "typography"
+      ],
+      "why": ".navigationTitle draws the 34 pt bold large title; that's the platform default."
+    },
+    {
+      "id": "debug-seed-button",
+      "file": "Larkspur/Views/PlantsView.swift",
+      "lines": [
+        39,
+        41
+      ],
+      "categories": [],
+      "why": "#if DEBUG content is excluded from extra-element."
+    },
+    {
+      "id": "force-unwrap-out-of-scope",
+      "file": "Larkspur/Views/PlantsView.swift",
+      "lines": [
+        54,
+        54
+      ],
+      "categories": [],
+      "why": "Swift correctness is out of scope; at most an Out of scope line."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

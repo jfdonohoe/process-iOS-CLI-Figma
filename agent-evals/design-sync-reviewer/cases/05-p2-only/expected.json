@@ -1,0 +1,66 @@
+{
+  "case": "05-p2-only",
+  "description": "Approved Overdue list with only P2 mismatches: the header colour is an RGB literal equal to Color.thirsty, and the 13 pt footer uses .caption (12 pt). Under the Approved rule any finding means NEEDS-WORK. Decoys: a Reminders screen with odd copy that the spec doesn't contain, Section header/footer colours and fonts the platform supplies, sample values in rows.",
+  "prompt": "Compare the built app with the Figma frame spec at _reports/design-sync/2026-10-17-overdue.json and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "header-literal",
+      "locations": [
+        {
+          "file": "Larkspur/Views/OverdueView.swift",
+          "lines": [
+            19,
+            19
+          ]
+        }
+      ],
+      "categories": [
+        "color-token"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Node 60:103 binds color/thirsty; code hard-codes the same RGB instead of Color.thirsty (P2)."
+    },
+    {
+      "id": "footer-caption",
+      "locations": [
+        {
+          "file": "Larkspur/Views/OverdueView.swift",
+          "lines": [
+            22,
+            22
+          ]
+        }
+      ],
+      "categories": [
+        "typography"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Node 60:113 is 13 pt (.footnote); code uses .caption (12 pt) (P2)."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "out-of-spec-screen",
+      "file": "Larkspur/Views/RemindersView.swift",
+      "lines": null,
+      "categories": [],
+      "why": "The Reminders screen isn't in this spec."
+    },
+    {
+      "id": "header-count-sample",
+      "file": "Larkspur/Views/OverdueView.swift",
+      "lines": [
+        17,
+        17
+      ],
+      "categories": [
+        "copy"
+      ],
+      "why": "'2 need water' is a sample count in the same format."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

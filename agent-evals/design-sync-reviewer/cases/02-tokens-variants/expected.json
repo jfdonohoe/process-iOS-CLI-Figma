@@ -1,0 +1,151 @@
+{
+  "case": "02-tokens-variants",
+  "description": "Approved spec for plant detail. Planted: overdue text uses an RGB literal equal to Color.thirsty; the notes caption is 13 pt in Figma but .caption (12) in code; the Hug primary button is built with fill: true (Width = Fill); Delete is red in Figma but forced to Color.leaf (wrong colour meaning, also against the CLAUDE.md rule); the History header is the first row instead of a Section header (CLAUDE.md rule). Decoys: .system(size: 13) for 13 pt text, unbound #000000 text matched by the default label colour, sample values, the button's own label font (component internals), white card hex fills (design note only).",
+  "prompt": "Compare the built app with the Figma frame spec at _reports/design-sync/2026-10-14-plant-detail.json and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "overdue-literal",
+      "locations": [
+        {
+          "file": "Larkspur/Views/PlantDetailView.swift",
+          "lines": [
+            15,
+            15
+          ]
+        }
+      ],
+      "categories": [
+        "color-token"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Node 30:108 binds color/thirsty; code hard-codes the RGB instead of Color.thirsty."
+    },
+    {
+      "id": "notes-caption-size",
+      "locations": [
+        {
+          "file": "Larkspur/Views/PlantDetailView.swift",
+          "lines": [
+            24,
+            24
+          ]
+        }
+      ],
+      "categories": [
+        "typography"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Node 30:111 is 13 pt Regular (.footnote); code uses .caption (12 pt)."
+    },
+    {
+      "id": "button-stretched",
+      "locations": [
+        {
+          "file": "Larkspur/Views/PlantDetailView.swift",
+          "lines": [
+            37,
+            37
+          ]
+        }
+      ],
+      "categories": [
+        "component-variant"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Instance 30:116 is Width=Hug; code stretches it."
+    },
+    {
+      "id": "delete-green",
+      "locations": [
+        {
+          "file": "Larkspur/Views/PlantDetailView.swift",
+          "lines": [
+            38,
+            39
+          ]
+        }
+      ],
+      "categories": [
+        "color-token",
+        "project-rule"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Node 30:118 binds Accents/Red; code overrides the destructive role with Color.leaf, against the 'destructive uses system red' rule."
+    },
+    {
+      "id": "history-header-row",
+      "locations": [
+        {
+          "file": "Larkspur/Views/PlantDetailView.swift",
+          "lines": [
+            29,
+            30
+          ]
+        }
+      ],
+      "categories": [
+        "project-rule",
+        "component-variant",
+        "copy",
+        "typography",
+        "order"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Node 30:112 is a header outside the card; code makes it the first row, which CLAUDE.md forbids."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "fixed-size-13",
+      "file": "Larkspur/Views/PlantDetailView.swift",
+      "lines": [
+        21,
+        21
+      ],
+      "categories": [
+        "typography"
+      ],
+      "why": ".system(size: 13) matches the 13 pt Regular node."
+    },
+    {
+      "id": "default-label-colour",
+      "file": "Larkspur/Views/PlantDetailView.swift",
+      "lines": [
+        10,
+        11
+      ],
+      "categories": [
+        "color-token",
+        "copy"
+      ],
+      "why": "Unbound #000000 text matched by the default label colour; values are data-driven and match the format."
+    },
+    {
+      "id": "button-label-font",
+      "file": "Larkspur/Views/Components/PrimaryButton.swift",
+      "lines": null,
+      "categories": [
+        "typography",
+        "color-token"
+      ],
+      "why": "Text inside the Primary Button instance belongs to the component; body semibold = 17 Semi Bold anyway."
+    },
+    {
+      "id": "detail-title-sample",
+      "file": "Larkspur/Views/PlantDetailView.swift",
+      "lines": [
+        42,
+        42
+      ],
+      "categories": [
+        "copy",
+        "typography"
+      ],
+      "why": "'Monstera' is a sample value; navigationTitle draws the large title."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

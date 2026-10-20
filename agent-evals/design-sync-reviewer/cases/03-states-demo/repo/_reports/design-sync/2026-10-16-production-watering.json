@@ -1,0 +1,481 @@
+{
+  "spec": "figma-frame-spec/1",
+  "source": {
+    "fileKey": "LarkspurAppScreensFixture01",
+    "page": "🛳️ Production",
+    "section": {
+      "id": "40:1",
+      "name": "Plants and watering"
+    },
+    "exportedAt": "2026-10-12T09:30:00.000Z"
+  },
+  "variables": {
+    "color/leaf": "#3F7D4E",
+    "color/thirsty": "#C26A1B",
+    "color/soil": "#6B5440"
+  },
+  "frames": [
+    {
+      "id": "40:100",
+      "name": "Plants – Overdue",
+      "size": [
+        393,
+        852
+      ],
+      "fills": [
+        {
+          "var": "Backgrounds (Grouped)/Primary",
+          "hex": "#F2F2F7"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "40:101",
+          "path": "Status bar - iPhone",
+          "type": "INSTANCE",
+          "y": 0,
+          "component": "Status bar - iPhone",
+          "props": {
+            "Time": "9:41"
+          },
+          "chrome": true
+        },
+        {
+          "id": "40:102",
+          "path": "Large Title",
+          "type": "TEXT",
+          "y": 96,
+          "text": "Plants",
+          "fontSize": 34,
+          "fontStyle": "Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "40:103",
+          "path": "Card – Plants",
+          "type": "FRAME",
+          "y": 160,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "40:104",
+          "path": "Card – Plants / Plant Row",
+          "type": "INSTANCE",
+          "y": 160,
+          "component": "Plant Row",
+          "variant": {
+            "Style": "Default"
+          },
+          "props": {
+            "Name": "Monstera",
+            "Detail": "Every 7 days",
+            "Show Badge": true,
+            "Badge": "Overdue"
+          }
+        },
+        {
+          "id": "40:105",
+          "path": "Card – Plants / Plant Row / Name",
+          "type": "TEXT",
+          "y": 170,
+          "text": "Monstera",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "40:106",
+          "path": "Card – Plants / Plant Row / Detail",
+          "type": "TEXT",
+          "y": 193,
+          "text": "Every 7 days",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "40:107",
+          "path": "Card – Plants / Plant Row / Badge",
+          "type": "TEXT",
+          "y": 172,
+          "text": "Overdue",
+          "fontSize": 13,
+          "fontStyle": "Semi Bold",
+          "inComponent": true,
+          "fills": [
+            {
+              "var": "color/thirsty",
+              "hex": "#C26A1B"
+            }
+          ]
+        },
+        {
+          "id": "40:108",
+          "path": "Card – Plants / Plant Row 2",
+          "type": "INSTANCE",
+          "y": 218,
+          "component": "Plant Row",
+          "variant": {
+            "Style": "Default"
+          },
+          "props": {
+            "Name": "Pothos",
+            "Detail": "Every 5 days",
+            "Show Badge": false
+          }
+        },
+        {
+          "id": "40:109",
+          "path": "Card – Plants / Plant Row 2 / Name",
+          "type": "TEXT",
+          "y": 228,
+          "text": "Pothos",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "40:110",
+          "path": "Card – Plants / Plant Row 2 / Detail",
+          "type": "TEXT",
+          "y": 251,
+          "text": "Every 5 days",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "40:111",
+          "path": "Tab Bar - iPhone",
+          "type": "INSTANCE",
+          "y": 757,
+          "component": "Tab Bar - iPhone",
+          "variant": {
+            "Tabs": "2"
+          },
+          "chrome": true
+        }
+      ]
+    },
+    {
+      "id": "40:200",
+      "name": "Watering – Countdown",
+      "size": [
+        393,
+        852
+      ],
+      "fills": [
+        {
+          "var": "Backgrounds/Primary",
+          "hex": "#FFFFFF"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "40:201",
+          "path": "Status bar - iPhone",
+          "type": "INSTANCE",
+          "y": 0,
+          "component": "Status bar - iPhone",
+          "props": {
+            "Time": "9:41"
+          },
+          "chrome": true
+        },
+        {
+          "id": "40:202",
+          "path": "Nav Title",
+          "type": "TEXT",
+          "y": 70,
+          "text": "Monstera",
+          "fontSize": 17,
+          "fontStyle": "Semi Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "40:203",
+          "path": "Nav / Skip",
+          "type": "TEXT",
+          "y": 70,
+          "text": "Skip",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "color/leaf",
+              "hex": "#3F7D4E"
+            }
+          ]
+        },
+        {
+          "id": "40:204",
+          "path": "Countdown",
+          "type": "TEXT",
+          "y": 360,
+          "text": "24s",
+          "fontSize": 34,
+          "fontStyle": "Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "40:205",
+          "path": "Instruction",
+          "type": "TEXT",
+          "y": 420,
+          "text": "Water slowly until it drains from the bottom.",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "40:300",
+      "name": "Watering – Done",
+      "size": [
+        393,
+        852
+      ],
+      "fills": [
+        {
+          "var": "Backgrounds/Primary",
+          "hex": "#FFFFFF"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "40:301",
+          "path": "Status bar - iPhone",
+          "type": "INSTANCE",
+          "y": 0,
+          "component": "Status bar - iPhone",
+          "props": {
+            "Time": "9:41"
+          },
+          "chrome": true
+        },
+        {
+          "id": "40:302",
+          "path": "Nav Title",
+          "type": "TEXT",
+          "y": 70,
+          "text": "Monstera",
+          "fontSize": 17,
+          "fontStyle": "Semi Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "40:303",
+          "path": "Nav / Skip",
+          "type": "TEXT",
+          "y": 70,
+          "text": "Skip",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "color/leaf",
+              "hex": "#3F7D4E"
+            }
+          ]
+        },
+        {
+          "id": "40:304",
+          "path": "icon/checkmark.circle.fill",
+          "type": "INSTANCE",
+          "y": 330,
+          "component": "icon/checkmark.circle.fill",
+          "fills": [
+            {
+              "var": "color/leaf",
+              "hex": "#3F7D4E"
+            }
+          ]
+        },
+        {
+          "id": "40:305",
+          "path": "Done Title",
+          "type": "TEXT",
+          "y": 380,
+          "text": "Watered",
+          "fontSize": 22,
+          "fontStyle": "Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "40:306",
+          "path": "Remind Row",
+          "type": "INSTANCE",
+          "y": 430,
+          "component": "Toggle Row",
+          "variant": {
+            "On": "True"
+          },
+          "props": {
+            "Label": "Remind me tomorrow"
+          }
+        },
+        {
+          "id": "40:307",
+          "path": "Remind Row / Label",
+          "type": "TEXT",
+          "y": 442,
+          "text": "Remind me tomorrow",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "40:400",
+      "name": "Watering – Skipped",
+      "size": [
+        393,
+        852
+      ],
+      "fills": [
+        {
+          "var": "Backgrounds/Primary",
+          "hex": "#FFFFFF"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "40:401",
+          "path": "Status bar - iPhone",
+          "type": "INSTANCE",
+          "y": 0,
+          "component": "Status bar - iPhone",
+          "props": {
+            "Time": "9:41"
+          },
+          "chrome": true
+        },
+        {
+          "id": "40:402",
+          "path": "Nav Title",
+          "type": "TEXT",
+          "y": 70,
+          "text": "Monstera",
+          "fontSize": 17,
+          "fontStyle": "Semi Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "40:403",
+          "path": "icon/forward.circle",
+          "type": "INSTANCE",
+          "y": 330,
+          "component": "icon/forward.circle",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "40:404",
+          "path": "Skipped Title",
+          "type": "TEXT",
+          "y": 380,
+          "text": "Skipped for today",
+          "fontSize": 22,
+          "fontStyle": "Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "40:405",
+          "path": "Skipped Body",
+          "type": "TEXT",
+          "y": 420,
+          "text": "We’ll remind you again tomorrow morning.",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

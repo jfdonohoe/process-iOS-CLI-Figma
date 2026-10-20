@@ -1,0 +1,242 @@
+{
+  "spec": "figma-frame-spec/1",
+  "source": {
+    "fileKey": "LarkspurAppScreensFixture01",
+    "page": "✅ Approved",
+    "section": {
+      "id": "60:1",
+      "name": "Approved - Overdue list (2026-10-17)"
+    },
+    "exportedAt": "2026-10-12T09:30:00.000Z"
+  },
+  "variables": {
+    "color/leaf": "#3F7D4E",
+    "color/thirsty": "#C26A1B",
+    "color/soil": "#6B5440"
+  },
+  "frames": [
+    {
+      "id": "60:100",
+      "name": "Overdue",
+      "size": [
+        393,
+        852
+      ],
+      "fills": [
+        {
+          "var": "Backgrounds (Grouped)/Primary",
+          "hex": "#F2F2F7"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "60:101",
+          "path": "Status bar - iPhone",
+          "type": "INSTANCE",
+          "y": 0,
+          "component": "Status bar - iPhone",
+          "props": {
+            "Time": "9:41"
+          },
+          "chrome": true
+        },
+        {
+          "id": "60:102",
+          "path": "Large Title",
+          "type": "TEXT",
+          "y": 96,
+          "text": "Overdue",
+          "fontSize": 34,
+          "fontStyle": "Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "60:103",
+          "path": "Header",
+          "type": "TEXT",
+          "y": 150,
+          "text": "2 need water",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "color/thirsty",
+              "hex": "#C26A1B"
+            }
+          ]
+        },
+        {
+          "id": "60:104",
+          "path": "Card – Overdue",
+          "type": "FRAME",
+          "y": 174,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "60:105",
+          "path": "Card – Overdue / Plant Row",
+          "type": "INSTANCE",
+          "y": 174,
+          "component": "Plant Row",
+          "variant": {
+            "Style": "Default"
+          },
+          "props": {
+            "Name": "Monstera",
+            "Detail": "Every 7 days",
+            "Show Badge": true,
+            "Badge": "Overdue"
+          }
+        },
+        {
+          "id": "60:106",
+          "path": "Card – Overdue / Plant Row / Name",
+          "type": "TEXT",
+          "y": 184,
+          "text": "Monstera",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "60:107",
+          "path": "Card – Overdue / Plant Row / Detail",
+          "type": "TEXT",
+          "y": 207,
+          "text": "Every 7 days",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "60:108",
+          "path": "Card – Overdue / Plant Row / Badge",
+          "type": "TEXT",
+          "y": 186,
+          "text": "Overdue",
+          "fontSize": 13,
+          "fontStyle": "Semi Bold",
+          "inComponent": true,
+          "fills": [
+            {
+              "var": "color/thirsty",
+              "hex": "#C26A1B"
+            }
+          ]
+        },
+        {
+          "id": "60:109",
+          "path": "Card – Overdue / Plant Row 2",
+          "type": "INSTANCE",
+          "y": 232,
+          "component": "Plant Row",
+          "variant": {
+            "Style": "Default"
+          },
+          "props": {
+            "Name": "Pothos",
+            "Detail": "Every 5 days",
+            "Show Badge": true,
+            "Badge": "Overdue"
+          }
+        },
+        {
+          "id": "60:110",
+          "path": "Card – Overdue / Plant Row 2 / Name",
+          "type": "TEXT",
+          "y": 242,
+          "text": "Pothos",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "60:111",
+          "path": "Card – Overdue / Plant Row 2 / Detail",
+          "type": "TEXT",
+          "y": 265,
+          "text": "Every 5 days",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "60:112",
+          "path": "Card – Overdue / Plant Row 2 / Badge",
+          "type": "TEXT",
+          "y": 244,
+          "text": "Overdue",
+          "fontSize": 13,
+          "fontStyle": "Semi Bold",
+          "inComponent": true,
+          "fills": [
+            {
+              "var": "color/thirsty",
+              "hex": "#C26A1B"
+            }
+          ]
+        },
+        {
+          "id": "60:113",
+          "path": "Footer",
+          "type": "TEXT",
+          "y": 298,
+          "text": "A plant is overdue the day after its watering date.",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "60:114",
+          "path": "Tab Bar - iPhone",
+          "type": "INSTANCE",
+          "y": 757,
+          "component": "Tab Bar - iPhone",
+          "variant": {
+            "Tabs": "2"
+          },
+          "chrome": true
+        }
+      ]
+    }
+  ]
+}

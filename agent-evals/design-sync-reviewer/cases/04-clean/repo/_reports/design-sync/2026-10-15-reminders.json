@@ -1,0 +1,247 @@
+{
+  "spec": "figma-frame-spec/1",
+  "source": {
+    "fileKey": "LarkspurAppScreensFixture01",
+    "page": "✅ Approved",
+    "section": {
+      "id": "50:1",
+      "name": "Approved - Reminders (2026-10-15)"
+    },
+    "exportedAt": "2026-10-12T09:30:00.000Z"
+  },
+  "variables": {
+    "color/leaf": "#3F7D4E",
+    "color/thirsty": "#C26A1B",
+    "color/soil": "#6B5440"
+  },
+  "frames": [
+    {
+      "id": "50:100",
+      "name": "Reminders",
+      "size": [
+        393,
+        852
+      ],
+      "fills": [
+        {
+          "var": "Backgrounds (Grouped)/Primary",
+          "hex": "#F2F2F7"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "50:101",
+          "path": "Status bar - iPhone",
+          "type": "INSTANCE",
+          "y": 0,
+          "component": "Status bar - iPhone",
+          "props": {
+            "Time": "9:41"
+          },
+          "chrome": true
+        },
+        {
+          "id": "50:102",
+          "path": "Large Title",
+          "type": "TEXT",
+          "y": 96,
+          "text": "Reminders",
+          "fontSize": 34,
+          "fontStyle": "Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "50:103",
+          "path": "Card – Main",
+          "type": "FRAME",
+          "y": 160,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "50:104",
+          "path": "Card – Main / Toggle Row",
+          "type": "INSTANCE",
+          "y": 160,
+          "component": "Toggle Row",
+          "variant": {
+            "On": "True"
+          },
+          "props": {
+            "Label": "Watering reminders"
+          }
+        },
+        {
+          "id": "50:105",
+          "path": "Card – Main / Toggle Row / Label",
+          "type": "TEXT",
+          "y": 172,
+          "text": "Watering reminders",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "50:106",
+          "path": "Card – Main / Stepper Label",
+          "type": "TEXT",
+          "y": 216,
+          "text": "Remind at 8:00",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "50:107",
+          "path": "Footer",
+          "type": "TEXT",
+          "y": 268,
+          "text": "Reminders arrive once a day, at most.",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "50:108",
+          "path": "Card – Quiet",
+          "type": "FRAME",
+          "y": 340,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "50:109",
+          "path": "Card – Quiet / Title",
+          "type": "TEXT",
+          "y": 352,
+          "text": "Skip reminders on weekends",
+          "fontSize": 17,
+          "fontStyle": "Semi Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "50:110",
+          "path": "Card – Quiet / Body",
+          "type": "TEXT",
+          "y": 376,
+          "text": "Plants don’t mind a short wait.",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "50:111",
+          "path": "Card – Actions",
+          "type": "FRAME",
+          "y": 430,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "50:112",
+          "path": "Card – Actions / Primary Button",
+          "type": "INSTANCE",
+          "y": 442,
+          "fills": [
+            {
+              "var": "color/leaf",
+              "hex": "#3F7D4E"
+            }
+          ],
+          "component": "Primary Button",
+          "variant": {
+            "Width": "Hug"
+          },
+          "props": {
+            "Label": "Send a Test Reminder"
+          }
+        },
+        {
+          "id": "50:113",
+          "path": "Card – Actions / Primary Button / Label",
+          "type": "TEXT",
+          "y": 456,
+          "text": "Send a Test Reminder",
+          "fontSize": 17,
+          "fontStyle": "Semi Bold",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "50:114",
+          "path": "Card – Actions / Reset",
+          "type": "TEXT",
+          "y": 500,
+          "text": "Reset Reminders",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Accents/Red",
+              "hex": "#FF3B30"
+            }
+          ]
+        },
+        {
+          "id": "50:115",
+          "path": "Tab Bar - iPhone",
+          "type": "INSTANCE",
+          "y": 757,
+          "component": "Tab Bar - iPhone",
+          "variant": {
+            "Tabs": "2"
+          },
+          "chrome": true
+        }
+      ]
+    }
+  ]
+}

@@ -73,8 +73,11 @@ def classify_all(parsed, expected):
                 results[i] = {"kind": "decoy", "id": d["id"]}
                 break
         else:
+            # a near miss is the right file and a fitting category at the wrong line; an unrelated finding in
+            # the same file stays unlabeled so the evaluator adjudicates it
             near = next((item["id"] for item in expected["must_find"]
-                         if any(loc["file"] == f["file"] for loc in item["locations"])), None)
+                         if any(loc["file"] == f["file"] for loc in item["locations"])
+                         and (not item["categories"] or f.get("category") in item["categories"])), None)
             results[i] = {"kind": "near_miss", "id": near} if near else {"kind": "unlabeled", "id": None}
     return results
 

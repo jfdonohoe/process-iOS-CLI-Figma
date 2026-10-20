@@ -53,7 +53,7 @@ def check(agent, prompt, fixture, timeout, agent_file=None):
 
     spawned, agent_ids, other_tools, reason = [], set(), [], "session ended"
     usage = {"input_tokens": 0, "cache_read_input_tokens": 0, "cache_creation_input_tokens": 0, "output_tokens": 0}
-    seen_msgs, cost = set(), None
+    seen_msgs, cost, texts = set(), None, []
     try:
         for line in proc.stdout:
             try:
@@ -67,6 +67,8 @@ def check(agent, prompt, fixture, timeout, agent_file=None):
                     for k in usage:
                         usage[k] += (msg.get("usage") or {}).get(k, 0) or 0
                 for block in ev.get("message", {}).get("content", []):
+                    if block.get("type") == "text" and block.get("text", "").strip():
+                        texts.append(block["text"].strip())
                     if block.get("type") != "tool_use":
                         continue
                     if block.get("name") in AGENT_TOOL_NAMES:
@@ -94,7 +96,10 @@ def check(agent, prompt, fixture, timeout, agent_file=None):
     if fired.is_set() and reason == "session ended":
         reason = "timeout"
     # cost is only reported when the session ends on its own; killed sessions report token usage instead
-    return {"spawned": spawned, "other_tools": other_tools[:10], "reason": reason, "cost_usd": cost, "usage": usage}
+    # the last text the session wrote, so a non-delegation can be attributed (e.g. it stopped to ask)
+    final_text = texts[-1][:1500] if texts else None
+    return {"spawned": spawned, "other_tools": other_tools[:10], "reason": reason, "cost_usd": cost, "usage": usage,
+            "final_text": final_text}
 
 
 def main():

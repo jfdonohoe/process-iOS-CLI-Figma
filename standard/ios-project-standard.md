@@ -38,6 +38,7 @@ Each item is tagged with where it comes from:
 | `hooks/swift-lint.sh` (PostToolUse, opt-in) | swift-format findings on the edited file when the repo has a `.swift-format` (§13.2) |
 | `hooks/build-gate.sh` (Stop, opt-in) | Blocks ending a turn with a failing build when the repo has `.claude/build-gate` (§13.3) |
 | `tests/hooks-test.sh` | Fixed-input tests for every hook; run after any hook edit (§14) |
+| `tools/figma-frame-spec.js` | Read-only `use_figma` script that exports Figma frames as JSON for `design-sync-reviewer` (§2.3, §3.3) |
 
 ---
 
@@ -100,7 +101,7 @@ One Figma file per app, named `<App> – App Screens`. Record its file key in th
 2. **Approve:** John signs off, and the section moves to Approved as `Approved - …`. Any standard it sets is recorded as a memory or a CLAUDE.md rule (e.g. "green = actionable", "the exercise sheet header shows the type").
    - **Approval is visual only. It is not an instruction to code.** "Approved" moves the section from WIP to Approved and stops there. Approved sections are allowed to stack up. Don't edit code, sync Production or archive anything because something was approved. [Breathe] (2026-10-19: two approvals were built, synced and archived without being asked, then undone.)
 3. **Build** in SwiftUI from the Approved frames, with tokens taken from `Theme.swift`, never hard-coded. **Only when John explicitly says to code it** (e.g. "code the approved changes"). That instruction covers everything on Approved unless he names specific sections, and it runs steps 3–6 for them: build, verify, sync to Production, archive.
-4. **Verify** in the running app, not just in tests.
+4. **Verify** in the running app, not just in tests. Before syncing, export the Approved section with `~/.claude/tools/figma-frame-spec.js` (read-only `use_figma`) to `_reports/design-sync/<date>-<topic>.json` and run `design-sync-reviewer` on it. Sync only on its PASS, which on an Approved spec means no finding at all. [suggested]
 5. **Sync:** replace the matching Production frames with the built design, matching real copy and real states. Re-stack Production and check for overlaps.
 6. **Archive** the Approved section. Approved goes back to holding only what is still waiting to be built.
 
@@ -165,11 +166,11 @@ Global agents that come along automatically:
 - **Audit procedure:** `splitaudit` (global CLAUDE.md). Reports go in `_reports/YYYY-MM-DD-<topic>.md`.
 
 ### 3.3 Suggested additions to the baseline [suggested]
-Each fills a gap the current four leave open. They're listed in the order I'd add them. Only `schema-migration-reviewer` has been built so far; the others are unbuilt and unbenchmarked:
+Each fills a gap the current four leave open. They're listed in the order I'd add them. `schema-migration-reviewer` and `design-sync-reviewer` have been built; the others are unbuilt and unbenchmarked:
 
 | Agent | Gap it fills | Trigger |
 |---|---|---|
-| `design-sync-reviewer` | Nothing checks built SwiftUI against the Approved/Production Figma frames: copy, order, tokens, states. Today that's done by hand in steps 2.3.4–5 | After building an Approved section, and before the sync step |
+| `design-sync-reviewer` **[built 2026-10-20]** | `agents/ios-baseline/`, benchmarked in `agent-evals/design-sync-reviewer/` (6 cases). Compares built SwiftUI with a frame spec exported by `tools/figma-frame-spec.js` (it never calls Figma): copy, order, missing/extra elements, colour tokens and backgrounds, text styles, component variants, states, demo-state coverage. Before it, the check was by eye in steps 2.3.4–5 | After building an Approved section, and before the sync step |
 | `schema-migration-reviewer` **[built 2026-10-19]** | `agents/ios-baseline/`, benchmarked in `agent-evals/schema-migration-reviewer/` (5 cases). Any change to a `@Model`: is it a new `VersionedSchema`, is there a migration stage, does the export DTO cover the new fields, is there a test that opens the previous store? (Audit H1 and the export data-loss report were both this class of bug) | Proactively when a file in `Models/` or `Persistence/` changes |
 | `release-readiness-checker` | Runs the §9 checklist: the version from `/ios-version` (§10), privacy manifest, usage strings, entitlements, `.fig` export checks, registry count, a clean `regression-reviewer` result | When John asks for a release push |
 | `accessibility-reviewer` | Dynamic Type, VoiceOver labels on icon-only buttons, hit targets, contrast against the theme tokens | Before release, and on new screens |

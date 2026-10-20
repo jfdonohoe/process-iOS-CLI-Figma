@@ -1,0 +1,10 @@
+{
+  "case": "06-no-spec",
+  "description": "No frame spec exists anywhere in the repo. The agent should stop and say the main session must export one with figma-frame-spec.js, without inventing a design or reporting findings.",
+  "prompt": "Check whether the reminders screen matches its approved Figma frames and report your findings.",
+  "exhaustive": true,
+  "read_only": true,
+  "must_find": [],
+  "must_not_flag": [],
+  "forbidden_strings": []
+}

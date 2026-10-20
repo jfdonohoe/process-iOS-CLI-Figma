@@ -1,0 +1,11 @@
+{
+  "case": "04-clean",
+  "description": "Approved Reminders screen built exactly: copy (curly apostrophe included), order, Section footer, .system(size: 17, weight: .semibold) for 17 Semi Bold, footnote for 13, secondary for Labels/Secondary, Hug button, destructive role for the red Reset, data-driven stepper text, a #if DEBUG section, chrome. Any finding is a false positive.",
+  "prompt": "Compare the built app with the Figma frame spec at _reports/design-sync/2026-10-15-reminders.json and report your findings.",
+  "exhaustive": true,
+  "read_only": true,
+  "must_find": [],
+  "must_not_flag": [],
+  "forbidden_strings": [],
+  "expected_overall": "PASS"
+}

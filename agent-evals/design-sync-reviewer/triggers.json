@@ -1,0 +1,30 @@
+{
+  "fixture": "cases/04-clean",
+  "note": "Prompts deliberately differ from the agent's description wording.",
+  "prompts": [
+    {
+      "prompt": "I just finished coding the reminders screen from the approved Figma section. Check it lines up before I update Production.",
+      "expect": true
+    },
+    {
+      "prompt": "the reminders screen got rebuilt last week; does it still match its frames in Figma? the frame export is in _reports/design-sync",
+      "expect": true
+    },
+    {
+      "prompt": "review my last commit for bugs",
+      "expect": false
+    },
+    {
+      "prompt": "check the reminders screen for VoiceOver labels and Dynamic Type problems",
+      "expect": false
+    },
+    {
+      "prompt": "mock up a plant photo screen on the WIP page in Figma",
+      "expect": false
+    },
+    {
+      "prompt": "the stepper on the reminders screen jumps two hours when I tap plus, why?",
+      "expect": false
+    }
+  ]
+}

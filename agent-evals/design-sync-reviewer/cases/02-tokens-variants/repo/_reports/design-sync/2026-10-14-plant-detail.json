@@ -1,0 +1,305 @@
+{
+  "spec": "figma-frame-spec/1",
+  "source": {
+    "fileKey": "LarkspurAppScreensFixture01",
+    "page": "✅ Approved",
+    "section": {
+      "id": "30:1",
+      "name": "Approved - Plant detail (2026-10-14)"
+    },
+    "exportedAt": "2026-10-12T09:30:00.000Z"
+  },
+  "variables": {
+    "color/leaf": "#3F7D4E",
+    "color/thirsty": "#C26A1B",
+    "color/soil": "#6B5440"
+  },
+  "frames": [
+    {
+      "id": "30:100",
+      "name": "Plant Detail",
+      "size": [
+        393,
+        852
+      ],
+      "fills": [
+        {
+          "var": "Backgrounds (Grouped)/Primary",
+          "hex": "#F2F2F7"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "30:101",
+          "path": "Status bar - iPhone",
+          "type": "INSTANCE",
+          "y": 0,
+          "component": "Status bar - iPhone",
+          "props": {
+            "Time": "9:41"
+          },
+          "chrome": true
+        },
+        {
+          "id": "30:102",
+          "path": "Large Title",
+          "type": "TEXT",
+          "y": 96,
+          "text": "Monstera",
+          "fontSize": 34,
+          "fontStyle": "Bold",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "30:103",
+          "path": "Card – Status",
+          "type": "FRAME",
+          "y": 160,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "30:104",
+          "path": "Card – Status / Last watered",
+          "type": "TEXT",
+          "y": 172,
+          "text": "Last watered",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "30:105",
+          "path": "Card – Status / Last watered value",
+          "type": "TEXT",
+          "y": 172,
+          "text": "3 days ago",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "30:106",
+          "path": "Card – Status / Water every",
+          "type": "TEXT",
+          "y": 216,
+          "text": "Water every",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "30:107",
+          "path": "Card – Status / Water every value",
+          "type": "TEXT",
+          "y": 216,
+          "text": "7 days",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "30:108",
+          "path": "Card – Status / Overdue",
+          "type": "TEXT",
+          "y": 260,
+          "text": "Overdue",
+          "fontSize": 15,
+          "fontStyle": "Semi Bold",
+          "fills": [
+            {
+              "var": "color/thirsty",
+              "hex": "#C26A1B"
+            }
+          ]
+        },
+        {
+          "id": "30:109",
+          "path": "Card – Notes",
+          "type": "FRAME",
+          "y": 316,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "30:110",
+          "path": "Card – Notes / Next watering",
+          "type": "TEXT",
+          "y": 328,
+          "text": "Next watering",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "30:111",
+          "path": "Card – Notes / Notes",
+          "type": "TEXT",
+          "y": 350,
+          "text": "Likes a misting on hot days",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "30:112",
+          "path": "History Header",
+          "type": "TEXT",
+          "y": 410,
+          "text": "HISTORY",
+          "fontSize": 13,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Labels/Secondary",
+              "hex": "#3C3C43"
+            }
+          ]
+        },
+        {
+          "id": "30:113",
+          "path": "Card – History",
+          "type": "FRAME",
+          "y": 434,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "30:114",
+          "path": "Card – History / Row",
+          "type": "TEXT",
+          "y": 446,
+          "text": "Oct 12, 2026",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "hex": "#000000",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "30:115",
+          "path": "Card – Actions",
+          "type": "FRAME",
+          "y": 508,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "30:116",
+          "path": "Card – Actions / Primary Button",
+          "type": "INSTANCE",
+          "y": 520,
+          "fills": [
+            {
+              "var": "color/leaf",
+              "hex": "#3F7D4E"
+            }
+          ],
+          "component": "Primary Button",
+          "variant": {
+            "Width": "Hug"
+          },
+          "props": {
+            "Label": "Mark as Watered"
+          }
+        },
+        {
+          "id": "30:117",
+          "path": "Card – Actions / Primary Button / Label",
+          "type": "TEXT",
+          "y": 534,
+          "text": "Mark as Watered",
+          "fontSize": 17,
+          "fontStyle": "Semi Bold",
+          "inComponent": true,
+          "fills": [
+            {
+              "hex": "#FFFFFF",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "30:118",
+          "path": "Card – Actions / Delete Plant",
+          "type": "TEXT",
+          "y": 578,
+          "text": "Delete Plant",
+          "fontSize": 17,
+          "fontStyle": "Regular",
+          "fills": [
+            {
+              "var": "Accents/Red",
+              "hex": "#FF3B30"
+            }
+          ]
+        },
+        {
+          "id": "30:119",
+          "path": "Tab Bar - iPhone",
+          "type": "INSTANCE",
+          "y": 757,
+          "component": "Tab Bar - iPhone",
+          "variant": {
+            "Tabs": "2"
+          },
+          "chrome": true
+        }
+      ]
+    }
+  ]
+}

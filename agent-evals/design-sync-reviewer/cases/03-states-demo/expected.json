@@ -1,0 +1,103 @@
+{
+  "case": "03-states-demo",
+  "description": "Production drift check for the plants list and the watering flow. Planted: the Skipped frame has no phase in WateringView (state-coverage); the seeder only creates freshly watered plants, so the Overdue frame can't be captured (seeder-coverage). Decoys: the countdown and done phases are reachable through -larkspurSampleFlow; the Toggle row is platform chrome; the countdown value is data; the overdue badge exists in PlantRow.",
+  "prompt": "Compare the built app with the Figma frame spec at _reports/design-sync/2026-10-16-production-watering.json and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "skipped-state",
+      "locations": [
+        {
+          "file": "Larkspur/Views/WateringView.swift",
+          "lines": [
+            4,
+            6
+          ]
+        },
+        {
+          "file": "Larkspur/Views/WateringView.swift",
+          "lines": [
+            18,
+            18
+          ]
+        }
+      ],
+      "categories": [
+        "state-coverage"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Frame 40:400 (nodes 40:403, 40:404) shows a Skipped state; Phase has only countdown and done, and Skip just dismisses."
+    },
+    {
+      "id": "overdue-not-seeded",
+      "locations": [
+        {
+          "file": "Larkspur/Debug/SampleDataSeeder.swift",
+          "lines": [
+            11,
+            13
+          ]
+        }
+      ],
+      "categories": [
+        "seeder-coverage"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Row 40:104 shows the Overdue badge; every seeded plant has lastWatered = .now, so none is overdue."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "flow-harness-reachable",
+      "file": "Larkspur/Debug/SampleDataSeeder.swift",
+      "lines": [
+        17,
+        20
+      ],
+      "categories": [
+        "seeder-coverage"
+      ],
+      "why": "countdown and done are reachable through -larkspurSampleFlow."
+    },
+    {
+      "id": "toggle-platform",
+      "file": "Larkspur/Views/WateringView.swift",
+      "lines": [
+        33,
+        33
+      ],
+      "categories": [
+        "component-variant",
+        "typography",
+        "color-token"
+      ],
+      "why": "Toggle chrome is the platform's; default On matches the frame."
+    },
+    {
+      "id": "countdown-sample",
+      "file": "Larkspur/Views/WateringView.swift",
+      "lines": [
+        20,
+        20
+      ],
+      "categories": [
+        "copy"
+      ],
+      "why": "24s is a sample value; the format matches."
+    },
+    {
+      "id": "overdue-badge-exists",
+      "file": "Larkspur/Views/Components/PlantRow.swift",
+      "lines": null,
+      "categories": [
+        "missing-element",
+        "state-coverage",
+        "copy"
+      ],
+      "why": "PlantRow renders the Overdue badge for overdue plants."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

@@ -20,9 +20,9 @@ The project wiki is a Google Doc (the repository is private, standard §11): [iO
 | `skills/ios-project-standard/` | `/ios-project-standard [check\|figma\|agents\|device\|release\|cost]`: gap check, reads only the sections it needs |
 | `skills/ios-version/` | `/ios-version`: suggests the next SemVer number before a release |
 | `hooks/` | SessionStart and PostToolUse hooks that keep the standard in view; `settings-hooks.json` is the settings fragment |
-| `tools/` | Simulator driver and SF Symbol vector pipeline (see `tools/README.md`) |
+| `tools/` | Simulator driver, SF Symbol vector pipeline and the Figma frame-spec export for `design-sync-reviewer` (see `tools/README.md`) |
 | `agents/global/` | Cross-project agents: `dead-code-finder`, `review-agent-evaluator` |
-| `agents/ios-baseline/` | The §3.1 baseline reviewer set to copy into a new app's `.claude/agents/` |
+| `agents/ios-baseline/` | The §3.1 baseline reviewer set to copy into a new app's `.claude/agents/`, plus the built §3.3 additions (`schema-migration-reviewer`, `design-sync-reviewer`) |
 | `agent-evals/` | Seeded-defect benchmarks for the agents (run outputs are not committed) |
 | `tests/hooks-test.sh` | Fixed-input tests for every hook (standard §14.1) |
 

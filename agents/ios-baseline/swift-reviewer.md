@@ -1,6 +1,6 @@
 ---
 name: swift-reviewer
-description: Reviews Swift / SwiftUI / SwiftData changes in WorkoutApp for correctness and the project's known pitfalls. Use PROACTIVELY after editing any .swift file before considering the change done.
+description: Reviews Swift / SwiftUI / SwiftData changes in WorkoutApp for correctness and the project's known pitfalls. Use PROACTIVELY after editing any .swift file before considering the change done. SwiftData schema, migration and backup safety belongs to schema-migration-reviewer; mention it in one line rather than reporting it.
 tools: Read, Grep, Glob, Bash
 model: inherit
 ---

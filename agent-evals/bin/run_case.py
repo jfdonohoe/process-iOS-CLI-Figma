@@ -80,7 +80,17 @@ def build_history(repo, case_dir):
     git(repo, "add", "-A")
     for p in later:
         git(repo, "reset", "-q", "--", p)
+    # A case's base/ holds earlier versions of files that a later commit modifies:
+    # they go into the base commit, then repo/'s version is restored for that commit.
+    base_dir = case_dir / "base"
+    base_files = [f.relative_to(base_dir) for f in base_dir.rglob("*") if f.is_file()] if base_dir.is_dir() else []
+    for rel in base_files:
+        (repo / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(base_dir / rel, repo / rel)
+        git(repo, "add", "--", str(rel))
     git(repo, "commit", "-q", "-m", hist.get("base_message", "initial"), days_ago=hist.get("base_days_ago", 365))
+    for rel in base_files:
+        shutil.copyfile(case_dir / "repo" / rel, repo / rel)
     for c in hist["commits"]:
         git(repo, "add", "--", *c["paths"])
         git(repo, "commit", "-q", "-m", c["message"], days_ago=c["days_ago"])

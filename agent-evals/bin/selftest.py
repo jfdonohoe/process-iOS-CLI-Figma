@@ -78,6 +78,13 @@ def validate_expected(case):
         for c in json.loads(hist.read_text())["commits"]:
             for path in c["paths"]:
                 check(f"{case.name}: history path exists ({path})", (repo / path).is_file())
+    base = case / "base"
+    if base.is_dir():
+        later = {path for c in json.loads(hist.read_text())["commits"] for path in c["paths"]} if hist.exists() else set()
+        for f in (x for x in base.rglob("*") if x.is_file()):
+            rel = str(f.relative_to(base))
+            check(f"{case.name}: base file {rel} is also in repo/", (repo / rel).is_file())
+            check(f"{case.name}: base file {rel} is changed by a later commit", rel in later)
     for d in e["must_not_flag"]:
         check(f"{case.name}: decoy {d['id']} file exists", (repo / d["file"]).is_file())
         if not d["lines"] or d["categories"]:

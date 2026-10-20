@@ -1,0 +1,207 @@
+{
+  "case": "02-destructive",
+  "description": "Unversioned app whose CLAUDE.md has a data-safety trigger list. HEAD renames a stored property without originalName, retypes Int->Double, adds .unique, changes a persisted enum rawValue, moves the store, bumps the algorithm version and adds a delete-then-recompute. Decoys: a rename that carries originalName, a new enum case, a computed property.",
+  "prompt": "Review the changes in the most recent commit (git show HEAD) and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "rename-label-title",
+      "locations": [
+        {
+          "file": "Tidepool/Models/PracticeSession.swift",
+          "lines": [
+            8,
+            8
+          ]
+        }
+      ],
+      "categories": [
+        "rename-or-type-change",
+        "non-optional-no-default"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "label renamed to title with no @Attribute(originalName: \"label\"): old values are dropped, and title is non-optional with no default so migration fails."
+    },
+    {
+      "id": "retype-heart-rate",
+      "locations": [
+        {
+          "file": "Tidepool/Models/PracticeSession.swift",
+          "lines": [
+            10,
+            10
+          ]
+        }
+      ],
+      "categories": [
+        "rename-or-type-change"
+      ],
+      "why": "Stored type changed Int -> Double in place; lightweight migration can't infer it."
+    },
+    {
+      "id": "unique-external-id",
+      "locations": [
+        {
+          "file": "Tidepool/Models/PracticeSession.swift",
+          "lines": [
+            6,
+            6
+          ]
+        }
+      ],
+      "categories": [
+        "unique-constraint"
+      ],
+      "expected_verdict": "PLAUSIBLE",
+      "why": ".unique added to an existing column: duplicates fail the migration and later inserts upsert over existing rows."
+    },
+    {
+      "id": "enum-rawvalue-bodyscan",
+      "locations": [
+        {
+          "file": "Tidepool/Models/PracticeKind.swift",
+          "lines": [
+            5,
+            5
+          ]
+        }
+      ],
+      "categories": [
+        "enum-rawvalue"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Raw value changed body_scan -> bodyScan; existing rows hold \"body_scan\" and fail to decode."
+    },
+    {
+      "id": "store-moved",
+      "locations": [
+        {
+          "file": "Tidepool/Persistence/Store.swift",
+          "lines": [
+            6,
+            6
+          ]
+        }
+      ],
+      "categories": [
+        "data-safety-trigger",
+        "correctness"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The store URL moves to Documents/Sessions; the app opens an empty store and the old one is orphaned. Hits the store-location trigger."
+    },
+    {
+      "id": "reanalyze-delete-recompute",
+      "locations": [
+        {
+          "file": "Tidepool/Services/Analysis.swift",
+          "lines": [
+            16,
+            19
+          ]
+        }
+      ],
+      "categories": [
+        "data-safety-trigger",
+        "correctness"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Deletes every DerivedMetric and recomputes; hits the delete-then-recompute trigger and loses version-2 results."
+    },
+    {
+      "id": "algorithm-version-bump",
+      "locations": [
+        {
+          "file": "Tidepool/Services/Analysis.swift",
+          "lines": [
+            6,
+            10
+          ]
+        }
+      ],
+      "categories": [
+        "data-safety-trigger"
+      ],
+      "why": "Algorithm version 2 -> 3 with a changed formula; hits the analysis-version trigger."
+    },
+    {
+      "id": "unversioned-session",
+      "locations": [
+        {
+          "file": "Tidepool/Models/PracticeSession.swift",
+          "lines": [
+            4,
+            6
+          ]
+        }
+      ],
+      "categories": [
+        "unversioned-schema-change"
+      ],
+      "why": "No VersionedSchema; a shipped model is changed in place."
+    },
+    {
+      "id": "no-migration-test-02",
+      "locations": [
+        {
+          "file": "Tidepool/Models/PracticeSession.swift",
+          "lines": [
+            4,
+            6
+          ]
+        }
+      ],
+      "categories": [
+        "migration-test"
+      ],
+      "why": "The project has no tests at all; nothing opens a 2.1 store with the new code."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "journal-original-name",
+      "file": "Tidepool/Models/PracticeSession.swift",
+      "lines": [
+        9,
+        9
+      ],
+      "categories": [
+        "rename-or-type-change",
+        "unversioned-schema-change"
+      ],
+      "why": "Rename carries originalName; lightweight migration maps it."
+    },
+    {
+      "id": "enum-new-case",
+      "file": "Tidepool/Models/PracticeKind.swift",
+      "lines": [
+        7,
+        7
+      ],
+      "categories": [
+        "enum-rawvalue"
+      ],
+      "why": "Adding a case doesn't affect existing rows."
+    },
+    {
+      "id": "computed-display-title",
+      "file": "Tidepool/Models/PracticeSession.swift",
+      "lines": [
+        13,
+        13
+      ],
+      "categories": [],
+      "why": "Computed, not stored."
+    },
+    {
+      "id": "metric-untouched",
+      "file": "Tidepool/Models/DerivedMetric.swift",
+      "lines": null,
+      "categories": [],
+      "why": "Unchanged by HEAD."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

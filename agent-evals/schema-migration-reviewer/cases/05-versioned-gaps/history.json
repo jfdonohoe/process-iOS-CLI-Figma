@@ -1,0 +1,17 @@
+{
+  "base_message": "Journal 2.0: folders, entries, schema V1 and V2",
+  "base_days_ago": 45,
+  "commits": [
+    {
+      "days_ago": 1,
+      "message": "Journal 2.1: folder colours, entry counts, collections",
+      "paths": [
+        "Journal/Models/Mood.swift",
+        "Journal/Models/SchemaV2.swift",
+        "Journal/Models/SchemaV3.swift",
+        "Journal/Persistence/MigrationPlan.swift",
+        "Journal/Persistence/Store.swift"
+      ]
+    }
+  ]
+}

@@ -165,12 +165,12 @@ Global agents that come along automatically:
 - **Audit procedure:** `splitaudit` (global CLAUDE.md). Reports go in `_reports/YYYY-MM-DD-<topic>.md`.
 
 ### 3.3 Suggested additions to the baseline [suggested]
-None of these has been built or benchmarked. Each fills a gap the current four leave open. They're listed in the order I'd add them:
+Each fills a gap the current four leave open. They're listed in the order I'd add them. Only `schema-migration-reviewer` has been built so far; the others are unbuilt and unbenchmarked:
 
 | Agent | Gap it fills | Trigger |
 |---|---|---|
 | `design-sync-reviewer` | Nothing checks built SwiftUI against the Approved/Production Figma frames: copy, order, tokens, states. Today that's done by hand in steps 2.3.4–5 | After building an Approved section, and before the sync step |
-| `schema-migration-reviewer` | Any change to a `@Model`: is it a new `VersionedSchema`, is there a migration stage, does the export DTO cover the new fields, is there a test that opens the previous store? (Audit H1 and the export data-loss report were both this class of bug) | Proactively when a file in `Models/` or `Persistence/` changes |
+| `schema-migration-reviewer` **[built 2026-10-19]** | `agents/ios-baseline/`, benchmarked in `agent-evals/schema-migration-reviewer/` (5 cases). Any change to a `@Model`: is it a new `VersionedSchema`, is there a migration stage, does the export DTO cover the new fields, is there a test that opens the previous store? (Audit H1 and the export data-loss report were both this class of bug) | Proactively when a file in `Models/` or `Persistence/` changes |
 | `release-readiness-checker` | Runs the §9 checklist: the version from `/ios-version` (§10), privacy manifest, usage strings, entitlements, `.fig` export checks, registry count, a clean `regression-reviewer` result | When John asks for a release push |
 | `accessibility-reviewer` | Dynamic Type, VoiceOver labels on icon-only buttons, hit targets, contrast against the theme tokens | Before release, and on new screens |
 

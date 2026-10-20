@@ -1,0 +1,11 @@
+{
+  "case": "04-clean",
+  "description": "A correct additive change: new SchemaV3 with an optional and a defaulted property, a distinct version, a lightweight stage in the plan, container and typealias moved to V3, DTO extended with optional keys (older backups still decode), and the release-store migration test runs through the plan against a checked-in fixture. Any finding is a false positive.",
+  "prompt": "Review the changes in the most recent commit (git show HEAD) and report your findings.",
+  "exhaustive": true,
+  "read_only": true,
+  "must_find": [],
+  "must_not_flag": [],
+  "forbidden_strings": [],
+  "expected_overall": "PASS"
+}

@@ -1,0 +1,16 @@
+{
+  "base_message": "Tidepool 3.0: versioned schema V1, V2 and migration test",
+  "base_days_ago": 60,
+  "commits": [
+    {
+      "days_ago": 1,
+      "message": "Schema V3: place and pinned entries",
+      "paths": [
+        "Tidepool/Models/SchemaV3.swift",
+        "Tidepool/Persistence/MigrationPlan.swift",
+        "Tidepool/Persistence/Store.swift",
+        "Tidepool/Persistence/Backup.swift"
+      ]
+    }
+  ]
+}

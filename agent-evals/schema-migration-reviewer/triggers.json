@@ -1,0 +1,30 @@
+{
+  "fixture": "cases/01-additive",
+  "note": "Prompts deliberately differ from the agent's description wording.",
+  "prompts": [
+    {
+      "prompt": "I added a couple of fields to the journal entry class. Will people who already have entries be OK when they update?",
+      "expect": true
+    },
+    {
+      "prompt": "look over my last commit to the persistence layer before I ship it",
+      "expect": true
+    },
+    {
+      "prompt": "audit the whole app for architecture problems, duplication and test gaps",
+      "expect": false
+    },
+    {
+      "prompt": "is anything in this project unused that we can delete?",
+      "expect": false
+    },
+    {
+      "prompt": "the reminder toggle doesn't animate, can you look at why",
+      "expect": false
+    },
+    {
+      "prompt": "add a tags field to Entry",
+      "expect": false
+    }
+  ]
+}

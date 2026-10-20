@@ -1,0 +1,16 @@
+{
+  "base_message": "Tidepool 2.1: practice sessions and derived metrics",
+  "base_days_ago": 200,
+  "commits": [
+    {
+      "days_ago": 2,
+      "message": "Session cleanup: title, unique IDs, precise heart rate, new store folder, re-analysis",
+      "paths": [
+        "Tidepool/Models/PracticeSession.swift",
+        "Tidepool/Models/PracticeKind.swift",
+        "Tidepool/Persistence/Store.swift",
+        "Tidepool/Services/Analysis.swift"
+      ]
+    }
+  ]
+}

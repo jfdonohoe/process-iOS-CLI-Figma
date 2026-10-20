@@ -1,0 +1,135 @@
+{
+  "case": "03-versioned",
+  "description": "Project with VersionedSchema, a migration plan and a release-store migration test. HEAD adds SchemaV3 but: reuses V2's version identifier, uses a lightweight stage for an Int->Double type change, and leaves the container, typealias and test on SchemaV2 (Store.swift not updated). Export maps SchemaV3.Entry explicitly and covers the new fields.",
+  "prompt": "Review the changes in the most recent commit (git show HEAD) and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "duplicate-version-identifier",
+      "locations": [
+        {
+          "file": "Tidepool/Models/SchemaV3.swift",
+          "lines": [
+            5,
+            5
+          ]
+        }
+      ],
+      "categories": [
+        "migration-plan"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "SchemaV3 declares Schema.Version(2, 0, 0), the same as SchemaV2."
+    },
+    {
+      "id": "lightweight-for-type-change",
+      "locations": [
+        {
+          "file": "Tidepool/Persistence/MigrationPlan.swift",
+          "lines": [
+            9,
+            9
+          ]
+        },
+        {
+          "file": "Tidepool/Models/SchemaV3.swift",
+          "lines": [
+            12,
+            12
+          ]
+        }
+      ],
+      "categories": [
+        "migration-plan",
+        "rename-or-type-change"
+      ],
+      "why": "rating changes Int -> Double between V2 and V3; a lightweight stage can't infer that, it needs .custom."
+    },
+    {
+      "id": "container-still-v2",
+      "locations": [
+        {
+          "file": "Tidepool/Persistence/Store.swift",
+          "lines": null
+        },
+        {
+          "file": "Tidepool/Persistence/MigrationPlan.swift",
+          "lines": [
+            5,
+            5
+          ]
+        }
+      ],
+      "categories": [
+        "migration-plan",
+        "correctness"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Store still builds from SchemaV2 and Entry is still SchemaV2.Entry, so the app never runs the V3 models while the plan's last version is V3."
+    },
+    {
+      "id": "test-never-runs-v3",
+      "locations": [
+        {
+          "file": "TidepoolTests/MigrationTests.swift",
+          "lines": null
+        },
+        {
+          "file": "Tidepool/Models/SchemaV3.swift",
+          "lines": [
+            4,
+            6
+          ]
+        }
+      ],
+      "categories": [
+        "migration-test"
+      ],
+      "why": "MigrationTests builds from Store.currentSchema, still SchemaV2, so the v2ToV3 stage is never exercised."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "v1-to-v2-stage",
+      "file": "Tidepool/Persistence/MigrationPlan.swift",
+      "lines": [
+        8,
+        8
+      ],
+      "categories": [],
+      "why": "Existing, correct (V2 only added a defaulted property)."
+    },
+    {
+      "id": "place-optional",
+      "file": "Tidepool/Models/SchemaV3.swift",
+      "lines": [
+        14,
+        14
+      ],
+      "categories": [
+        "non-optional-no-default",
+        "export-coverage"
+      ],
+      "why": "Optional and exported."
+    },
+    {
+      "id": "export-covers-v3",
+      "file": "Tidepool/Persistence/Backup.swift",
+      "lines": null,
+      "categories": [
+        "export-coverage"
+      ],
+      "why": "DTO carries rating as Double and place."
+    },
+    {
+      "id": "schema-v1-untouched",
+      "file": "Tidepool/Models/SchemaV1.swift",
+      "lines": null,
+      "categories": [],
+      "why": "Unchanged."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

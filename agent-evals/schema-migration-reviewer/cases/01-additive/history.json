@@ -1,0 +1,15 @@
+{
+  "base_message": "Tidepool 1.0: entries, reminders, JSON backup",
+  "base_days_ago": 120,
+  "commits": [
+    {
+      "days_ago": 1,
+      "message": "Track practice duration, tags and energy on entries",
+      "paths": [
+        "Tidepool/Models/Entry.swift",
+        "Tidepool/Persistence/Backup.swift",
+        "TidepoolTests/BackupTests.swift"
+      ]
+    }
+  ]
+}

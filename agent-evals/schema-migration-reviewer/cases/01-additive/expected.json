@@ -1,0 +1,167 @@
+{
+  "case": "01-additive",
+  "description": "Unversioned SwiftData app (no VersionedSchema). HEAD adds four properties to a shipped @Model in place: one non-optional with no declaration default (planted), one optional, one defaulted, one @Transient, plus a computed property. The export DTO gains two of the new fields but not the non-optional one. The only test is an in-memory round trip.",
+  "prompt": "Review the changes in the most recent commit (git show HEAD) and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "nonoptional-duration",
+      "locations": [
+        {
+          "file": "Tidepool/Models/Entry.swift",
+          "lines": [
+            10,
+            10
+          ]
+        }
+      ],
+      "categories": [
+        "non-optional-no-default"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "durationSeconds is non-optional and only set in init; existing rows have no value, so lightweight migration fails and the store won't open."
+    },
+    {
+      "id": "export-missing-duration",
+      "locations": [
+        {
+          "file": "Tidepool/Persistence/Backup.swift",
+          "lines": [
+            4,
+            9
+          ]
+        },
+        {
+          "file": "Tidepool/Persistence/Backup.swift",
+          "lines": [
+            16,
+            17
+          ]
+        }
+      ],
+      "categories": [
+        "export-coverage"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "EntryDTO and the export mapping carry tags and energy but not durationSeconds; a backup round trip loses it."
+    },
+    {
+      "id": "unversioned-entry",
+      "locations": [
+        {
+          "file": "Tidepool/Models/Entry.swift",
+          "lines": [
+            4,
+            10
+          ]
+        },
+        {
+          "file": "Tidepool/Persistence/Store.swift",
+          "lines": null
+        }
+      ],
+      "categories": [
+        "unversioned-schema-change"
+      ],
+      "why": "A shipped model is changed in place with no VersionedSchema or migration plan; inferred lightweight migration is the only safety net."
+    },
+    {
+      "id": "no-migration-test",
+      "locations": [
+        {
+          "file": "Tidepool/Models/Entry.swift",
+          "lines": [
+            4,
+            10
+          ]
+        },
+        {
+          "file": "TidepoolTests/BackupTests.swift",
+          "lines": null
+        }
+      ],
+      "categories": [
+        "migration-test"
+      ],
+      "why": "No test opens a store written by the previous schema; the in-memory round trip proves nothing about migration."
+    },
+    {
+      "id": "energy-breaks-old-backups",
+      "locations": [
+        {
+          "file": "Tidepool/Persistence/Backup.swift",
+          "lines": [
+            10,
+            10
+          ]
+        }
+      ],
+      "categories": [
+        "restore-compatibility",
+        "export-coverage"
+      ],
+      "expected_verdict": "PLAUSIBLE",
+      "why": "energy is a required DTO key, so a 1.0 backup without it no longer decodes; there is no restore code yet, so PLAUSIBLE."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "optional-tags",
+      "file": "Tidepool/Models/Entry.swift",
+      "lines": [
+        11,
+        11
+      ],
+      "categories": [
+        "non-optional-no-default",
+        "export-coverage",
+        "correctness"
+      ],
+      "why": "Optional: old rows read as nil. Exported."
+    },
+    {
+      "id": "defaulted-energy",
+      "file": "Tidepool/Models/Entry.swift",
+      "lines": [
+        12,
+        12
+      ],
+      "categories": [
+        "non-optional-no-default",
+        "export-coverage",
+        "correctness"
+      ],
+      "why": "Has a declaration-level default. Exported."
+    },
+    {
+      "id": "transient-draft",
+      "file": "Tidepool/Models/Entry.swift",
+      "lines": [
+        13,
+        13
+      ],
+      "categories": [],
+      "why": "@Transient is not stored."
+    },
+    {
+      "id": "computed-good-day",
+      "file": "Tidepool/Models/Entry.swift",
+      "lines": [
+        15,
+        15
+      ],
+      "categories": [],
+      "why": "Computed, not stored."
+    },
+    {
+      "id": "reminder-untouched",
+      "file": "Tidepool/Models/Reminder.swift",
+      "lines": null,
+      "categories": [],
+      "why": "Unchanged by HEAD."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

@@ -4,7 +4,7 @@ Reusable helpers referenced by `~/.claude/ios-project-standard.md`. Use these in
 
 | Tool | What it does | Standard |
 |---|---|---|
-| `sim-drive.py` | Tap, drag-scroll and screenshot the Simulator without UI-automation tools | §2.6 |
+| `sim-drive.py` | Fallback only: tap, drag-scroll and screenshot the Simulator when XcodeBuildMCP's `ui-automation` workflow can't be enabled (check and enable that first, §2.6) | §2.6 |
 | `sf-symbol-match.swift` | Finds an SF Symbol's private-use code point by rendering `NSImage(systemSymbolName:)` and matching it against every glyph in `SFSymbolsFallback.otf` (the SF Symbols app ships no name table). Prints `name<TAB>HEX<TAB>score`; lower score is better, under ~65 was always correct | §2.4 |
 | `sf-symbol-export.swift` | Exports glyph outlines by code point as SVG at a chosen weight (400 regular, 590 semibold) | §2.4 |
 | `sf-symbolset-extract.py` | Pulls one weight layer out of a custom `.symbolset` SVG | §2.4 |

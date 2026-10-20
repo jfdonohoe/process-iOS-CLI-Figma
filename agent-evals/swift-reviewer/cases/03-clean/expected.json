@@ -1,0 +1,11 @@
+{
+  "case": "03-clean",
+  "description": "A small, correct change (display-unit formatting and a settings picker) that touches none of the pitfalls. Any finding is a false positive.",
+  "prompt": "Review the changes in the most recent commit (git show HEAD) for correctness and report your findings.",
+  "exhaustive": true,
+  "read_only": true,
+  "must_find": [],
+  "must_not_flag": [],
+  "forbidden_strings": [],
+  "expected_overall": "PASS"
+}

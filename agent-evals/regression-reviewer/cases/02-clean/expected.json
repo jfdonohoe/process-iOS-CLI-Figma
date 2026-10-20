@@ -1,0 +1,48 @@
+{
+  "case": "02-clean",
+  "description": "The same package with every registry fix intact and pinned, every README rule tested (weight-only done and re-finishing included), the stats feature wired at launch, and the registry's test count current. A user's workout on a demo routine is the user's. Contains the same decoys: open row R-006 and accepted row R-007 with its deliberately skipped test.",
+  "prompt": "Changes were just made to this codebase. Run the full regression check and report the results.",
+  "exhaustive": true,
+  "read_only": true,
+  "expected_overall": "PASS",
+  "must_find": [],
+  "must_not_flag": [
+    {
+      "id": "open-r006-soft-deleted-user-data",
+      "file": "Sources/Lifts/SessionStore.swift",
+      "lines": [
+        97,
+        100
+      ],
+      "categories": [],
+      "why": "Known open registry row R-006."
+    },
+    {
+      "id": "intact-r001-snapshot",
+      "file": "Sources/Lifts/SessionStore.swift",
+      "lines": [
+        40,
+        51
+      ],
+      "categories": [],
+      "why": "Intact and pinned."
+    },
+    {
+      "id": "accepted-r007-skipped-test",
+      "file": "Tests/LiftsTests/ImportTests.swift",
+      "lines": [
+        10,
+        12
+      ],
+      "categories": [],
+      "why": "Skipped on purpose for accepted row R-007."
+    },
+    {
+      "id": "accepted-r007-import",
+      "file": "Sources/Lifts/PlanImport.swift",
+      "lines": null,
+      "categories": [],
+      "why": "Accepted limitation R-007."
+    }
+  ]
+}

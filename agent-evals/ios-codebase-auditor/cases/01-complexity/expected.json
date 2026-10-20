@@ -1,0 +1,179 @@
+{
+  "case": "01-complexity",
+  "description": "SwiftUI + SwiftData workout app (11 app files, 3 test files). One item is planted per bullet of the auditor's unnecessary-complexity area, each inside otherwise sound code: a long parse/validate/save function, a four-level nested conditional with a flag variable, a protocol with one conformer and no test double, hand-rolled grouping and counting, parallel arrays indexed together, a count threaded down three view layers as a binding, and a label with four special cases that one rule covers. Three of the planted items have unit tests (CONFIRMED); the rest do not (PLAUSIBLE). Decoys: a protocol with two conformers, a long but linear demo seeder, an unused function that belongs to dead-code-finder, and a correct date-bucketing routine that only looks clever.",
+  "prompt": "I'm planning a cleanup of this app and want a proper audit of the whole codebase first. Where is the code more complicated than it needs to be, what is duplicated, and what could be simplified without changing what the app does? For each item tell me the file, what the simpler version would look like, and whether an existing test already covers the behaviour or one would have to be written first.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "long-import-function",
+      "locations": [
+        {
+          "file": "Lifts/Services/PlanImporter.swift",
+          "lines": null
+        }
+      ],
+      "categories": [],
+      "expected_verdict": "CONFIRMED",
+      "severity": "P2",
+      "why": "importRoutine(named:from:) (lines 23-94) parses, validates and saves in one 72-line body with three comment-marked seams; each part could be its own function. Behaviour is pinned by LiftsTests/PlanImporterTests.swift (8 tests through the public entry point), so the split is provable now: CONFIRMED, Batch 2 naming PlanImporterTests."
+    },
+    {
+      "id": "nested-status-resolver",
+      "locations": [
+        {
+          "file": "Lifts/Services/SessionStatusResolver.swift",
+          "lines": null
+        }
+      ],
+      "categories": [],
+      "expected_verdict": "CONFIRMED",
+      "severity": "P2",
+      "why": "status(for:) (lines 18-59) uses a `decided` flag and four levels of nested if/else where a guard chain or a switch over (abandonedAt, finishedAt, startedAt) gives the same six answers. LiftsTests/SessionStatusResolverTests.swift covers all six statuses plus the precedence cases, so the rewrite is provable now: CONFIRMED, Batch 2 naming SessionStatusResolverTests."
+    },
+    {
+      "id": "one-conformer-weight-protocol",
+      "locations": [
+        {
+          "file": "Lifts/Services/Formatting.swift",
+          "lines": [
+            1,
+            13
+          ]
+        },
+        {
+          "file": "Lifts/Views/HistoryScreen.swift",
+          "lines": [
+            9,
+            9
+          ]
+        },
+        {
+          "file": "Lifts/Views/HistoryScreen.swift",
+          "lines": [
+            74,
+            74
+          ]
+        },
+        {
+          "file": "Lifts/Views/SessionRows.swift",
+          "lines": [
+            42,
+            42
+          ]
+        }
+      ],
+      "categories": [],
+      "expected_verdict": "CONFIRMED",
+      "severity": "P3",
+      "why": "WeightFormatting has exactly one conformer (KilogramFormatter), no test double, and is carried as an existential through SetRow, HistoryScreen, ShareSheet and both exporters' signatures. The agent's own rule bounds this: removing a one-user protocol is a design-pattern change, so the Why It Matters cell must state the concrete cost (every caller and exporter carries a parameter that is always the same value). No test touches the formatter, so the change is not yet provable: PLAUSIBLE with a formatter test to write first. (Untested: the auditor names the test to write first in Validation; the verdict is still CONFIRMED under the 2026-10-18 contract.) Also counted when anchored at a call site that builds or holds the formatter as the protocol existential."
+    },
+    {
+      "id": "hand-rolled-grouping-and-counting",
+      "locations": [
+        {
+          "file": "Lifts/Services/HistoryStats.swift",
+          "lines": [
+            9,
+            53
+          ]
+        }
+      ],
+      "categories": [],
+      "expected_verdict": "CONFIRMED",
+      "severity": "P2",
+      "why": "sessionsByMonth (12-36) builds a dictionary with a nil-check-then-append loop plus a parallel `order` array, and doneSetsPerExercise (39-53) counts with an if-let/else that `counts[name, default: 0] += 1` or reduce(into:) replaces; Dictionary(grouping:by:) does the grouping. Untested, so PLAUSIBLE with a HistoryStats test (month order, per-exercise counts) as the verification. A finding on either function counts. (Untested: the auditor names the test to write first in Validation; the verdict is still CONFIRMED under the 2026-10-18 contract.)"
+    },
+    {
+      "id": "parallel-plate-arrays",
+      "locations": [
+        {
+          "file": "Lifts/Services/PlateCalculator.swift",
+          "lines": null
+        }
+      ],
+      "categories": [],
+      "expected_verdict": "CONFIRMED",
+      "severity": "P2",
+      "why": "plateLabels, plateKg and plateColors (lines 7-9) are three arrays indexed together by position in platesPerSide (19-30); one array of a plate struct carries the values that always travel together. Untested: PLAUSIBLE with a platesPerSide test (e.g. 100 kg -> 25, 10, 5 per side) to write first. (Untested: the auditor names the test to write first in Validation; the verdict is still CONFIRMED under the 2026-10-18 contract.)"
+    },
+    {
+      "id": "done-count-threaded-as-binding",
+      "locations": [
+        {
+          "file": "Lifts/Views/SessionScreen.swift",
+          "lines": null
+        },
+        {
+          "file": "Lifts/Views/SessionRows.swift",
+          "lines": [
+            1,
+            73
+          ]
+        }
+      ],
+      "categories": [],
+      "expected_verdict": "CONFIRMED",
+      "severity": "P2",
+      "why": "SessionScreen keeps `doneCount` in @State, seeds it in onAppear, and passes $doneCount through EntryList and EntrySection to SetRow, whose only use is `doneCount += set.done ? 1 : -1`. The header could read session.doneSetCount (already a model property) and the binding disappears from all three layers; the model is the source of truth. View-body code with no unit test: PLAUSIBLE, and by the agent's own rule Batch 3 unless a UI test or screenshot check is named. Also fits the SwiftUI state-management area (multiple sources of truth); report once. (Untested: the auditor names the test to write first in Validation; the verdict is still CONFIRMED under the 2026-10-18 contract.)"
+    },
+    {
+      "id": "rest-timer-label-special-cases",
+      "locations": [
+        {
+          "file": "Lifts/ViewModels/RestTimerModel.swift",
+          "lines": null
+        }
+      ],
+      "categories": [],
+      "expected_verdict": "CONFIRMED",
+      "severity": "P3",
+      "expected_batch": "1 or 2",
+      "why": "label (lines 28-39) has four branches by remaining seconds that all produce m:ss; the first two are textually identical and the last two are what %02d already does, so one expression gives the same result for every value. LiftsTests/RestTimerModelTests.swift pins 10:05, 1:30, 0:15, 0:07 and 0:00, so CONFIRMED. It is a view model with a unit test, not view-body code, so it belongs in Batch 2, or Batch 1 since RestTimerModelTests already pins it (contract 2026-10-18), never Batch 3. Score.py cannot check the batch; the evaluator checks the Recommended Refactoring Sequence by hand."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "two-conformer-exporter-protocol",
+      "file": "Lifts/Services/Formatting.swift",
+      "lines": [
+        15,
+        24
+      ],
+      "categories": [],
+      "why": "SessionExporter has two production conformers chosen at runtime by the ExportFormat picker. A protocol with two users is not an abstraction with one user. Narrowed 2026-10-18 to the protocol and the CSV conformer's head: the exporters' bodies hold the repeated sort closures, a real §2 duplication that is not this decoy."
+    },
+    {
+      "id": "unused-pounds-label-is-dead-code-not-complexity",
+      "file": "Lifts/Services/Formatting.swift",
+      "lines": [
+        66,
+        72
+      ],
+      "categories": [],
+      "why": "WeightLabels.pounds is called from nowhere. Dead code belongs to dead-code-finder: the only correct mention is a single PLAUSIBLE lead under Possible Issues Requiring Verification, never a row in the Confirmed table. A PLAUSIBLE mention here will register as a decoy hit by construction; what matters is decoy_hits_confirmed, which must stay 0 for this item."
+    },
+    {
+      "id": "long-linear-demo-seeder",
+      "file": "Lifts/Services/DemoData.swift",
+      "lines": [
+        6,
+        58
+      ],
+      "categories": [],
+      "why": "DemoData.seed is 50 lines of sequential inserts with deliberately distinct literal values. It has no seams: there is no repeated block to extract and no branching to flatten, and splitting it would only move lines. Length alone is not a finding. Moved to its own file 2026-10-18 so a §1 'four types in the app file' finding no longer lands on it; its enumeration-offset order bug was fixed."
+    },
+    {
+      "id": "correct-week-bucketing",
+      "file": "Lifts/Services/HistoryStats.swift",
+      "lines": [
+        55,
+        71
+      ],
+      "categories": [],
+      "why": "weekBlock(of:from:calendar:) looks over-built next to `Int(date.timeIntervalSince(anchor) / 86400) / 7`, but the shortcut gives a different answer in the hours after a DST change (verified: 2026-03-30 00:30 London is calendar block 1 and seconds block 0) and integer division puts the day before the anchor in block 0 instead of -1. Unfamiliar is not a finding; nothing simpler preserves the behaviour."
+    }
+  ],
+  "forbidden_strings": [],
+  "note": "The auditor's tables have no category column, so every item uses categories: []. Line-scoped items are those that share a file with a decoy; items that are the whole content of their file use lines: null so a file-level mention counts. Manual checks score.py cannot make: (1) the three CONFIRMED items appear in the Confirmed Cleanup Opportunities table, and no PLAUSIBLE item does; (2) no complexity item is placed in Batch 1; rest-timer-label-special-cases is in Batch 2, not Batch 3; done-count-threaded-as-binding is in Batch 3 unless a UI test or screenshot check is named; (3) every complexity row's Recommended Change is prose or pseudocode, not Swift, and its Validation names a test; (4) the unused function appears at most once, as a PLAUSIBLE dead-code lead. Non-complexity findings (for example the fatalError in LiftsApp.init or sorting inside view bodies) are unlabeled and adjudicated by the evaluator. 2026-10-18: the fixture's rest timer had an unplanted real bug (isRunning was false right after start(), so the view's tick loop never ran); fixed with an explicit isRunning flag so the first run's P1 is no longer a finding. label moved to lines 28-39."
+}

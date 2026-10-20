@@ -1,0 +1,14 @@
+{
+  "fixture": "cases/01-node-api",
+  "note": "Prompts deliberately differ from every example in the agent's description, so routing is tested on generalization rather than recall of its own examples.",
+  "prompts": [
+    { "prompt": "give me a health check on this repo: what's rotting, what's fine?", "expect": true },
+    { "prompt": "I want to trim this project down. what could we rip out without breaking anything?", "expect": true },
+    { "prompt": "are there files or functions in here that nobody calls anymore?", "expect": true },
+    { "prompt": "what does formatPrice in src/pricing.js return for 1999 cents?", "expect": false },
+    { "prompt": "add a GET /products/:id route to src/routes/products.js", "expect": false },
+    { "prompt": "review my staged changes for bugs before I commit", "expect": false },
+    { "prompt": "why would the pricing test fail on a machine with a non-US locale?", "expect": false },
+    { "prompt": "do a security review of this repo", "expect": false }
+  ]
+}

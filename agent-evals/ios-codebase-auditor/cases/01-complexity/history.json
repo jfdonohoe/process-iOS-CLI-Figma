@@ -1,0 +1,33 @@
+{
+  "base_message": "Lifts 1.2: models, sessions, history, sharing",
+  "base_days_ago": 210,
+  "commits": [
+    {
+      "days_ago": 40,
+      "message": "Plan import from the spreadsheet export, with tests",
+      "paths": [
+        "Lifts/Services/PlanImporter.swift",
+        "LiftsTests/PlanImporterTests.swift"
+      ]
+    },
+    {
+      "days_ago": 12,
+      "message": "Session status resolver and rest timer model, with tests",
+      "paths": [
+        "Lifts/Services/SessionStatusResolver.swift",
+        "LiftsTests/SessionStatusResolverTests.swift",
+        "Lifts/ViewModels/RestTimerModel.swift",
+        "LiftsTests/RestTimerModelTests.swift"
+      ]
+    },
+    {
+      "days_ago": 3,
+      "message": "Plate calculator sheet; progress header counts sets as they are ticked",
+      "paths": [
+        "Lifts/Services/PlateCalculator.swift",
+        "Lifts/Views/SessionScreen.swift",
+        "Lifts/Views/SessionRows.swift"
+      ]
+    }
+  ]
+}

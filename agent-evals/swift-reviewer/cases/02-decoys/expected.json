@@ -1,0 +1,67 @@
+{
+  "case": "02-decoys",
+  "description": "The same feature as 01-defects, written correctly: updatedAt dependency, corrections appended, unicode-scalar CSV split, borderless row buttons, one enum-driven sheet, balanced braces with braces inside a string literal. Every pitfall check has a look-alike that must not be flagged.",
+  "prompt": "Review the changes in the most recent commit (git show HEAD) for correctness and report your findings.",
+  "exhaustive": true,
+  "read_only": true,
+  "must_find": [],
+  "must_not_flag": [
+    {
+      "id": "live-session-observes-updatedAt",
+      "file": "Lifts/Views/LiveSessionView.swift",
+      "lines": null,
+      "categories": [
+        "swiftdata-observation"
+      ],
+      "why": "Reads session.updatedAt in body and bumps it on every write."
+    },
+    {
+      "id": "set-row-borderless",
+      "file": "Lifts/Views/SetRow.swift",
+      "lines": null,
+      "categories": [
+        "list-row-buttons"
+      ],
+      "why": "Both buttons use .borderless."
+    },
+    {
+      "id": "history-corrections-only",
+      "file": "Lifts/Persistence/HistoryEditing.swift",
+      "lines": null,
+      "categories": [
+        "immutability"
+      ],
+      "why": "Recorded sessions only get corrections; rename is guarded."
+    },
+    {
+      "id": "csv-unicode-scalars",
+      "file": "Lifts/Services/PlanCSV.swift",
+      "lines": null,
+      "categories": [
+        "csv-parsing"
+      ],
+      "why": "Splits on unicode scalars; Character iteration is used only for initials."
+    },
+    {
+      "id": "history-single-presentation",
+      "file": "Lifts/Views/HistoryScreen.swift",
+      "lines": null,
+      "categories": [
+        "presentations"
+      ],
+      "why": "One enum-driven .sheet(item:)."
+    },
+    {
+      "id": "stats-card-balanced",
+      "file": "Lifts/Views/StatsCard.swift",
+      "lines": null,
+      "categories": [
+        "balance"
+      ],
+      "why": "Code braces balance; the extra brace is inside a string literal."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "PASS",
+  "note": "Decoys are scoped to the pitfall they imitate: a `correctness` finding on the same code is scored as unlabeled, not as a decoy hit."
+}

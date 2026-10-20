@@ -1,0 +1,44 @@
+{
+  "case": "04-next-app",
+  "description": "Next.js pages-router app. Filename-routed pages and middleware, a script referenced only from CI, a tool referenced only from the README, framework-implied dependencies, knip configured but not installed, an unused local variable (a linter-level nitpick), an unused module-level constant, an old orphan, and an orphan committed 2 days ago.",
+  "prompt": "Audit this repository for dead code and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "unused-symbol-currency-symbols",
+      "locations": [{ "file": "lib/format.js", "lines": [1, 5] }],
+      "categories": ["unused-symbol"],
+      "why": "Module-level constant, not exported, never referenced."
+    },
+    {
+      "id": "orphan-legacy-cart",
+      "locations": [{ "file": "lib/legacyCart.js", "lines": null }],
+      "categories": ["orphaned-file"],
+      "expected_verdict": "CONFIRMED",
+      "why": "Nothing imports it, and it has been in history for over a year."
+    },
+    {
+      "id": "recent-orphan-gift-cards",
+      "locations": [{ "file": "lib/giftCards.js", "lines": null }],
+      "categories": ["orphaned-file"],
+      "expected_verdict": "PLAUSIBLE",
+      "why": "Nothing imports it, but it was committed 2 days ago as 'wip ... not wired into checkout yet'. The spec says to report recent code as PLAUSIBLE and note the recency."
+    }
+  ],
+  "must_not_flag": [
+    { "id": "unused-local-nitpick", "file": "lib/format.js", "lines": [9, 9], "categories": [], "why": "Unused local variable: a linter-level nitpick the spec says not to report." },
+    { "id": "used-formatMoney", "file": "lib/format.js", "lines": [7, 8], "categories": [], "why": "Used by both pages." },
+    { "id": "page-index", "file": "pages/index.js", "lines": null, "categories": [], "why": "Next.js filename-routed page." },
+    { "id": "page-product", "file": "pages/products/[id].js", "lines": null, "categories": [], "why": "Next.js dynamic filename route." },
+    { "id": "api-route", "file": "pages/api/health.js", "lines": null, "categories": [], "why": "Next.js filename-routed API handler." },
+    { "id": "middleware", "file": "middleware.js", "lines": null, "categories": [], "why": "Loaded by Next.js by filename." },
+    { "id": "next-config", "file": "next.config.js", "lines": null, "categories": [], "why": "Loaded by Next.js by path." },
+    { "id": "catalog", "file": "lib/catalog.js", "lines": null, "categories": [], "why": "Imported by both pages." },
+    { "id": "ci-only-script", "file": "scripts/generate-sitemap.js", "lines": null, "categories": [], "why": "Referenced only from .github/workflows/sitemap.yml, which is a real reference." },
+    { "id": "docs-only-tool", "file": "tools/lighthouse-budget.js", "lines": null, "categories": [], "why": "Referenced only from README, which is a real reference." },
+    { "id": "framework-dependencies", "file": "package.json", "lines": [12, 14], "categories": [], "why": "next, react and react-dom are required by Next.js even where not imported by name." },
+    { "id": "knip-dev-dependency", "file": "package.json", "lines": [17, 17], "categories": [], "why": "Used by the deadcode npm script." }
+  ],
+  "forbidden_strings": []
+}

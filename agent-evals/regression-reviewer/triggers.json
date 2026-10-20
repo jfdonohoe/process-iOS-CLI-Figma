@@ -1,0 +1,30 @@
+{
+  "fixture": "cases/01-regressions",
+  "note": "Prompts deliberately differ from the agent's description wording.",
+  "prompts": [
+    {
+      "prompt": "I've applied the fixes from the audit. Make sure nothing broke before I commit.",
+      "expect": true
+    },
+    {
+      "prompt": "are the bugs we fixed last week still fixed? check the whole thing",
+      "expect": true
+    },
+    {
+      "prompt": "review the diff in my last commit for Swift mistakes",
+      "expect": false
+    },
+    {
+      "prompt": "audit the whole app for duplication and architecture problems",
+      "expect": false
+    },
+    {
+      "prompt": "what can we delete from this project?",
+      "expect": false
+    },
+    {
+      "prompt": "why does testDistanceOnlyFinishesCompleted fail?",
+      "expect": false
+    }
+  ]
+}

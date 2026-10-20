@@ -1,0 +1,13 @@
+name: sitemap
+on:
+  schedule:
+    - cron: '0 4 * * *'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/generate-sitemap.js

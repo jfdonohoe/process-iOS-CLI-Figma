@@ -1,0 +1,199 @@
+{
+  "case": "01-regressions",
+  "description": "Swift package workout log with a regression registry. Planted: a fixed bug undone and caught by a failing test (distance-only done-ness); a fixed bug undone with no test (log into a locked session); a pinning test deleted (R-003); a pinning test renamed so XCTest skips it (R-004); a README rule broken under a weakened test (correction overwrites the logged value); a documented feature not wired at launch (stats). Decoys: an open registry row, an accepted row with a deliberately skipped test, an intact pinned fix.",
+  "prompt": "Changes were just made to this codebase. Run the full regression check and report the results.",
+  "exhaustive": false,
+  "read_only": true,
+  "expected_overall": "NEEDS-WORK",
+  "must_find": [
+    {
+      "id": "distance-done-regressed",
+      "locations": [
+        {
+          "file": "Sources/Lifts/SessionStore.swift",
+          "lines": [
+            65,
+            68
+          ]
+        },
+        {
+          "file": "Tests/LiftsTests/HistoryTests.swift",
+          "lines": [
+            17,
+            23
+          ]
+        }
+      ],
+      "categories": [
+        "fix-regressed",
+        "test-failure"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "isDone no longer counts distanceKm (R-002), so testDistanceOnlyFinishesCompleted fails: a distance-only workout locks as .started."
+    },
+    {
+      "id": "lock-guard-regressed",
+      "locations": [
+        {
+          "file": "Sources/Lifts/SessionStore.swift",
+          "lines": [
+            53,
+            56
+          ]
+        }
+      ],
+      "categories": [
+        "fix-regressed",
+        "rule-violation"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "R-005's fixed shape (log throws .locked when lockedAt is set) is gone and no test covers it; sets can be appended to a finished workout, which also resets status."
+    },
+    {
+      "id": "r003-pin-deleted",
+      "locations": [
+        {
+          "file": "_reports/regression-registry.md",
+          "lines": [
+            11,
+            11
+          ]
+        },
+        {
+          "file": "Tests/LiftsTests/HistoryTests.swift",
+          "lines": null
+        },
+        {
+          "file": "Sources/Lifts/SessionStore.swift",
+          "lines": [
+            28,
+            38
+          ]
+        }
+      ],
+      "categories": [
+        "missing-pin"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The registry pins R-003 with HistoryTests \u203a testEditCreatesNewVersion, which no longer exists. The fix itself is intact."
+    },
+    {
+      "id": "r004-pin-not-running",
+      "locations": [
+        {
+          "file": "Tests/LiftsTests/DemoTests.swift",
+          "lines": [
+            5,
+            13
+          ]
+        },
+        {
+          "file": "_reports/regression-registry.md",
+          "lines": [
+            12,
+            12
+          ]
+        },
+        {
+          "file": "Sources/Lifts/SessionStore.swift",
+          "lines": [
+            93,
+            97
+          ]
+        }
+      ],
+      "categories": [
+        "missing-pin"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "R-004's pinning test was renamed pendingDeleteDemoKeepsUserSessions, so XCTest never runs it. The fix itself is intact."
+    },
+    {
+      "id": "correction-overwrites",
+      "locations": [
+        {
+          "file": "Sources/Lifts/SessionStore.swift",
+          "lines": [
+            70,
+            79
+          ]
+        },
+        {
+          "file": "Tests/LiftsTests/CorrectionTests.swift",
+          "lines": [
+            13,
+            19
+          ]
+        }
+      ],
+      "categories": [
+        "rule-violation"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "correct() appends a Correction and then overwrites entries[index].reps, breaking the append-only rule; the only correction test checks the count and effective value, so it still passes."
+    },
+    {
+      "id": "stats-unwired",
+      "locations": [
+        {
+          "file": "Sources/Lifts/AppEnvironment.swift",
+          "lines": [
+            8,
+            12
+          ]
+        },
+        {
+          "file": "Sources/Lifts/StatsService.swift",
+          "lines": [
+            9,
+            15
+          ]
+        }
+      ],
+      "categories": [
+        "unwired"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "AppEnvironment.make() never calls stats.attach(to:), so onSessionLocked is never assigned at launch and the Stats total never changes; StatsTests wires it by hand and passes."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "open-r006-soft-deleted-user-data",
+      "file": "Sources/Lifts/SessionStore.swift",
+      "lines": [
+        99,
+        102
+      ],
+      "categories": [],
+      "why": "Known open registry row R-006, not a regression."
+    },
+    {
+      "id": "intact-r001-snapshot",
+      "file": "Sources/Lifts/SessionStore.swift",
+      "lines": [
+        40,
+        51
+      ],
+      "categories": [],
+      "why": "R-001 is intact and pinned by a passing test."
+    },
+    {
+      "id": "accepted-r007-skipped-test",
+      "file": "Tests/LiftsTests/ImportTests.swift",
+      "lines": [
+        10,
+        12
+      ],
+      "categories": [],
+      "why": "Skipped on purpose for accepted row R-007."
+    },
+    {
+      "id": "accepted-r007-import",
+      "file": "Sources/Lifts/PlanImport.swift",
+      "lines": null,
+      "categories": [],
+      "why": "Accepted limitation R-007."
+    }
+  ]
+}

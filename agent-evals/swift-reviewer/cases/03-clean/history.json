@@ -1,0 +1,8 @@
+{
+  "base_message": "Lifts 1.2: sessions, store, models",
+  "base_days_ago": 90,
+  "commits": [
+    { "days_ago": 1, "message": "Root tabs; show weights in kg or lb, chosen in Settings",
+      "paths": ["Lifts/Services/WeightFormat.swift", "Lifts/Views/UnitsSetting.swift", "Lifts/Views/WeightLabel.swift", "Lifts/Views/RootView.swift"] }
+  ]
+}

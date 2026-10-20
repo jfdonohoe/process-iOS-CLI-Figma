@@ -1,0 +1,183 @@
+{
+  "case": "01-defects",
+  "description": "SwiftData workout app. The latest commit plants one defect per swift-reviewer check (observation, locked-history write, Character-based CSV line splitting, unstyled row buttons, two presentations on one view, a missing brace) next to look-alike code that is correct.",
+  "prompt": "Review the changes in the most recent commit (git show HEAD) for correctness and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "observation-live-session",
+      "locations": [
+        {
+          "file": "Lifts/Views/LiveSessionView.swift",
+          "lines": [
+            5,
+            31
+          ]
+        }
+      ],
+      "categories": [
+        "swiftdata-observation"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Holds the Session model directly and renders counts from the to-many sets, with no dependency on a bumped scalar such as session.updatedAt, so toggling a set may not re-render the header."
+    },
+    {
+      "id": "immutability-fix-weight",
+      "locations": [
+        {
+          "file": "Lifts/Persistence/HistoryEditing.swift",
+          "lines": [
+            9,
+            13
+          ]
+        }
+      ],
+      "categories": [
+        "immutability"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Overwrites weight on a recorded (locked) session instead of appending a SetCorrection; the doc comment says it is for recorded workouts."
+    },
+    {
+      "id": "csv-character-split",
+      "locations": [
+        {
+          "file": "Lifts/Services/PlanCSV.swift",
+          "lines": [
+            10,
+            28
+          ]
+        }
+      ],
+      "categories": [
+        "csv-parsing"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Iterates Characters; \"\\r\\n\" is one grapheme that equals neither \"\\n\" nor \"\\r\", so CRLF files come back as one line."
+    },
+    {
+      "id": "row-buttons-no-borderless",
+      "locations": [
+        {
+          "file": "Lifts/Views/SetRow.swift",
+          "lines": [
+            11,
+            21
+          ]
+        }
+      ],
+      "categories": [
+        "list-row-buttons"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Two Buttons in a row rendered inside a List (LiveSessionView) with no .buttonStyle(.borderless): one tap fires both."
+    },
+    {
+      "id": "two-presentations-history",
+      "locations": [
+        {
+          "file": "Lifts/Views/HistoryScreen.swift",
+          "lines": [
+            28,
+            33
+          ]
+        }
+      ],
+      "categories": [
+        "presentations"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "A .sheet and a .fileImporter on the same view, driven by separate booleans."
+    },
+    {
+      "id": "missing-brace-stats-card",
+      "locations": [
+        {
+          "file": "Lifts/Views/StatsCard.swift",
+          "lines": [
+            7,
+            16
+          ]
+        }
+      ],
+      "categories": [
+        "balance"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The VStack opened on line 8 is never closed; .padding() attaches inside it."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "fix-reps-appends-correction",
+      "file": "Lifts/Persistence/HistoryEditing.swift",
+      "lines": [
+        16,
+        21
+      ],
+      "categories": [
+        "immutability"
+      ],
+      "why": "Appending a correction to a locked session is the supported path."
+    },
+    {
+      "id": "rename-guarded",
+      "file": "Lifts/Persistence/HistoryEditing.swift",
+      "lines": [
+        24,
+        29
+      ],
+      "categories": [
+        "immutability"
+      ],
+      "why": "Guards on isLocked before writing."
+    },
+    {
+      "id": "initials-characters",
+      "file": "Lifts/Services/PlanCSV.swift",
+      "lines": [
+        31,
+        40
+      ],
+      "categories": [
+        "csv-parsing"
+      ],
+      "why": "Character iteration over a name, not line splitting; graphemes are correct here."
+    },
+    {
+      "id": "history-row-borderless",
+      "file": "Lifts/Views/HistoryScreen.swift",
+      "lines": [
+        14,
+        22
+      ],
+      "categories": [
+        "list-row-buttons"
+      ],
+      "why": "Both row buttons already use .borderless."
+    },
+    {
+      "id": "braces-in-string",
+      "file": "Lifts/Views/StatsCard.swift",
+      "lines": [
+        18,
+        22
+      ],
+      "categories": [
+        "balance"
+      ],
+      "why": "Braces inside a string literal; a naive count flags them but they are not code."
+    },
+    {
+      "id": "store-guarded",
+      "file": "Lifts/Persistence/SessionStore.swift",
+      "lines": null,
+      "categories": [],
+      "why": "Base-commit file, unchanged by HEAD and correct."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK",
+  "note": "Decoys are scoped to the pitfall they imitate: a `correctness` finding on the same code is scored as unlabeled, not as a decoy hit."
+}

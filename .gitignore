@@ -1,0 +1,9 @@
+.DS_Store
+# compiled tools (rebuild with install.sh)
+tools/sf-symbol-match
+tools/sf-symbol-export
+# eval run outputs and build caches
+agent-evals/*/results/
+**/.build/
+**/DerivedData/
+*.xcresult

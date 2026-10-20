@@ -1,0 +1,14 @@
+{
+  "fixture": "cases/01-complexity",
+  "note": "Prompts deliberately differ from the agent's description wording. Two positives are questions. Negatives are near misses owned by other agents: a diff review (swift-reviewer), a dead-code request (dead-code-finder), a single bug fix, and a one-function question.",
+  "prompts": [
+    { "prompt": "I'm about to start a big cleanup of this app. Before I touch anything, go through the whole codebase and tell me what's over-engineered, what's repeated, and where the tests are thin.", "expect": true },
+    { "prompt": "Which parts of this project would hurt the most if I started simplifying them tomorrow? Walk the whole thing, not one file.", "expect": true },
+    { "prompt": "How healthy is this codebase overall? I want a read on structure, complexity and test coverage before the next release.", "expect": true },
+    { "prompt": "Do a full architecture and maintainability pass over the app and rank the cleanup work by how safe it is.", "expect": true },
+    { "prompt": "Look over the diff from my last commit and tell me if I broke anything in the Swift.", "expect": false },
+    { "prompt": "Is there anything in this repo that nothing calls anymore? I want to delete what's unused.", "expect": false },
+    { "prompt": "The plan import throws a bad-row error on a file that looks fine to me. Find the bug and fix it.", "expect": false },
+    { "prompt": "What does PlateCalculator.platesPerSide give back for a 100 kg target?", "expect": false }
+  ]
+}

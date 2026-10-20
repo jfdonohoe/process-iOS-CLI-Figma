@@ -1,0 +1,12 @@
+{
+  "fixture": "cases/01-defects",
+  "note": "Prompts deliberately differ from the agent's description wording.",
+  "prompts": [
+    { "prompt": "I just finished the live session screen and the history editing code. Look it over before I move on.", "expect": true },
+    { "prompt": "check my last commit to the Swift files for mistakes", "expect": true },
+    { "prompt": "audit the whole app for architecture problems, duplication and test gaps", "expect": false },
+    { "prompt": "is anything in this project unused that we can delete?", "expect": false },
+    { "prompt": "what does PlanCSV.initials return for 'Bench Press'?", "expect": false },
+    { "prompt": "add a delete button to HistoryScreen", "expect": false }
+  ]
+}

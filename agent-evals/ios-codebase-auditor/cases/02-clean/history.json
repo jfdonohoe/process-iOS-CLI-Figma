@@ -1,0 +1,22 @@
+{
+  "base_message": "Lifts 1.2: models, sessions, history",
+  "base_days_ago": 210,
+  "commits": [
+    {
+      "days_ago": 5,
+      "message": "Derive the session status; SessionEditing, stats helpers and formatter with tests",
+      "paths": [
+        "Lifts/Services/SessionStatus.swift",
+        "LiftsTests/SessionStatusTests.swift",
+        "Lifts/Services/HistoryStats.swift",
+        "LiftsTests/HistoryStatsTests.swift",
+        "Lifts/Services/WeightFormat.swift",
+        "LiftsTests/WeightFormatTests.swift",
+        "Lifts/Services/SessionEditing.swift",
+        "LiftsTests/SessionEditingTests.swift",
+        "LiftsTests/Fixtures.swift",
+        "Lifts/Views/TodayScreen.swift"
+      ]
+    }
+  ]
+}

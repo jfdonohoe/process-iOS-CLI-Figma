@@ -1,0 +1,7 @@
+{
+  "base_message": "storefront 2.3.0",
+  "base_days_ago": 420,
+  "commits": [
+    { "days_ago": 2, "message": "wip: gift card support (not wired into checkout yet)", "paths": ["lib/giftCards.js"] }
+  ]
+}

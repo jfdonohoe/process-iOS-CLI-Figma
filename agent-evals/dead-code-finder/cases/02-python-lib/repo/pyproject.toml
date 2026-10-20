@@ -1,0 +1,16 @@
+[project]
+name = "textkit"
+version = "0.6.2"
+description = "Small text normalization helpers."
+requires-python = ">=3.10"
+dependencies = [
+    "regex>=2023.10.3",
+    "requests>=2.31",
+]
+
+[project.entry-points."textkit.plugins"]
+upper = "textkit.plugins.upper:register"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

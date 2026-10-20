@@ -1,0 +1,35 @@
+{
+  "case": "05-swiftui-app",
+  "description": "SwiftUI + SwiftData app. Dead code that is still referenced, but only from other dead code: a branch on a computed property that always returns nil, and the card it would show; a full-screen cover whose flag is never set true, the view it opens, and the row only that view uses. Live look-alikes: a sheet driven by onOpenURL, a sheet driven by a row tap, a sheet whose flag a child sets through a Binding, the @main entry, a test discovered by name, and #Preview blocks that reference their own view.",
+  "prompt": "Audit this repository for dead code and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    { "id": "unreachable-resume-branch", "locations": [{ "file": "Sets/Views/TodayView.swift", "lines": [8, 14] }],
+      "categories": ["unreachable-code", "unused-symbol", "stale-flag"], "expected_verdict": "CONFIRMED",
+      "why": "`resumable` is a computed property that always returns nil, so the `if let` branch can never run." },
+    { "id": "transitive-resume-card", "locations": [{ "file": "Sets/Views/ResumeCard.swift", "lines": null }],
+      "categories": ["orphaned-file", "unused-symbol", "unreachable-code", "superseded-code"], "expected_verdict": "CONFIRMED",
+      "why": "Its only reference outside its own #Preview is inside the unreachable branch in TodayView." },
+    { "id": "never-presented-archive", "locations": [{ "file": "Sets/Views/CalendarView.swift", "lines": [7, 7] }, { "file": "Sets/Views/CalendarView.swift", "lines": [19, 21] }],
+      "categories": ["unreachable-code", "unused-symbol", "stale-flag"], "expected_verdict": "CONFIRMED",
+      "why": "`showingArchive` is declared false and only ever bound, never set true, so the full-screen cover can never be presented." },
+    { "id": "transitive-archive-view", "locations": [{ "file": "Sets/Views/ArchiveView.swift", "lines": null }],
+      "categories": ["orphaned-file", "unused-symbol", "unreachable-code", "superseded-code"], "expected_verdict": "CONFIRMED",
+      "why": "Only opened by the cover that can never be presented (its #Preview is a self-reference)." },
+    { "id": "transitive-archive-row", "locations": [{ "file": "Sets/Views/ArchiveRow.swift", "lines": null }],
+      "categories": ["orphaned-file", "unused-symbol", "unreachable-code", "superseded-code"], "expected_verdict": "CONFIRMED",
+      "why": "Used only by ArchiveView, which is itself dead: two links down the chain." }
+  ],
+  "must_not_flag": [
+    { "id": "import-via-open-url", "file": "Sets/Views/ImportView.swift", "lines": null, "categories": [], "why": "Presented by RootView's sheet, whose item is set in .onOpenURL." },
+    { "id": "root-open-url-sheet", "file": "Sets/Views/RootView.swift", "lines": [15, 25], "categories": [], "why": "The onOpenURL-driven sheet and the URL Identifiable conformance it needs." },
+    { "id": "day-detail", "file": "Sets/Views/DayDetailView.swift", "lines": null, "categories": [], "why": "Presented when a row tap sets `selected`." },
+    { "id": "calendar-day-sheet", "file": "Sets/Views/CalendarView.swift", "lines": [16, 18], "categories": [], "why": "Live sheet driven by the row tap." },
+    { "id": "about-via-binding", "file": "Sets/Views/SettingsView.swift", "lines": null, "categories": [], "why": "The flag is set true by the child AboutButton through a Binding." },
+    { "id": "app-entry", "file": "Sets/SetsApp.swift", "lines": null, "categories": [], "why": "@main entry point." },
+    { "id": "model", "file": "Sets/Models/Workout.swift", "lines": null, "categories": [], "why": "Used throughout." },
+    { "id": "test-by-convention", "file": "SetsTests/TodayViewTests.swift", "lines": null, "categories": [], "why": "XCTest discovers it by naming convention." }
+  ],
+  "forbidden_strings": []
+}

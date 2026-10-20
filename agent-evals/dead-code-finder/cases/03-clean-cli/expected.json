@@ -1,0 +1,46 @@
+{
+  "case": "03-clean-cli",
+  "description": "Clean CLI with getattr-based command dispatch. There is no dead code, so every finding is a false positive.",
+  "prompt": "Audit this repository for dead code and report your findings.",
+  "exhaustive": true,
+  "must_find": [],
+  "must_not_flag": [
+    {
+      "id": "getattr-dispatched-commands",
+      "file": "app/commands.py",
+      "lines": null,
+      "categories": [],
+      "why": "cmd_* functions are reached via getattr(commands, f\"cmd_{name}\")."
+    },
+    {
+      "id": "cli-entry",
+      "file": "app/cli.py",
+      "lines": null,
+      "categories": [],
+      "why": "Registered in [project.scripts]."
+    },
+    {
+      "id": "store",
+      "file": "app/store.py",
+      "lines": null,
+      "categories": [],
+      "why": "Used by commands and tests."
+    },
+    {
+      "id": "main-module",
+      "file": "app/__main__.py",
+      "lines": null,
+      "categories": [],
+      "why": "python -m app entry point."
+    },
+    {
+      "id": "tests",
+      "file": "tests/test_cli.py",
+      "lines": null,
+      "categories": [],
+      "why": "pytest naming convention."
+    }
+  ],
+  "forbidden_strings": [],
+  "read_only": true
+}

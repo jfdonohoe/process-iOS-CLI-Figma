@@ -1,0 +1,13 @@
+# ~/.claude/tools
+
+Reusable helpers referenced by `~/.claude/ios-project-standard.md`. Use these instead of rewriting them per session.
+
+| Tool | What it does | Standard |
+|---|---|---|
+| `sim-drive.py` | Tap, drag-scroll and screenshot the Simulator without UI-automation tools | §2.6 |
+| `sf-symbol-match.swift` | Finds an SF Symbol's private-use code point by rendering `NSImage(systemSymbolName:)` and matching it against every glyph in `SFSymbolsFallback.otf` (the SF Symbols app ships no name table). Prints `name<TAB>HEX<TAB>score`; lower score is better, under ~65 was always correct | §2.4 |
+| `sf-symbol-export.swift` | Exports glyph outlines by code point as SVG at a chosen weight (400 regular, 590 semibold) | §2.4 |
+| `sf-symbolset-extract.py` | Pulls one weight layer out of a custom `.symbolset` SVG | §2.4 |
+
+Build the Swift tools once: `swiftc -O -o sf-symbol-match sf-symbol-match.swift` (same for export). Font: `/Applications/SF Symbols*.app/Contents/Resources/Fonts/SFSymbolsFallback.otf`.
+Figma import: upload the SVGs with `upload_assets` (multipart, filename = layer name; the first URL of a batch often 404s, so request one spare), then move each vector into its icon component.

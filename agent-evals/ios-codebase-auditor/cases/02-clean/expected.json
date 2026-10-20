@@ -1,0 +1,62 @@
+{
+  "case": "02-clean",
+  "description": "The same app in its idiomatic form (9 app files, 5 test files): a plain enum formatter instead of a protocol, Dictionary(grouping:) and reduce(into:) for the stats, a guard/switch status rule, a progress header that reads the model instead of threading a count through bindings, one SessionEditing service that owns the finish/toggle rules and surfaces a failed save, and a History screen that derives its lists once per render from tested helpers. Every service is unit tested. There is nothing to simplify, so any finding is a false positive.",
+  "prompt": "I'm planning a cleanup of this app and want a proper audit of the whole codebase first. Where is the code more complicated than it needs to be, what is duplicated, and what could be simplified without changing what the app does? For each item tell me the file, what the simpler version would look like, and whether an existing test already covers the behaviour or one would have to be written first.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [],
+  "must_not_flag": [
+    {
+      "id": "idiomatic-switch-on-counts",
+      "file": "Lifts/Services/SessionStatus.swift",
+      "lines": [
+        16,
+        25
+      ],
+      "categories": [],
+      "why": "A switch with expression patterns on the done count is the plain form of this rule; rewriting it as if/else is not simpler and changes nothing. Two runs called it 'stylistic preference only' and still listed it; it must not appear in the Confirmed table."
+    },
+    {
+      "id": "derive-per-render-is-idiomatic",
+      "file": "Lifts/Views/HistoryScreen.swift",
+      "lines": [
+        8,
+        14
+      ],
+      "categories": [],
+      "why": "Four small lists derived once per body evaluation is the idiomatic SwiftUI form; caching them would add state (a §3 multiple-source-of-truth risk) to save microseconds. A §5 performance note belongs in Possible Issues at most, never as an §8 simplification."
+    },
+    {
+      "id": "save-rollback-is-not-bloat",
+      "file": "Lifts/Services/SessionEditing.swift",
+      "lines": [
+        28,
+        36
+      ],
+      "categories": [],
+      "why": "do/catch with rollback before rethrow is the minimum correct save; folding it into the callers would duplicate it."
+    },
+    {
+      "id": "calendar-day-week-block",
+      "file": "Lifts/Services/HistoryStats.swift",
+      "lines": [
+        52,
+        64
+      ],
+      "categories": [],
+      "why": "Calendar-day counting and a Double floor look replaceable by seconds/86400 and integer division; both shortcuts are wrong and each is pinned by a HistoryStatsTests case."
+    },
+    {
+      "id": "container-fatal-error",
+      "file": "Lifts/LiftsApp.swift",
+      "lines": [
+        8,
+        14
+      ],
+      "categories": [],
+      "why": "Apple's ModelContainer template with a versioned schema and a migration plan; the only non-throwing form for an App initialiser."
+    }
+  ],
+  "forbidden_strings": [],
+  "note": "No longer exhaustive (2026-10-18, after the third runs): a 7-area auditor keeps finding legitimate non-§8 items on any fixture, so 'every finding is an FP' measured the fixture, not §8. Now: decoys scoped to the §8-shaped code mark false positives (decoy_hits, especially decoy_hits_confirmed, is the number to read); everything else is unlabeled and adjudicated by hand against the fixture. Third revision of the fixture: inverse relationships so toggle finds its own session, a VersionedSchema and migration plan, the week anchor computed with min() instead of relying on the query's sort, TodayScreen in its own file, a real bundle id prefix. Exhaustive: every parsed finding is a false positive. The parser also reads tables with a Files column, so rows of the Current Architecture table may be counted; the evaluator separates those from real findings by hand. The fatalError in LiftsApp.init is Apple's ModelContainer template and the only non-throwing form; the week-block routine's calendar-day counting and Double floor are each pinned by a HistoryStatsTests case (testBlockBoundaryHoldsAcrossDSTChange, testDayBeforeAnchorIsBlockMinusOne). Flagging either is a false positive. Revised 2026-10-18 after the first run found real issues (two try? saves discarding errors, the done-set rule written twice, the this-week rule living untested in the view, keys-then-lookup fallbacks): all fixed, so those are no longer legitimate findings. Second revision after run 2: a failed save rolls back before it is thrown; RootView/TodayScreen moved to Views/; one shared test builder (LiftsTests/Fixtures.swift); WeightFormat takes a locale so its tests are locale-independent; project.yml declares the test scheme."
+}

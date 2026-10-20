@@ -1,0 +1,15 @@
+{
+  "case": "01-pin-first",
+  "description": "Swift package workout log (6 source files, 3 test files; `swift test` runs 11 passing tests). Planted for the refactorer: a duplicate weight formatter in two files (SessionSummary.formatWeight at Sources/Lifts/SessionSummary.swift:19-21 and HistoryExport.weightLabel at Sources/Lifts/HistoryExport.swift:19-21, both producing \"12.5 kg\") and a four-level nested conditional with a flag variable (SessionStatusRules.status(for:now:) at Sources/Lifts/SessionStatusRules.swift:12-50). Neither has a test. The prompt hands the agent an audit that puts the formatter in Batch 1 and the conditional in Batch 2.",
+  "prompt": "Apply Batch 1 and Batch 2 from the attached audit to this package. Work one batch at a time and report each one in your usual format. Audit excerpt:\n\n## Confirmed Cleanup Opportunities\n\n| Priority | Files | Finding | Why It Matters | Recommended Change | Expected Benefit | Risk | Validation |\n| -------- | ----- | ------- | -------------- | ------------------ | ---------------- | ---- | ---------- |\n| P2 | Sources/Lifts/SessionSummary.swift, Sources/Lifts/HistoryExport.swift | Two internal weight formatters (SessionSummary.formatWeight, HistoryExport.weightLabel) produce the same \"12.5 kg\" text | A change to the weight display has to be made twice and can drift | One shared formatter that both call sites use | One place to change the weight display | Low | No test covers either formatter; write one that checks the shared output for 0, 12.5 and 100 kg before the change |\n| P2 | Sources/Lifts/SessionStatusRules.swift | status(for:now:) decides through four levels of nested if/else and a `decided` flag | Hard to see that all six statuses are reachable and that abandoned wins | A guard chain: abandoned first, then finished (completed/partial/abandoned by done count), then started, then missed or scheduled by date | Each rule on its own line | Low | No test exists; write one that covers all six statuses and the abandoned-beats-finished case before the change |\n\n## Recommended Refactoring Sequence\n\n### Batch 1: Safe Cleanup\n\n- Consolidate the two weight formatters (SessionSummary.swift, HistoryExport.swift).\n\n### Batch 2: Targeted Simplification\n\n- Flatten SessionStatusRules.status(for:now:) into a guard chain.\n\n### Batch 3: Higher-Risk Refactors\n\n- None.",
+  "exhaustive": false,
+  "read_only": false,
+  "forbidden_commands": [
+    "\\bgit (commit|add|push|reset|rebase|restore|checkout|switch|rm|mv|clean|tag|merge|cherry-pick|am|apply)\\b",
+    "\\bgit stash\\b(?!\\s+(list|show)\\b)"
+  ],
+  "must_find": [],
+  "must_not_flag": [],
+  "forbidden_strings": [],
+  "note": "The agent writes files, so read_only is false and score.py's recall/precision metrics do not apply (must_find and must_not_flag are empty by design). score.py still applies forbidden_commands to every Bash call, which covers the no-commit rule. Everything else is scored by ../../check_run.py on the run directory (git state changes, pin-first ordering, swift test runs) and by the manual checklist in README.md next to this file."
+}

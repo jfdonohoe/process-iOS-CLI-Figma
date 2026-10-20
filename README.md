@@ -15,6 +15,7 @@ The project wiki is a Google Doc (the repository is private, standard §11): [iO
 | `standard/ios-project-standard.md` | The standard. Single source of truth. §2 Figma loop, §3 agents, §4 SwiftData, §6 testing, §8–9 device and release checklists, §10 versioning, §11 project wiki, §12 token cost |
 | `standard/ios-splash-standard.md` | Splash and launch-screen rules and the verification procedure |
 | `standard/splitaudit.md` | The deep multi-area audit procedure (keyword `splitaudit`) |
+| `CHANGELOG.md` | What each merge to `main` changed, dated and naming its commits; the wiki's Changelog page is derived from it (§11.2) |
 | `standard/ios-project-standard.ledger` | Every candidate practice John was asked about, with his answer |
 | `claude/CLAUDE.md` | Global rules loaded in every session (kept short; procedures live in the files above) |
 | `skills/ios-project-standard/` | `/ios-project-standard [check\|figma\|agents\|device\|release\|cost]`: gap check, reads only the sections it needs |

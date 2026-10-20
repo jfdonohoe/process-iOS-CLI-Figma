@@ -27,3 +27,4 @@ rule:accessibility-review-full-releases-only added 2026-10-20 (§3.3, §9, §12;
 process:ui-automation-first added 2026-10-20 (§2.6; check XcodeBuildMCP ui-automation, lead John through enabling it, sim-drive.py only as fallback; John: yes)
 tool:xcode-mcp removed 2026-10-20 (§6 cheapest visual check; xcode MCP server removed, settings allow cleaned; John: remove the server and clean up references)
 hook:preview-candidate added 2026-10-20 (§13.6, §14.4; tools/preview-candidates-report.sh; John: track whether the process could use the server)
+process:wiki-changelog added 2026-10-20 (§11.1 starting pages, §11.2; CHANGELOG.md entry per merge, wiki Changelog page derived from it; John: add CHANGELOG.md, every app's wiki)

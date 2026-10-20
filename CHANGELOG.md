@@ -1,0 +1,29 @@
+# Changelog
+
+Every merge to `main` adds an entry here, in the same merge, and the wiki's Changelog page is re-derived from it (standard §11.2). This repository has no releases, so entries are dated and name their commits; sections follow Keep a Changelog (Added / Changed / Fixed / Removed).
+
+## 2026-10-20
+
+### Added
+- `CHANGELOG.md`, and a Changelog page in the wiki derived from it; standard §11 now gives every app's wiki one.
+- `hooks/preview-candidate.sh` (§13.6): logs each XcodeBuildMCP simulator run and flags the ones a SwiftUI `#Preview` would have replaced; `tools/preview-candidates-report.sh` totals the log for the monthly review (§14.4). `tests/hooks-test.sh` now has 18 checks. (38b799c, ba9b48d)
+- `release-readiness-checker` (4-case benchmark), a static §9 release gate, and `accessibility-reviewer` (6-case benchmark), with `tools/contrast-ratio.sh`. Visual accessibility fixes go through a Figma before/after WIP section first (§2.3). (4c77595)
+- `design-sync-reviewer` (6-case benchmark), which compares built SwiftUI with a Figma frame spec, and `tools/figma-frame-spec.js`, the read-only export it reads (§2.3 step 4). (d8f6575)
+
+### Changed
+- `README.md` and `tools/README.md` list the preview-tracker report and all four hook events. (ba9b48d)
+- Simulator UI automation (§2.6): check XcodeBuildMCP's `ui-automation` workflow first and lead John through enabling it; `tools/sim-drive.py` only as a fallback. (d4e070d)
+- Accessibility reviews run only before a full (major) release, including the first; point and dot releases and new screens skip them (§3.3, §9, §12). (2741807)
+- `accessibility-reviewer` checks dark appearance only when the project states it supports dark mode. (7d63bd4)
+
+### Removed
+- Apple's Xcode MCP (`xcrun mcpbridge`, `RenderPreview`): Xcode re-asked for access every Claude Code session and the server had never been called. The cheapest-visual-check rule (§6) no longer names it. (38b799c)
+
+## 2026-10-19
+
+### Added
+- `schema-migration-reviewer` (5-case benchmark) for SwiftData model, schema, migration, container and export changes. (b4a1b68)
+- One-shot next-session hand-off hook, `hooks/next-session.sh`. (c872f89)
+- §13 guardrails as hooks (`ios-guard`, opt-in `swift-lint`, opt-in build gate), spec before code for non-UI work, modern Swift preferences; §14 evaluating the process; `tests/hooks-test.sh` (16 checks). Also §2.4 iOS semantic colours, §3.2 finding triage, §6 cheapest visual check first, §12 MCP builds and parallel sessions. (fa86dd7)
+- The project wiki link in the README. (6a85509)
+- Initial import from `~/.claude`: the standard, skills, hooks, tools, agents and evals, with `install.sh` linking them back. (5c7bb8c)

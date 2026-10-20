@@ -336,12 +336,13 @@ Every app has one wiki that describes what is on `main`, written for a reader wh
 ### 11.1 Day one: create it
 - **Public repository: the GitHub wiki.** Enable it on the repository and clone `<repo>.wiki.git` beside the project. One Markdown file per page, `Home.md` first, a `_Sidebar.md` for navigation.
 - **Private repository: a Google Doc.** One Doc named `<App> Wiki` in the project's Drive folder. Each page is an H2, so the Doc's outline pane is the navigation and the pages map one-to-one onto a real wiki if the repository is ever made public. Record the Doc's title, URL and Drive location in the project's reference notes (a memory or the project CLAUDE.md), and read them from there rather than copying them anywhere else.
-- **Starting pages:** Home (what the app is, who it is for, the current version), one page per area of the app, Data and privacy, Verification, Known limitations and open items, Sources (which repo files each page is derived from).
+- **Starting pages:** Home (what the app is, who it is for, the current version), one page per area of the app, Data and privacy, Verification, Known limitations and open items, Changelog, Sources (which repo files each page is derived from).
 
 ### 11.2 The rule: a merge to main updates the wiki
 - **Every merge to `main` includes the wiki update,** whether it is a merge commit, a fast-forward, a squash, or commits pushed straight to `main`. The merge is not finished until the wiki reflects it. This is automatic: Claude does it as part of the merge, not later and not only when asked.
 - **Re-derive, never invent.** Rewrite the changed pages from the repo's own documents (README, FEATURES, BEST_PRACTICES, BUGS, CHANGELOG) and the code. Never put a fact in the wiki that those files do not state; if the repo documents are wrong, fix them first, then re-derive.
 - **Only the pages the merge changed.** Keep the heading structure: pages are added or rewritten, not flattened or renamed, so navigation and any later migration survive.
+- **Log it in the changelog.** Each merge adds its entry to the repo's `CHANGELOG.md` first (Keep a Changelog sections; dated entries naming the commits where the repo has no releases), then the wiki's Changelog page is re-derived from it, newest first. (Added 2026-10-20.)
 - **Stamp it.** The Home page carries the version or tag it now describes (and the commit for an unreleased `main`).
 - **Report it.** Say what changed, page by page. A restructure or a deleted page is a rewrite of a shared document: show the plan and wait for a yes.
 - **GitHub wiki mechanics:** commit the wiki clone with the same tag or commit reference in the message and push it with the merge. **Google Doc mechanics:** use the Docs connector; insert plain text first, re-read, then apply headings, bullets and bold from the real paragraph positions.

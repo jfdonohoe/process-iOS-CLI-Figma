@@ -22,5 +22,7 @@ link agent-evals agent-evals
 for f in agents/global/*.md; do link "$f" "agents/$(basename "$f")"; done
 # The built §3.3 additions are user-level; the rest of agents/ios-baseline is copied per app (§3.1).
 for a in schema-migration-reviewer design-sync-reviewer release-readiness-checker accessibility-reviewer; do link "agents/ios-baseline/$a.md" "agents/$a.md"; done
+# Per-developer values (standard "Your setup"); never overwritten, never in the repo.
+[ -e "$C/ios-setup.local.md" ] || { cp "$REPO/standard/ios-setup.template.md" "$C/ios-setup.local.md"; echo "created ~/.claude/ios-setup.local.md: fill in your values"; }
 (cd "$REPO/tools" && swiftc -O -o sf-symbol-match sf-symbol-match.swift && swiftc -O -o sf-symbol-export sf-symbol-export.swift) && echo "built tools"
 echo "Hooks: merge hooks/settings-hooks.json into ~/.claude/settings.json if they aren't there yet."

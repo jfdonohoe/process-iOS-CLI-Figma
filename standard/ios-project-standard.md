@@ -1,15 +1,31 @@
 # iOS project standard
 
-**Applies to:** every iOS app John builds. That covers a new app project, and an existing project that becomes one (a web prototype, script or package that turns into an iPhone app).
+**Applies to:** every iOS app the developer builds. That covers a new app project, and an existing project that becomes one (a web prototype, script or package that turns into an iPhone app).
 **Established:** 2026-10-18, mostly from lessons on WorkoutApp ("Sets").
-**Status:** recommended default. Claude proposes it and John picks what to adopt for each app.
+**Status:** recommended default. Claude proposes it and the developer picks what to adopt for each app.
+
+**The developer** is whoever runs Claude Code with this standard. Wherever it says to ask, Claude asks them and waits for a yes.
+
+### Your setup
+A few values differ from one developer to the next. Keep them in `~/.claude/ios-setup.local.md`, outside the repository (`install.sh` creates it from this template when it is missing), and read them from there whenever a section refers to Your setup.
+
+| Value | Example | Used in |
+|---|---|---|
+| Bundle ID prefix | `com.example` | §1 |
+| Projects folder | `~/Developer` | Where app repositories live |
+| Apps under the standard | `Sets: ~/Developer/Sets` | Cross-app checks and examples |
+| GitHub owner | `your-account` | §11, public wikis |
+| Private-wiki location | A Google Drive folder | §11, private wikis |
+
+Private ledger answers (for agents or practices you don't want in a public ledger) go in `~/.claude/ios-project-standard.local.ledger`; the hooks read both ledgers.
 
 The two practices to replicate first are **Figma-driven development (§2)** and **the agent setup (§3)**. Everything else supports them.
 
 Each item is tagged with where it comes from:
 - **[Sets]**: learned on WorkoutApp, with the evidence named.
-- **[Senstream]**: from the SenstreamRingKit2 agent setup.
-- **[general]**: standard practice, not yet tested on one of John's apps.
+- **[Breathe]**: learned on Breathe, a meditation app.
+- **[RingKit]**: from the agent setup of RingKit, a Bluetooth wearable SDK with signal processing and on-device ML.
+- **[general]**: standard practice, not yet tested on one of these apps.
 - **[suggested]**: an idea that hasn't been built or benchmarked yet.
 
 ---
@@ -21,7 +37,7 @@ Each item is tagged with where it comes from:
 3. Ask which items to set up. Don't apply them unasked.
 4. As the project grows, propose project-specific agents (§3.4) when a subsystem appears that has its own failure modes.
 5. Bring up the device-install and release checklists (§8, §9) when the project reaches those points.
-6. **When a new agent, skill, hook or process step appears, ask John whether to add it here.** Don't add it without a yes. Record the answer either way in `~/.claude/ios-project-standard.ledger` (`<kind>:<name> added|declined YYYY-MM-DD`), so nothing is asked about twice.
+6. **When a new agent, skill, hook or process step appears, ask the developer whether to add it here.** Don't add it without a yes. Record the answer either way in `~/.claude/ios-project-standard.ledger` (`<kind>:<name> added|declined YYYY-MM-DD`), so nothing is asked about twice.
 
 ### Automation
 | Piece | What it does |
@@ -31,8 +47,8 @@ Each item is tagged with where it comes from:
 | `~/.claude/hooks/ios-standard-check.sh` (SessionStart) | Recommends this standard in an iOS project whose CLAUDE.md doesn't mention it yet |
 | `~/.claude/hooks/standard-unreviewed-scan.sh` (SessionStart) | Lists agents and skills that are neither in this file nor in the ledger, so Claude can ask about them once |
 | `~/.claude/hooks/standard-candidate.sh` (PostToolUse on Write/Edit) | After Claude writes an agent, skill, hook or CLAUDE.md, reminds it to ask whether that belongs here |
-| `~/.claude/ios-project-standard.ledger` | Every candidate John has been asked about, with his answer |
-| Git repo `~/Documents/Claude/Projects/ios-best-practices` | Source of truth for this standard, its skills, hooks, tools, global agents and evals. `~/.claude` paths are symlinks into it (`install.sh`), so every edit shows in `git status`. Commit changes to the standard there |
+| `~/.claude/ios-project-standard.ledger` | Every candidate the developer has been asked about, with their answer |
+| The `process-ios-cli-figma` repository, cloned anywhere | Source of truth for this standard, its skills, hooks, tools, global agents and evals. `~/.claude` paths are symlinks into it (`install.sh`), so every edit shows in `git status`. Commit changes to the standard there |
 | `~/.claude/tools/` | Fallback simulator driver (when XcodeBuildMCP UI automation can't be enabled), SF Symbol vector pipeline, contrast helper (§2.4, §2.6, §3.3) |
 | `hooks/ios-guard.sh` (PreToolUse) | Asks before `git push` and before edits to `@Model` files; denies hand edits to `project.pbxproj` in XcodeGen projects (§13.1) |
 | `hooks/swift-lint.sh` (PostToolUse, opt-in) | swift-format findings on the edited file when the repo has a `.swift-format` (§13.2) |
@@ -56,7 +72,7 @@ Each item is tagged with where it comes from:
 
 ### Xcode project
 - **One source of truth for project settings:** either an XcodeGen `project.yml` or the `.xcodeproj`, never both drifting apart. [Sets] In WorkoutApp, `project.yml` and `project.pbxproj` disagree on the bundle ID.
-- **Pick the bundle ID once:** `com.donohoeux.<app>`. Changing it later makes a new app on the phone, and the old data container stays behind with the old app. [general]
+- **Pick the bundle ID once:** `<bundle prefix>.<app>`, with the prefix from Your setup. Changing it later makes a new app on the phone, and the old data container stays behind with the old app. [general]
 - **Write down the platform decisions in CLAUDE.md:** deployment target, device family, orientation, display name.
 - **Swift 6 language mode with strict concurrency, from the start.** [general]
 - **Folder layout:** `App/ Models/ Persistence/ Services/ Views/` plus a unit-test target. [Sets]
@@ -85,7 +101,7 @@ One Figma file per app, named `<App> – App Screens`. Record its file key in th
 | 🧱 **Components** | The component library and its variants | Bound to variables that mirror `Theme.swift` |
 
 ### 2.2 Conventions
-- **Claude works only on the WIP page** unless John names another page. Don't create new files or pages. [Sets] A mockup once had to be moved from a standalone file.
+- **Claude works only on the WIP page** unless the developer names another page. Don't create new files or pages. [Sets] A mockup once had to be moved from a standalone file.
 - **Stack sections vertically** at x = 0 with a 200 px gap. Screens are frames at device width (393 for iPhone).
 - **Revise existing WIP frames in place.** Don't make a new section for every round of feedback.
 - **Base edits to Production screens on clones,** placed in a WIP section.
@@ -98,14 +114,14 @@ One Figma file per app, named `<App> – App Screens`. Record its file key in th
 
 ### 2.3 The loop
 1. **Explore** on WIP: a new dated section built from Components and theme variables.
-2. **Approve:** John signs off, and the section moves to Approved as `Approved - …`. Any standard it sets is recorded as a memory or a CLAUDE.md rule (e.g. "green = actionable", "the exercise sheet header shows the type").
+2. **Approve:** the developer signs off, and the section moves to Approved as `Approved - …`. Any standard it sets is recorded as a memory or a CLAUDE.md rule (e.g. "green = actionable", "the exercise sheet header shows the type").
    - **Approval is visual only. It is not an instruction to code.** "Approved" moves the section from WIP to Approved and stops there. Approved sections are allowed to stack up. Don't edit code, sync Production or archive anything because something was approved. [Breathe] (2026-10-19: two approvals were built, synced and archived without being asked, then undone.)
-3. **Build** in SwiftUI from the Approved frames, with tokens taken from `Theme.swift`, never hard-coded. **Only when John explicitly says to code it** (e.g. "code the approved changes"). That instruction covers everything on Approved unless he names specific sections, and it runs steps 3–6 for them: build, verify, sync to Production, archive.
+3. **Build** in SwiftUI from the Approved frames, with tokens taken from `Theme.swift`, never hard-coded. **Only when the developer explicitly says to code it** (e.g. "code the approved changes"). That instruction covers everything on Approved unless he names specific sections, and it runs steps 3–6 for them: build, verify, sync to Production, archive.
 4. **Verify** in the running app, not just in tests. Before syncing, export the Approved section with `~/.claude/tools/figma-frame-spec.js` (read-only `use_figma`) to `_reports/design-sync/<date>-<topic>.json` and run `design-sync-reviewer` on it. Sync only on its PASS, which on an Approved spec means no finding at all. [suggested]
 5. **Sync:** replace the matching Production frames with the built design, matching real copy and real states. Re-stack Production and check for overlaps.
 6. **Archive** the Approved section. Approved goes back to holding only what is still waiting to be built.
 
-**Accessibility fixes that change how a screen looks go through this loop too,** whether or not `accessibility-reviewer` found them: new colours or token values, a visibly bigger control, a text-style change or a layout that reflows at large sizes, a label or symbol added beside a colour-only state, the reduced form of an animation. Step 1 is a WIP section named `Accessibility - <screen> (<YYYY-MM-DD>)` with frames `<screen> - Before` and `<screen> - After (accessibility)`, and a note beside each After frame, one line per change: what changed, why (who it helps and the problem), and the measurement against the rule (contrast ratio from `tools/contrast-ratio.sh` against 4.5:1 or 3:1, or the target size against 44 pt). Spoken-only fixes (labels, traits, values, grouping, hiding decorative images, an invisible larger hit area) go straight to code. [suggested] (John, 2026-10-20)
+**Accessibility fixes that change how a screen looks go through this loop too,** whether or not `accessibility-reviewer` found them: new colours or token values, a visibly bigger control, a text-style change or a layout that reflows at large sizes, a label or symbol added beside a colour-only state, the reduced form of an animation. Step 1 is a WIP section named `Accessibility - <screen> (<YYYY-MM-DD>)` with frames `<screen> - Before` and `<screen> - After (accessibility)`, and a note beside each After frame, one line per change: what changed, why (who it helps and the problem), and the measurement against the rule (contrast ratio from `tools/contrast-ratio.sh` against 4.5:1 or 3:1, or the target size against 44 pt). Spoken-only fixes (labels, traits, values, grouping, hiding decorative images, an invisible larger hit area) go straight to code. [suggested] (the developer, 2026-10-20)
 
 ### 2.4 Design system
 - **`Theme.swift` ⇄ Figma variables, one to one.** A new token is added to both in the same piece of work.
@@ -126,9 +142,9 @@ Production screens are captured from the real app running in the simulator, in e
 - **Clearly marked and safe.** Sample IDs carry a `sample-` prefix and derived rows carry a `sample` version string, so they can never be mistaken for real data. The seeder is idempotent, never compiled for device builds, and never touches an existing store on a device.
 - **Capture procedure.** Build and launch with the launch argument on the standard simulator (iPhone 16, 393 pt). Screenshot with `xcrun simctl io <udid> screenshot`. Navigate with the UI-automation tools (below). Capture the empty states too, by launching without the argument. Build Production screens in Figma from these captures (status bar and tab bar from the iOS library, real copy and real values).
 - **Keep it current.** When a screen or model gains a new state, add that state to the seeder in the same piece of work, the way a new token goes into both `Theme.swift` and the Figma variables.
-- **UI automation: XcodeBuildMCP first, the home-made driver only as a fallback.** (John, 2026-10-20) Before the first simulator navigation in a session:
+- **UI automation: XcodeBuildMCP first, the home-made driver only as a fallback.** (2026-10-20) Before the first simulator navigation in a session:
   1. **Check.** Is XcodeBuildMCP's `ui-automation` workflow enabled: `XCODEBUILDMCP_ENABLED_WORKFLOWS` in the `xcodebuildmcp` server entry (`~/.claude.json`), or `enabledWorkflows` in the project's `.xcodebuildmcp/config.yaml`? Then confirm it works: with the app running, `snapshot_ui` must return element targets. An empty snapshot means it isn't working.
-  2. **If not, lead John through enabling it.** Add `"XCODEBUILDMCP_ENABLED_WORKFLOWS": "simulator,ui-automation"` to that server's `env` (or `enabledWorkflows: [simulator, ui-automation]` to the project config), then restart Claude Code, because MCP servers load at session start. UI automation needs the AXe helper, which the package bundles. If it's reported missing, follow XcodeBuildMCP's troubleshooting docs (its doctor check, or the `axePath` setting / `XCODEBUILDMCP_AXE_PATH`). Editing `~/.claude.json` changes John's global config, so show him the change and let him approve it.
+  2. **If not, lead the developer through enabling it.** Add `"XCODEBUILDMCP_ENABLED_WORKFLOWS": "simulator,ui-automation"` to that server's `env` (or `enabledWorkflows: [simulator, ui-automation]` to the project config), then restart Claude Code, because MCP servers load at session start. UI automation needs the AXe helper, which the package bundles. If it's reported missing, follow XcodeBuildMCP's troubleshooting docs (its doctor check, or the `axePath` setting / `XCODEBUILDMCP_AXE_PATH`). Editing `~/.claude.json` changes the developer's global config, so show him the change and let him approve it.
   3. **Then use it.** `snapshot_ui` to see the screen, taps on named elements, `wait_for_ui` until the screen settles. Its accessibility tree also lets you check VoiceOver labels.
   4. **If enabling fails, suggest the home-made driver.** `~/.claude/tools/sim-drive.py` taps, drags and screenshots by posting mouse events on the Simulator window. It's blind (fixed coordinates, iPhone 16 bezel at default zoom) and needs macOS Accessibility permission for System Events, so wait for the app to settle before tapping. Don't rewrite a driver per session.
 - **Tests run on a clean simulator.** Seeded data persists across launches and breaks UI tests that expect empty states. Uninstall the app (`xcrun simctl uninstall <udid> <bundle id>`) before a test run, and re-seed afterwards only when capturing. [Breathe]
@@ -139,13 +155,13 @@ Production screens are captured from the real app running in the simulator, in e
 ## 3. Agents
 
 ### 3.1 Baseline set: every iOS app [Sets]
-These live in the project's `.claude/agents/`, copied from WorkoutApp and adapted (app name, README rules, pitfalls).
+These live in the project's `.claude/agents/`, copied from this repository's `agents/ios-baseline/` and adapted (app name, README rules, pitfalls).
 
 | Agent | Role | When it runs | Writes? |
 |---|---|---|---|
 | `swift-reviewer` | Reviews a change for correctness and the project's known pitfalls | **Proactively** after every `.swift` edit | No |
 | `ios-codebase-auditor` | Architecture, data integrity, performance, duplication and test gaps across the whole app | Audits and `splitaudit` area runs | No (plan mode) |
-| `ios-codebase-refactorer` | Applies approved audit findings conservatively, preserving behaviour | Only after John approves specific findings | Yes |
+| `ios-codebase-refactorer` | Applies approved audit findings conservatively, preserving behaviour | Only after the developer approves specific findings | Yes |
 | `regression-reviewer` | Four phases: (0) branch, HEAD and registry; (1) build and run the **whole** suite, comparing the count with the last run; (2) every **fixed** registry row is still in place and pinned by a test that runs and asserts it; (3) the README product rules still hold and are pinned; (4) documented features are wired up from the `@main` launch path. Returns PASS or NEEDS-WORK | **Proactively** after code revisions, before calling work done. This *is* "full regression testing" | No |
 
 `regression-reviewer` is benchmarked in `~/.claude/agent-evals/regression-reviewer/` (v2, 2026-10-18), with a regressions case and a clean case.
@@ -157,9 +173,9 @@ Global agents that come along automatically:
 ### 3.2 Infrastructure that makes agents work
 - **Shared finding scheme:** P0–P3 severity and a CONFIRMED/PLAUSIBLE verdict, using the same keys in every agent. Reports from different agents and different apps then merge and compare. Write it in `.claude/agents/README.md`. [Sets]
 - **Clear ownership:** each concern has one owner, and the others refer to it in one line rather than reporting it (dead code → `dead-code-finder`, style and performance → the auditor). This avoids duplicate findings. [Sets]
-- **Audit, then fix, as separate steps.** Auditors are read-only and stop at the report. Fixes happen in a separate run, after approval. [Sets, Senstream]
+- **Audit, then fix, as separate steps.** Auditors are read-only and stop at the report. Fixes happen in a separate run, after approval. [Sets, RingKit]
 - **Triage findings; don't chase them all.** A reviewer asked for gaps always reports some. Fix what affects correctness, data or a stated requirement (P0–P1, and P2 that touch data); log the rest without acting. Every reviewer prompt says to report only those, and to mark anything else optional. [general] (Anthropic best practices.)
-- **No project state in agent prompts.** Prompts hold method and the shapes of past failures. Test counts, bug statuses and versions are worked out at run time or read from the project's documents. If a prompt and the source disagree, the agent reports it and trusts the source. [Senstream] (`~/.claude/senstream-agent-rules.md` §2–4)
+- **No project state in agent prompts.** Prompts hold method and the shapes of past failures. Test counts, bug statuses and versions are worked out at run time or read from the project's documents. If a prompt and the source disagree, the agent reports it and trusts the source. [RingKit] (from RingKit's shared agent-rules file)
 - **Documents the agents read** (the project's single source of current state):
   - `README.md`: product rules and testing
   - `_reports/regression-registry.md`, maintained by the main session; the agent reports updates and never edits it:
@@ -167,7 +183,7 @@ Global agents that come along automatically:
     - a "Last full run" line: HEAD, tests run, passed and failed, and the verdict
     - add a row when a fix lands, update it when a test is renamed, and update the count after each run
     - start it with the first fixed bug. For an existing app, seed it from `_reports/`, as WorkoutApp did on 2026-10-18 (169 lines)
-  - Optionally `FEATURES.md` and `BUGS.md` once the app is big enough. [Senstream]
+  - Optionally `FEATURES.md` and `BUGS.md` once the app is big enough. [RingKit]
 - **Benchmarks:** every custom reviewer gets a seeded-defect benchmark in `~/.claude/agent-evals/<agent>/`. Snapshot the agent before editing it, and re-run the old snapshot on the same day, because model updates move the scores. [Sets]
 - **Audit procedure:** `splitaudit` (global CLAUDE.md). Reports go in `_reports/YYYY-MM-DD-<topic>.md`.
 
@@ -178,11 +194,11 @@ Each fills a gap the current four leave open. They're listed in the order I'd ad
 |---|---|---|
 | `design-sync-reviewer` **[built 2026-10-20]** | `agents/ios-baseline/`, benchmarked in `agent-evals/design-sync-reviewer/` (6 cases). Compares built SwiftUI with a frame spec exported by `tools/figma-frame-spec.js` (it never calls Figma): copy, order, missing/extra elements, colour tokens and backgrounds, text styles, component variants, states, demo-state coverage. Before it, the check was by eye in steps 2.3.4–5 | After building an Approved section, and before the sync step |
 | `schema-migration-reviewer` **[built 2026-10-19]** | `agents/ios-baseline/`, benchmarked in `agent-evals/schema-migration-reviewer/` (5 cases). Any change to a `@Model`: is it a new `VersionedSchema`, is there a migration stage, does the export DTO cover the new fields, is there a test that opens the previous store? (Audit H1 and the export data-loss report were both this class of bug) | Proactively when a file in `Models/` or `Persistence/` changes |
-| `release-readiness-checker` **[built 2026-10-20]** | `agents/ios-baseline/`, benchmarked in `agent-evals/release-readiness-checker/` (4 cases). Runs the §9 checklist statically: the recorded `regression-reviewer` run is PASS and current, the latest `splitaudit` P0/P1 items are resolved, the migration test exists when a `@Model` changed since the last tag, version and build are consistent and new with a CHANGELOG entry (§10), the privacy manifest covers the required-reason APIs used, every requested permission has a Release usage string, entitlements and background modes match the code, no debug-only data tool reaches Release, and the `.fig` export is present and fresh (§2.5). Lists the items only a person can check (Figma Production, wiki stamp, App Store privacy answers, accessibility) | When John asks for a release push, after `/ios-version` |
-| `accessibility-reviewer` **[built 2026-10-20]** | `agents/ios-baseline/`, benchmarked in `agent-evals/accessibility-reviewer/` (6 cases). Static review of the SwiftUI views and colour tokens: spoken labels on icon-only controls, button traits and values on tap gestures and custom controls, Dynamic Type (fixed sizes, caps), hit targets under 44 pt, WCAG contrast computed with `tools/contrast-ratio.sh` from `Theme.swift` and the colorsets (light appearance only, unless the project's README or CLAUDE.md states it supports dark mode), state shown by colour alone, and looping motion that ignores Reduce Motion. Tags each finding `visual_change`; its first recommendation for a visual fix (colour, size, text style, added label, reduced motion) is a before/after section on 🚧 WIP named `Accessibility - <screen> (<date>)`, with a note on each After frame saying what changed, why and the measurement behind it, for John to approve (§2.3), while spoken-only fixes go straight to code. Lists the VoiceOver and largest-text checks only the running app can settle | **Only before a full release** (major version, X.0.0, §10), as the §9 accessibility pass. Not for point or dot releases, and not on new screens, to keep the cost down (§12). At other times only when John explicitly asks for one |
+| `release-readiness-checker` **[built 2026-10-20]** | `agents/ios-baseline/`, benchmarked in `agent-evals/release-readiness-checker/` (4 cases). Runs the §9 checklist statically: the recorded `regression-reviewer` run is PASS and current, the latest `splitaudit` P0/P1 items are resolved, the migration test exists when a `@Model` changed since the last tag, version and build are consistent and new with a CHANGELOG entry (§10), the privacy manifest covers the required-reason APIs used, every requested permission has a Release usage string, entitlements and background modes match the code, no debug-only data tool reaches Release, and the `.fig` export is present and fresh (§2.5). Lists the items only a person can check (Figma Production, wiki stamp, App Store privacy answers, accessibility) | When the developer asks for a release push, after `/ios-version` |
+| `accessibility-reviewer` **[built 2026-10-20]** | `agents/ios-baseline/`, benchmarked in `agent-evals/accessibility-reviewer/` (6 cases). Static review of the SwiftUI views and colour tokens: spoken labels on icon-only controls, button traits and values on tap gestures and custom controls, Dynamic Type (fixed sizes, caps), hit targets under 44 pt, WCAG contrast computed with `tools/contrast-ratio.sh` from `Theme.swift` and the colorsets (light appearance only, unless the project's README or CLAUDE.md states it supports dark mode), state shown by colour alone, and looping motion that ignores Reduce Motion. Tags each finding `visual_change`; its first recommendation for a visual fix (colour, size, text style, added label, reduced motion) is a before/after section on 🚧 WIP named `Accessibility - <screen> (<date>)`, with a note on each After frame saying what changed, why and the measurement behind it, for the developer to approve (§2.3), while spoken-only fixes go straight to code. Lists the VoiceOver and largest-text checks only the running app can settle | **Only before a full release** (major version, X.0.0, §10), as the §9 accessibility pass. Not for point or dot releases, and not on new screens, to keep the cost down (§12). At other times only when the developer explicitly asks for one |
 
 ### 3.4 Project-specific specialists
-When a project grows a subsystem with its own ways of failing, propose a specialist reviewer for it instead of stretching the baseline agents. [Senstream] SenstreamRingKit2 has six, covering BLE/concurrency, the capture pipeline, DSP/ML, architecture/API, regression, and upstream sync.
+When a project grows a subsystem with its own ways of failing, propose a specialist reviewer for it instead of stretching the baseline agents. [RingKit] RingKit has six, covering BLE/concurrency, the capture pipeline, DSP/ML, architecture/API, regression, and upstream sync.
 
 **Signs a specialist is warranted:**
 
@@ -196,7 +212,7 @@ When a project grows a subsystem with its own ways of failing, propose a special
 | A package or app extracted from another codebase | Upstream-sync reconciliation agent |
 | A shared Swift package with public API | Architecture and public-API reviewer |
 
-**How Senstream builds them:**
+**How RingKit builds them:**
 - One shared rules file (read-only contract, truth-source precedence, output scheme), read first by every specialist.
 - Each specialist is narrow, read-only, and owns its own known bugs and accepted limitations.
 - A regression agent per project, plus a physical-device checklist for whatever static review can't prove.
@@ -237,10 +253,10 @@ Name specialists `<project>-<area>-reviewer`. Benchmark each one before relying 
 - **A unit-test target exists from the first model.** Every data-integrity fix comes with a regression test and a registry row. [Sets]
 - **The full suite passes, and `regression-reviewer` returns PASS, before anything is called done.** [Sets]
 - **A green suite isn't the same as working:** check the feature in the running app before you commit. [Sets]
-- **Cheapest visual check first.** A screen in a real state: simulator with the demo-state launch arguments (§2.6). Only a full flow needs a click-through. Every view gets a `#Preview` that uses sample data, so John can check a single view in Xcode's canvas. Apple's Xcode MCP (`xcrun mcpbridge`, with `RenderPreview`) was removed on 2026-10-20 because Xcode re-asks for access every session and it had never been called; `hooks/preview-candidate.sh` (§13.6) logs the simulator runs a preview would have replaced, so the decision can be revisited on evidence. [general]
+- **Cheapest visual check first.** A screen in a real state: simulator with the demo-state launch arguments (§2.6). Only a full flow needs a click-through. Every view gets a `#Preview` that uses sample data, so the developer can check a single view in Xcode's canvas. Apple's Xcode MCP (`xcrun mcpbridge`, with `RenderPreview`) was removed on 2026-10-20 because Xcode re-asks for access every session and it had never been called; `hooks/preview-candidate.sh` (§13.6) logs the simulator runs a preview would have replaced, so the decision can be revisited on evidence. [general]
 - **Device truth comes from the device.** Have the app report its own `Bundle.main` contents and read them with `devicectl … --console`. [Sets]
 - **Never debug launch artwork by eye.** Freeze the launch and measure. [Sets]
-- **Hardware-dependent behaviour gets a physical-device checklist** in the repo. [Senstream]
+- **Hardware-dependent behaviour gets a physical-device checklist** in the repo. [RingKit]
 
 ---
 
@@ -267,7 +283,7 @@ Name specialists `<project>-<area>-reviewer`. Benchmark each one before relying 
 - [ ] `splitaudit 3` run and its P0/P1 items resolved
 - [ ] Production page in Figma matches the build, and Approved holds nothing that's built but unsynced (§2.3)
 - [ ] The wiki describes the version being released and is stamped with it (§11)
-- [ ] Version number suggested by `/ios-version` and approved by John, set in every configuration, entered in CHANGELOG.md, and tagged `vX.Y.Z` (§10)
+- [ ] Version number suggested by `/ios-version` and approved by the developer, set in every configuration, entered in CHANGELOG.md, and tagged `vX.Y.Z` (§10)
 - [ ] Privacy manifest (`PrivacyInfo.xcprivacy`) and App Store privacy answers done [general]
 - [ ] Accessibility pass, **full releases only** (major version, §10; the first release counts): `accessibility-reviewer` PASS, then VoiceOver and the largest text size on a device. Point and dot releases skip it [general]
 - [ ] Fresh `.fig` export committed in the release commit (§2.5)
@@ -323,15 +339,15 @@ SemVer was written for APIs, so for an app the test is **what the user experienc
 At every release push, and before any TestFlight or App Store build, run **`/ios-version`**:
 1. `version-facts.sh` collects the current numbers, the baseline (the last tag, or failing that the last version change) and the change signals.
 2. Claude reads the diff, classifies each change by 10.2 and proposes a number, with reasons, the alternative it rejected and a draft changelog entry.
-3. **John approves or overrides the number.** Only then is it set everywhere, entered in the changelog and tagged.
+3. **The developer approves or overrides the number.** Only then is it set everywhere, entered in the changelog and tagged.
 
 A build that only goes to a device or to TestFlight, with no new version, gets a build-number bump only.
 
 ---
 
-## 11. Project wiki, kept in step with main [Senstream]
+## 11. Project wiki, kept in step with main [RingKit]
 
-Every app has one wiki that describes what is on `main`, written for a reader who was not in the conversations. The repo is authoritative and the wiki is a synthesis of it. (Added 2026-10-19; from the Senstream merge-to-main rule.)
+Every app has one wiki that describes what is on `main`, written for a reader who was not in the conversations. The repo is authoritative and the wiki is a synthesis of it. (Added 2026-10-19; from RingKit's merge-to-main rule.)
 
 ### 11.1 Day one: create it
 - **Public repository: the GitHub wiki.** Enable it on the repository and clone `<repo>.wiki.git` beside the project. One Markdown file per page, `Home.md` first, a `_Sidebar.md` for navigation.
@@ -364,13 +380,13 @@ Added 2026-10-19 after two expensive days of Figma and standard work. In rough o
    ```
    Open failures only when the summary shows any. Run long builds and tests in the background and keep working. **Use XcodeBuildMCP's structured tools** (`build_sim`, `test_sim`) for builds and targeted tests during work, since errors come back with file and line; use the result-bundle summary for the full regression run, where only counts matter.
 4. **Reuse tools** from `~/.claude/tools/` rather than re-deriving them.
-5. **Read only what's needed.** The `/ios-project-standard` skill reads only the sections its argument names. Always-loaded CLAUDE.md files hold rules and pointers; procedures live in referenced files (`~/.claude/splitaudit.md`, `Senstream/DATA_SAFETY.md`).
+5. **Read only what's needed.** The `/ios-project-standard` skill reads only the sections its argument names. Always-loaded CLAUDE.md files hold rules and pointers; procedures live in referenced files (`~/.claude/splitaudit.md`, a project's `DATA_SAFETY.md`).
 6. **Match the model to the work.** Mechanical work (Figma syncs, captures, renames, re-stacking) runs on Sonnet or at lower `/effort`; keep Opus for design decisions, diagnosis and data-safety calls.
 7. **Approvals don't trigger builds** (§2.3), which avoids build-and-revert cycles.
 8. **`splitaudit`** costs about 1.2M tokens a round: one round by default, three only before migrations or releases.
 9. **Subagents only for parallel or isolated work.** A subagent starts cold and its brief and report both cost tokens; do lookups and small checks inline. Give a subagent a narrow brief and a file list, and ask for findings in a short table, not prose.
 10. **Upload, don't paste.** Large assets (SVGs, images) go to Figma with `upload_assets`, not inside `use_figma` code.
-11. **Accessibility reviews only for full releases.** `accessibility-reviewer` and the device VoiceOver and large-text pass run before a full (major) release, not for point or dot releases or on each new screen. Accessibility fixes found then still go through the Figma loop (§2.3). (John, 2026-10-20)
+11. **Accessibility reviews only for full releases.** `accessibility-reviewer` and the device VoiceOver and large-text pass run before a full (major) release, not for point or dot releases or on each new screen. Accessibility fixes found then still go through the Figma loop (§2.3). (the developer, 2026-10-20)
 12. **Parallel sessions for independent work.** Two pieces of work that don't touch the same files run in separate sessions on separate git worktrees (`claude --worktree` or `git worktree add`), each with its own small context, rather than one long session. Name sessions with `/rename` so they can be resumed.
 13. **Measure it** (§14).
 
@@ -378,10 +394,10 @@ Added 2026-10-19 after two expensive days of Figma and standard work. In rough o
 
 ## 13. Guardrails and quality gates [general]
 
-Added 2026-10-19 to close the gaps found by comparing this standard with published Claude Code iOS practice (Anthropic's best-practices guide, Indragie Karunaratne, Blake Crosley, Figma's SwiftUI guidance). Rules that must hold every time are hooks, because CLAUDE.md text is advisory and hooks are deterministic. Hook sources live in the `ios-best-practices` repo; `tests/hooks-test.sh` checks them.
+Added 2026-10-19 to close the gaps found by comparing this standard with published Claude Code iOS practice (Anthropic's best-practices guide, Indragie Karunaratne, Blake Crosley, Figma's SwiftUI guidance). Rules that must hold every time are hooks, because CLAUDE.md text is advisory and hooks are deterministic. Hook sources live in `hooks/` in this repository; `tests/hooks-test.sh` checks them.
 
 ### 13.1 Guard (always on): `hooks/ios-guard.sh`, PreToolUse
-- **`git push` asks.** Pushes happen only when John asks; the hook makes Claude Code prompt before any push.
+- **`git push` asks.** Pushes happen only when the developer asks; the hook makes Claude Code prompt before any push.
 - **`@Model` edits ask.** Any edit to a Swift file that contains or adds `@Model` prompts first, so a SwiftData schema change can't slip through without the Data Safety confirmation (§4).
 - **`project.pbxproj` edits are denied** in a project generated by XcodeGen: edit `project.yml` and run `xcodegen`.
 
@@ -396,7 +412,7 @@ xcodebuild build -project App.xcodeproj -scheme App -destination 'id=<udid>' -qu
 When Swift files have changed and that exact change hasn't already built, the hook builds at the end of the turn and, on failure, blocks the turn from ending with the first error lines. It never blocks twice in a row and caches a passing change, so it costs one build per new change. Add `.claude/.build-gate-pass` to `.gitignore`.
 
 ### 13.4 Spec before code for non-UI work
-Figma decides screens (§2). Logic, data and integration work gets a spec instead: for anything bigger than a one-sentence diff, Claude interviews John (AskUserQuestion), writes `specs/YYYY-MM-DD-<topic>.md` naming the files and interfaces involved, what is out of scope, and an end-to-end verification step, then implementation starts in a **fresh session** from that spec. Small, clear fixes skip this. Like a Figma approval, approving a spec is not an instruction to build it.
+Figma decides screens (§2). Logic, data and integration work gets a spec instead: for anything bigger than a one-sentence diff, Claude interviews the developer (AskUserQuestion), writes `specs/YYYY-MM-DD-<topic>.md` naming the files and interfaces involved, what is out of scope, and an end-to-end verification step, then implementation starts in a **fresh session** from that spec. Small, clear fixes skip this. Like a Figma approval, approving a spec is not an instruction to build it.
 
 ### 13.5 Modern Swift preferences
 Claude's known weak spots on Apple platforms are Swift Concurrency, choosing legacy APIs, and over-large SwiftUI bodies. Each app's CLAUDE.md carries this list (or points to it):
@@ -407,7 +423,7 @@ Claude's known weak spots on Apple platforms are Swift Concurrency, choosing leg
 - **Prefer SwiftUI;** reach for UIKit/AppKit only for something SwiftUI can't do, and say why.
 
 ### 13.6 Preview tracker (always on): `hooks/preview-candidate.sh`, PostToolUse
-Apple's Xcode MCP was removed on 2026-10-20 (§6). After each XcodeBuildMCP `build_run_sim`, the hook logs the run to `~/.claude/preview-candidates.jsonl` and asks Claude whether a `#Preview` of one view would have been enough. If so, Claude appends a `preview-would-do` line with the reason and tells John in one line. `tools/preview-candidates-report.sh` totals the log for the monthly review (§14.4): if previews would often have replaced simulator runs, reinstate the Xcode MCP through `xcodecli` (one prompt per Xcode launch) rather than raw `mcpbridge`.
+Apple's Xcode MCP was removed on 2026-10-20 (§6). After each XcodeBuildMCP `build_run_sim`, the hook logs the run to `~/.claude/preview-candidates.jsonl` and asks Claude whether a `#Preview` of one view would have been enough. If so, Claude appends a `preview-would-do` line with the reason and tells the developer in one line. `tools/preview-candidates-report.sh` totals the log for the monthly review (§14.4): if previews would often have replaced simulator runs, reinstate the Xcode MCP through `xcodecli` (one prompt per Xcode launch) rather than raw `mcpbridge`.
 
 ---
 
@@ -423,12 +439,12 @@ The process is a product too: measure it, and change it on evidence. Three level
 ### 14.2 A per-task log (every piece of work)
 Append one line per finished task to `_reports/process-log.md` in the app repo:
 
-`date | task | session tokens (/cost or /context) | turns | corrections by John | rework (reverted changes) | escaped defects found later | rule or hook that fired`
+`date | task | session tokens (/cost or /context) | turns | corrections by the developer | rework (reverted changes) | escaped defects found later | rule or hook that fired`
 
-From it, track the four numbers that matter: **tokens per task**, **corrections per task**, **rework events**, and **escaped defects** (bugs found after John was told "done"). A rule earns its place when the related number improves; a rule that never fires and never would have prevented anything is a candidate to cut.
+From it, track the four numbers that matter: **tokens per task**, **corrections per task**, **rework events**, and **escaped defects** (bugs found after the developer was told "done"). A rule earns its place when the related number improves; a rule that never fires and never would have prevented anything is a candidate to cut.
 
 ### 14.3 A benchmark task (quarterly, or after a big process change)
-Keep one fixed, representative change in the ios-best-practices repo, e.g. "add a setting with a new screen, a model field and a test" against a small sample app. Run it end to end in a fresh session with the current process and record tokens, wall-clock time, turns, test result, Figma and code match, and whether every gate fired as designed. Compare with the previous run. Model updates move the numbers, so re-run the previous configuration the same day when comparing a process change (same rule as §3.2's agent benchmarks).
+Keep one fixed, representative change in this repository, e.g. "add a setting with a new screen, a model field and a test" against a small sample app. Run it end to end in a fresh session with the current process and record tokens, wall-clock time, turns, test result, Figma and code match, and whether every gate fired as designed. Compare with the previous run. Model updates move the numbers, so re-run the previous configuration the same day when comparing a process change (same rule as §3.2's agent benchmarks).
 
 ### 14.4 Review
 Once a month, read the process log, the ledger and `tools/preview-candidates-report.sh` (§13.6): cut rules that never fire, promote advisory rules that keep being broken into hooks, and record each change in the ledger. Re-run the online comparison (Anthropic's guide and current iOS practitioner write-ups) twice a year.

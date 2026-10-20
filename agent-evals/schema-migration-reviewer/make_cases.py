@@ -4,7 +4,7 @@ are computed from the fixture text, so the key can't drift from the files."""
 import json, shutil, textwrap
 from pathlib import Path
 
-ROOT = Path.home() / "Documents/Claude/Projects/ios-best-practices/agent-evals/schema-migration-reviewer"
+ROOT = Path(__file__).resolve().parent  # agent-evals/schema-migration-reviewer
 PROMPT = "Review the changes in the most recent commit (git show HEAD) and report your findings."
 
 

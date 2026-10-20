@@ -1,9 +1,9 @@
 #!/bin/bash
 # PreToolUse (Bash|Edit|Write|MultiEdit) — standard §13.1. Deterministic versions of rules that
 # used to live only in CLAUDE.md text:
-#  - git push           -> ask John (never pushed on Claude's own initiative)
+#  - git push           -> ask the developer (never pushed on Claude's own initiative)
 #  - *.pbxproj edits    -> denied when the project has an XcodeGen project.yml (edit that, run xcodegen)
-#  - @Model Swift edits -> ask John (Data Safety: SwiftData schema changes can break existing stores)
+#  - @Model Swift edits -> ask the developer (Data Safety: SwiftData schema changes can break existing stores)
 # Silent for everything else. Never blocks reads.
 in=$(cat); tool=$(jq -r '.tool_name // empty' <<<"$in")
 out() { jq -n --arg d "$1" --arg r "$2" '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:$d,permissionDecisionReason:$r}}'; exit 0; }
@@ -11,7 +11,7 @@ case "$tool" in
   Bash)
     cmd=$(jq -r '.tool_input.command // empty' <<<"$in")
     if grep -qE '(^|[;&|(][[:space:]]*)git[[:space:]]+([^;&|]*[[:space:]])?push([[:space:]]|$)' <<<"$cmd"; then
-      out ask "git push: confirm John asked for this push (standard §13.1; pushes are never automatic)."
+      out ask "git push: confirm the developer asked for this push (standard §13.1; pushes are never automatic)."
     fi ;;
   Edit|Write|MultiEdit)
     f=$(jq -r '.tool_input.file_path // empty' <<<"$in"); [ -n "$f" ] || exit 0
@@ -23,7 +23,7 @@ case "$tool" in
       *.swift)
         new=$(jq -r '[.tool_input.content, .tool_input.new_string, (.tool_input.edits // [] | map(.new_string) | join("\n"))] | map(select(. != null)) | join("\n")' <<<"$in")
         if grep -q '@Model' "$f" 2>/dev/null || grep -q '@Model' <<<"$new"; then
-          out ask "This edits a SwiftData @Model file. Confirm it can't alter, migrate or reinterpret existing stored data, or that John has given the Data Safety confirmation (standard §4, §13.1)."
+          out ask "This edits a SwiftData @Model file. Confirm it can't alter, migrate or reinterpret existing stored data, or that the developer has given the Data Safety confirmation (standard §4, §13.1)."
         fi ;;
     esac ;;
 esac

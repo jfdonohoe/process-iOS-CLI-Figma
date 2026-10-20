@@ -1,8 +1,8 @@
 # iOS splash screen standard
 
-**Applies to:** every iOS app John vibe codes where a splash/launch image is supplied.
+**Applies to:** every iOS app the developer builds where a splash/launch image is supplied.
 **Established:** 2026-09-08, from the WorkoutApp ("Sets") build.
-**Status:** default approach — follow it unless John says otherwise for a specific app.
+**Status:** default approach — follow it unless the developer says otherwise for a specific app.
 
 ---
 

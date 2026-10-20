@@ -5,7 +5,7 @@ from the fixture text, so the key can't drift from the files."""
 import json, shutil, textwrap
 from pathlib import Path
 
-ROOT = Path.home() / "Documents/Claude/Projects/ios-best-practices/agent-evals/design-sync-reviewer"
+ROOT = Path(__file__).resolve().parent  # agent-evals/design-sync-reviewer
 
 
 def d(s):

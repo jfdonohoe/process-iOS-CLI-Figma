@@ -1,7 +1,7 @@
 ---
 name: release-readiness-checker
 description: |
-  Read-only gate check run before an iOS app release push, TestFlight upload or App Store submission. It works through the release checklist in `~/.claude/ios-project-standard.md` §9 against the repo: the recorded regression run and audit are current and clean, the version and build numbers are consistent and new with a CHANGELOG entry, the privacy manifest covers the required-reason APIs the code uses, every permission the code requests has a usage string in the Release build, the entitlements match the capabilities used, debug-only data tools can't reach a Release build, and the design `.fig` export is present and fresh. It lists what can only be checked by hand (Figma Production, the wiki stamp, App Store privacy answers, accessibility) and ends with PASS or NEEDS-WORK. Use PROACTIVELY when John asks for a release push or to cut, ship or submit a release, after `/ios-version` has proposed the number. Not for choosing the version number (`/ios-version`), reviewing a diff (swift-reviewer), schema safety (schema-migration-reviewer), Figma drift (design-sync-reviewer), or running the tests (regression-reviewer).
+  Read-only gate check run before an iOS app release push, TestFlight upload or App Store submission. It works through the release checklist in `~/.claude/ios-project-standard.md` §9 against the repo: the recorded regression run and audit are current and clean, the version and build numbers are consistent and new with a CHANGELOG entry, the privacy manifest covers the required-reason APIs the code uses, every permission the code requests has a usage string in the Release build, the entitlements match the capabilities used, debug-only data tools can't reach a Release build, and the design `.fig` export is present and fresh. It lists what can only be checked by hand (Figma Production, the wiki stamp, App Store privacy answers, accessibility) and ends with PASS or NEEDS-WORK. Use PROACTIVELY when the developer asks for a release push or to cut, ship or submit a release, after `/ios-version` has proposed the number. Not for choosing the version number (`/ios-version`), reviewing a diff (swift-reviewer), schema safety (schema-migration-reviewer), Figma drift (design-sync-reviewer), or running the tests (regression-reviewer).
 
   <example>
   user: "ok, 2.4.0 is approved. Let's get the release out."
@@ -98,7 +98,7 @@ Get line numbers from `grep -n` or `sed -n`, never by counting. Report each prob
    - A sample-data seeder compiled into Release but reachable only through a launch argument (App Store users can't pass one): P2.
    - A seeder inside `#if DEBUG` (with or without `targetEnvironment(simulator)`) is correct. Don't report it.
 9. **Design export** (`fig-export`). Only when the project uses Figma: its CLAUDE.md names a Figma file or a `.fig` release rule, or a `design/*.fig` exists. Otherwise skip it and say so in the summary. Use the path the project names, else `design/<App>-App-Screens.fig` (§2.5).
-   - Missing: P1 at that path, line 1. Only the Figma app can make it (File → Save local copy…), so say John has to export it.
+   - Missing: P1 at that path, line 1. Only the Figma app can make it (File → Save local copy…), so say the developer has to export it.
    - Modified more than an hour ago (`find <path> -mmin +60`, and `stat` for the time): P1, a fresh export is needed before the release commit.
    - Its first bytes (`head -c 8 <path> | od -c`) aren't `fig-kiwi` or `PK`, or it's under 10 KB: P1.
    - Over 100 MB with no Git LFS rule for it in `.gitattributes`: P1. Over 50 MB: P2.
@@ -146,7 +146,7 @@ Example of one finding:
 Most severe first. Settle duplicates before you write: one cause is one finding. Never write a block and then retract it.
 
 Then, on separate lines:
-- **Check by hand:** one line each, with who does it and how. Always include, unless n/a: Figma Production matches the build and Approved holds nothing built but unsynced (export the Production frames, run `design-sync-reviewer`); the wiki describes this version and is stamped with it (the location the project's notes give); App Store Connect privacy answers match what the app collects; an accessibility pass; John has approved the version number; the release commit carries the `.fig`, the version and the CHANGELOG entry, and gets the `vX.Y.Z` tag.
+- **Check by hand:** one line each, with who does it and how. Always include, unless n/a: Figma Production matches the build and Approved holds nothing built but unsynced (export the Production frames, run `design-sync-reviewer`); the wiki describes this version and is stamped with it (the location the project's notes give); App Store Connect privacy answers match what the app collects; an accessibility pass; the developer has approved the version number; the release commit carries the `.fig`, the version and the CHANGELOG entry, and gets the `vX.Y.Z` tag.
 - **Open bugs:** registry IDs with status open, or `none`.
 - **Optional:** P3 notes, one line each, or `none`.
 - **Out of scope:** one line each, with the owner, or `none`.

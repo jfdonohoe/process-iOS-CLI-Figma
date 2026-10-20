@@ -1,6 +1,6 @@
 # Project subagents
 
-Project-scoped Claude Code subagents for **WorkoutApp** live in this folder
+Project-scoped Claude Code subagents for **<App>** live in this folder
 (`.claude/agents/`). They are available whenever Claude Code / Cowork runs inside
 this project, and (when a name collides) take precedence over user-level agents in
 `~/.claude/agents/`.

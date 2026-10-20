@@ -1,6 +1,6 @@
 ---
 name: ios-version
-description: Suggests the next version number for one of John's iOS apps by evaluating what changed since the last release and classifying it as a full (major X.0.0), point (minor x.Y.0) or dot (patch x.y.Z) release under Semantic Versioning, plus the build number. Use PROACTIVELY before any release push, TestFlight or App Store build, or when John asks what version this should be, to bump the version, or to cut or tag a release. Read-only until John approves the number; then it applies the number everywhere it's set, updates CHANGELOG.md and tags the release commit.
+description: Suggests the next version number for one of the developer's iOS apps by evaluating what changed since the last release and classifying it as a full (major X.0.0), point (minor x.Y.0) or dot (patch x.y.Z) release under Semantic Versioning, plus the build number. Use PROACTIVELY before any release push, TestFlight or App Store build, or when the developer asks what version this should be, to bump the version, or to cut or tag a release. Read-only until the developer approves the number; then it applies the number everywhere it's set, updates CHANGELOG.md and tags the release commit.
 ---
 
 # iOS version suggestion
@@ -23,7 +23,7 @@ Sort each user-visible change into a level using §10.2 of the standard. **The h
 
 ## 3. Propose (don't apply)
 
-Show John:
+Show the developer:
 
 ```
 Current:   1.1 (build 4)  ·  baseline: <tag or commit, date>
@@ -44,13 +44,13 @@ Draft CHANGELOG entry
 Also: <normalise a two-part version, values that disagree across configurations, missing CHANGELOG, etc.>
 ```
 
-Say plainly where the judgement is close (e.g. "a large fix set; dot is right by the rules, but you could market it as a point release"). John decides; the suggestion isn't binding.
+Say plainly where the judgement is close (e.g. "a large fix set; dot is right by the rules, but you could market it as a point release"). The developer decides; the suggestion isn't binding.
 
-## 4. Apply (only after John approves the number)
+## 4. Apply (only after the developer approves the number)
 
 1. Set `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in **every** build configuration of every target in `project.pbxproj`, and in `project.yml` if there is one. Re-run the facts script and confirm there's exactly one value of each.
 2. Add the approved entry to the top of `CHANGELOG.md`, creating the file if it doesn't exist.
 3. Commit as part of the release commit (the project's release rules apply, e.g. the `.fig` export).
-4. After the release commit, create an annotated tag `vX.Y.Z` with the changelog entry as its message. Push the tag only when John pushes the release.
+4. After the release commit, create an annotated tag `vX.Y.Z` with the changelog entry as its message. Push the tag only when the developer pushes the release.
 
 For a build-only bump (another TestFlight or device build of the same version), change only `CURRENT_PROJECT_VERSION`. No changelog entry, no tag.

@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/john/.claude/hooks/standard-candidate.sh",
+            "command": "$HOME/.claude/hooks/standard-candidate.sh",
             "timeout": 10
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/john/.claude/hooks/swift-lint.sh",
+            "command": "$HOME/.claude/hooks/swift-lint.sh",
             "timeout": 30
           }
         ]
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/john/.claude/hooks/preview-candidate.sh",
+            "command": "$HOME/.claude/hooks/preview-candidate.sh",
             "timeout": 10
           }
         ]
@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/john/.claude/hooks/ios-standard-check.sh",
+            "command": "$HOME/.claude/hooks/ios-standard-check.sh",
             "timeout": 10
           }
         ]
@@ -48,7 +48,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/john/.claude/hooks/standard-unreviewed-scan.sh",
+            "command": "$HOME/.claude/hooks/standard-unreviewed-scan.sh",
             "timeout": 10
           }
         ]
@@ -58,7 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/john/.claude/hooks/next-session.sh",
+            "command": "$HOME/.claude/hooks/next-session.sh",
             "timeout": 10
           }
         ]
@@ -70,7 +70,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/john/.claude/hooks/ios-guard.sh",
+            "command": "$HOME/.claude/hooks/ios-guard.sh",
             "timeout": 10
           }
         ]
@@ -81,7 +81,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/john/.claude/hooks/build-gate.sh",
+            "command": "$HOME/.claude/hooks/build-gate.sh",
             "timeout": 600
           }
         ]

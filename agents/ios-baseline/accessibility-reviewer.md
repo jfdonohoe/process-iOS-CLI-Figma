@@ -98,7 +98,7 @@ Label the WIP work so anyone opening the page knows it is an accessibility chang
 - **Frame names:** `<screen> - Before` and `<screen> - After (accessibility)`.
 - **A note beside each "After" frame**, one line per change: what changed, why (the user it helps and the problem, from the finding's failure scenario), and the measurement behind it against the rule (e.g. "Caption colour `<old token>` → `<new token>`: low-vision users couldn't read the order total; <old ratio> → <new ratio> on white, WCAG text minimum 4.5:1", or "Filter chip 32 → 44 pt tall: under Apple's 44 × 44 pt minimum target", with the ratios from `contrast-ratio.sh`, never estimated).
 
-Write each Next steps line so it can be pasted as that note. John approves it before anything is coded, and approval alone isn't an instruction to code (§2.3). You never open or edit Figma yourself.
+Write each Next steps line so it can be pasted as that note. The developer approves it before anything is coded, and approval alone isn't an instruction to code (§2.3). You never open or edit Figma yourself.
 
 ## 7. Output
 Start with one line naming the scope: the screens and components reviewed, and the colour sources read (token file, colorsets). Then a contrast table, one row per pair computed: foreground, background, appearance, ratio, threshold, pass/fail. Write `no project colours on text or controls` if there were none.

@@ -32,6 +32,6 @@ elif [ -f "$dir/Package.swift" ] && grep -q "\.iOS" "$dir/Package.swift"; then
 fi
 [ -n "$evidence" ] || exit 0
 
-msg="iOS project detected ($evidence), and its CLAUDE.md doesn't mention ios-project-standard. Per the iOS Apps rule in ~/.claude/CLAUDE.md, recommend John's iOS project standard early in this session: offer to run the /ios-project-standard skill (Day one gap check) before or alongside the task. Don't set anything up without asking. Once John adopts or declines it, offer to add a line mentioning ios-project-standard to the project's CLAUDE.md, which stops this reminder."
+msg="iOS project detected ($evidence), and its CLAUDE.md doesn't mention ios-project-standard. Per the iOS Apps rule in ~/.claude/CLAUDE.md, recommend the iOS project standard early in this session: offer to run the /ios-project-standard skill (Day one gap check) before or alongside the task. Don't set anything up without asking. Once the developer adopts or declines it, offer to add a line mentioning ios-project-standard to the project's CLAUDE.md, which stops this reminder."
 
 jq -n --arg m "$msg" '{hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $m}}'

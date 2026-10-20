@@ -8,7 +8,7 @@ re-run this script after cloning."""
 import hashlib, json, os, shutil, textwrap, time
 from pathlib import Path
 
-ROOT = Path.home() / "Documents/Claude/Projects/ios-best-practices/agent-evals/release-readiness-checker"
+ROOT = Path(__file__).resolve().parent  # agent-evals/release-readiness-checker
 PROMPT = "We're about to push this release. Check the repo against the release checklist and report what's ready and what isn't."
 
 

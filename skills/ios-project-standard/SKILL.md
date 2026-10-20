@@ -1,6 +1,6 @@
 ---
 name: ios-project-standard
-description: John's iOS project best-practices standard (Figma-driven development, the baseline and project-specific reviewer agents, SwiftData persistence, testing, and device/release checklists). Use when starting a new iOS app project, when a project turns into an iOS app (an Xcode project or iOS target appears, or John says it's becoming an app), when a new subsystem appears that may need a specialist reviewer agent (BLE, HealthKit, StoreKit, sync, ML, widgets), before a first device install or a release, or when John asks how a project measures up against his iOS standard. Args: `check` (default, the Day one gap check), `figma`, `agents`, `device`, `release`.
+description: An iOS project best-practices standard (Figma-driven development, the baseline and project-specific reviewer agents, SwiftData persistence, testing, and device/release checklists). Use when starting a new iOS app project, when a project turns into an iOS app (an Xcode project or iOS target appears, or the developer says it's becoming an app), when a new subsystem appears that may need a specialist reviewer agent (BLE, HealthKit, StoreKit, sync, ML, widgets), before a first device install or a release, or when the developer asks how a project measures up against the iOS standard. Args: `check` (default, the Day one gap check), `figma`, `agents`, `device`, `release`.
 ---
 
 # iOS project standard
@@ -25,9 +25,9 @@ The standard is in **`~/.claude/ios-project-standard.md`**. That file is the sin
    | `release` | §9 and the sections it references |
 
 4. **Report a gap table** in the terminal with these columns: item · status (✅ in place / ⚠️ partial / ❌ missing / n/a) · evidence (file:line, or what you looked at) · proposed action. Cite evidence for every ✅ and ⚠️. Mark anything you couldn't verify as unverified.
-5. **Ask which gaps to set up.** Don't create files, agents, Figma pages or commits until John picks them. This is a recommendation, not an installer.
-6. When setting up agents, copy them from WorkoutApp (`~/Documents/Claude/Projects/WorkoutApp/.claude/agents/`) and adapt the app name, README rules and pitfalls. Afterwards, offer a benchmark with `review-agent-evaluator`.
+5. **Ask which gaps to set up.** Don't create files, agents, Figma pages or commits until the developer picks them. This is a recommendation, not an installer.
+6. When setting up agents, copy them from the repository's `agents/ios-baseline/` and adapt the app name, README rules and pitfalls. Afterwards, offer a benchmark with `review-agent-evaluator`.
 
 ## Keeping it current
 
-When John sets a new iOS-wide practice, or a lesson from any app should apply to all of them, propose an edit to `~/.claude/ios-project-standard.md`, tagged [Sets], [Senstream], [general] or [suggested]. Don't edit this skill.
+When the developer sets a new iOS-wide practice, or a lesson from any app should apply to all of them, propose an edit to `~/.claude/ios-project-standard.md`, tagged [Sets], [Breathe], [RingKit], [general] or [suggested]. Don't edit this skill.

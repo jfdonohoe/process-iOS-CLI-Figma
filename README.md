@@ -1,28 +1,29 @@
-# iOS best practices: Claude Code CLI with Figma, Xcode and agents
+# process-ios-cli-figma
 
-John's working standard for designing and building iOS apps with Claude Code from the terminal: Figma-driven design (WIP → Approved → build → Production → Archive), Xcode builds and tests through XcodeBuildMCP and `xcodebuild`, simulator demo state for accurate screenshots, specialist reviewer agents with measured benchmarks, and the practices that keep token cost down.
+A working process for designing and building iOS apps with Claude Code from the terminal, with Figma as the design source: Figma-driven design (WIP → Approved → build → Production → Archive), Xcode builds and tests through XcodeBuildMCP and `xcodebuild`, simulator demo state for accurate screenshots, specialist reviewer agents with measured benchmarks, hooks that enforce the rules that must always hold, and the practices that keep token cost down.
 
-Proven on two apps: **Sets** (WorkoutApp) and **Breathe** (Senstream Meditation). Tags in the standard say where each practice came from: [Sets], [Breathe], [Senstream], [general], [suggested].
+It was built and proven on three projects, which the standard cites as case studies: **Sets** (a workout tracker), **Breathe** (a meditation app) and **RingKit** (a Bluetooth wearable SDK with signal processing and on-device ML). Tags in the standard say where each practice came from: [Sets], [Breathe], [RingKit], [general], [suggested].
 
 ## Wiki
 
-The project wiki is a Google Doc (the repository is private, standard §11): [iOS Best Practices Wiki](https://docs.google.com/document/d/1-fMXRE5m4DntsOJJ0TaVhLv_NMZ-4MiyQqIFL5B6Bxo/edit), at the top level of My Drive. Every change merged to `main` updates the pages it touches, re-derived from these files, and restamps the commit on its first line.
+The [project wiki](../../wiki) is a readable synthesis of this repository. Every change merged to `main` updates the pages it touches, re-derived from these files, and restamps the commit on the Home page (standard §11).
 
 ## Layout
 
 | Path | What it is |
 |---|---|
-| `standard/ios-project-standard.md` | The standard. Single source of truth. §2 Figma loop, §3 agents, §4 SwiftData, §6 testing, §8–9 device and release checklists, §10 versioning, §11 project wiki, §12 token cost |
+| `standard/ios-project-standard.md` | The standard. Single source of truth. §2 Figma loop, §3 agents, §4 SwiftData, §6 testing, §8–9 device and release checklists, §10 versioning, §11 project wiki, §12 token cost, §13 guardrails, §14 evaluating the process |
 | `standard/ios-splash-standard.md` | Splash and launch-screen rules and the verification procedure |
 | `standard/splitaudit.md` | The deep multi-area audit procedure (keyword `splitaudit`) |
-| `SETUP.md` | What a fresh Mac needs for the process, and what it doesn't |
+| `standard/ios-setup.template.md` | The per-developer values (bundle prefix, projects folder, apps, wiki locations); `install.sh` copies it to `~/.claude/ios-setup.local.md` |
+| `standard/ios-project-standard.ledger` | Every candidate practice the developer was asked about, with the answer |
+| `SETUP.md` | What a fresh Mac needs for the process, and how to audit an existing setup |
 | `CHANGELOG.md` | What each merge to `main` changed, dated and naming its commits; the wiki's Changelog page is derived from it (§11.2) |
-| `standard/ios-project-standard.ledger` | Every candidate practice John was asked about, with his answer |
-| `claude/CLAUDE.md` | Global rules loaded in every session (kept short; procedures live in the files above) |
+| `claude/CLAUDE.md` | An example global CLAUDE.md, the reference developer's own rules (kept short; procedures live in the files above) |
 | `skills/ios-project-standard/` | `/ios-project-standard [check\|figma\|agents\|device\|release\|cost]`: gap check, reads only the sections it needs |
 | `skills/ios-version/` | `/ios-version`: suggests the next SemVer number before a release |
 | `hooks/` | SessionStart, PreToolUse, PostToolUse and Stop hooks that keep the standard in view and enforce its gates (§13); `settings-hooks.json` is the settings fragment |
-| `tools/` | Simulator driver, SF Symbol vector pipeline, the Figma frame-spec export for `design-sync-reviewer`, the contrast-ratio helper for `accessibility-reviewer` and the preview-tracker report (see `tools/README.md`) |
+| `tools/` | Simulator driver, SF Symbol vector pipeline, the Figma frame-spec export for `design-sync-reviewer`, the contrast-ratio helper for `accessibility-reviewer`, the preview-tracker report and the tool-usage audit (see `tools/README.md`) |
 | `agents/global/` | Cross-project agents: `dead-code-finder`, `review-agent-evaluator` |
 | `agents/ios-baseline/` | The §3.1 baseline reviewer set to copy into a new app's `.claude/agents/`, plus the built §3.3 additions (`schema-migration-reviewer`, `design-sync-reviewer`, `release-readiness-checker`, `accessibility-reviewer`) |
 | `agent-evals/` | Seeded-defect benchmarks for the agents (run outputs are not committed) |
@@ -30,13 +31,16 @@ The project wiki is a Google Doc (the repository is private, standard §11): [iO
 
 ## Install
 
-On a new Mac, start with [`SETUP.md`](SETUP.md): the accounts, apps, command-line tools, MCP servers, connectors and settings the process needs, and what it doesn't. Then:
+Start with [`SETUP.md`](SETUP.md): the accounts, apps, command-line tools, MCP servers, connectors and settings the process needs. Then:
 
 ```bash
-./install.sh
+git clone https://github.com/<owner>/process-ios-cli-figma.git
+cd process-ios-cli-figma && ./install.sh
 ```
 
-It symlinks everything into `~/.claude` (backing up real files it replaces) and builds the Swift tools. Then merge `hooks/settings-hooks.json` into `~/.claude/settings.json`.
+`install.sh` checks the prerequisites, symlinks everything into `~/.claude` (backing up real files it replaces), builds the Swift tools and creates `~/.claude/ios-setup.local.md` for your own values. Then merge `hooks/settings-hooks.json` into `~/.claude/settings.json` and run `tests/hooks-test.sh`. Because `~/.claude` points into your clone, edits made there show up in `git status`.
+
+Note that it links `claude/CLAUDE.md` over your global `~/.claude/CLAUDE.md` (the old one is backed up). Read it first and make it yours, or remove that line from `install.sh`.
 
 ## Working cheaply (standard §12)
 

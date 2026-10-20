@@ -5,6 +5,8 @@ Every merge to `main` adds an entry here, in the same merge, and the wiki's Chan
 ## 2026-10-20
 
 ### Added
+- `SETUP.md`: everything a fresh Mac needs for the process (accounts, apps, CLI tools, MCP servers, claude.ai connectors, plugins, hooks, permissions), each marked required, situational or optional from transcript usage, plus an inventory of everything still installed with its purpose, and what was removed. Linked from the README.
+- `install.sh` checks the prerequisites and warns about missing ones, and links the four built §3.3 reviewers into `~/.claude/agents/` (they had been linked by hand).
 - `CHANGELOG.md`, and a Changelog page in the wiki derived from it; standard §11 now gives every app's wiki one.
 - `hooks/preview-candidate.sh` (§13.6): logs each XcodeBuildMCP simulator run and flags the ones a SwiftUI `#Preview` would have replaced; `tools/preview-candidates-report.sh` totals the log for the monthly review (§14.4). `tests/hooks-test.sh` now has 18 checks. (38b799c, ba9b48d)
 - `release-readiness-checker` (4-case benchmark), a static §9 release gate, and `accessibility-reviewer` (6-case benchmark), with `tools/contrast-ratio.sh`. Visual accessibility fixes go through a Figma before/after WIP section first (§2.3). (4c77595)
@@ -18,6 +20,7 @@ Every merge to `main` adds an entry here, in the same merge, and the wiki's Chan
 - `accessibility-reviewer` checks dark appearance only when the project states it supports dark mode. (7d63bd4)
 
 ### Removed
+- Unused MCP servers `playwright`, `chrome-devtools`, `figma-desktop` and `flaude` (broken placeholder path); the `swift-lsp` plugin disabled; stale allow rules in `settings.local.json`. Recorded in `SETUP.md`.
 - Apple's Xcode MCP (`xcrun mcpbridge`, `RenderPreview`): Xcode re-asked for access every Claude Code session and the server had never been called. The cheapest-visual-check rule (§6) no longer names it. (38b799c)
 
 ## 2026-10-19

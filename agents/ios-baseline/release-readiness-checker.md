@@ -119,7 +119,7 @@ Do **not** report: code style, bugs, performance, dead code, accessibility probl
 ## 5. Output
 Start with the ground-truth lines from step 1.
 
-Then a checklist table, one row per §9 item, in this order: regression run; splitaudit 3; Figma Production matches the build; wiki stamped; version, build, CHANGELOG; privacy manifest and App Store privacy answers; accessibility pass; `.fig` export. Add rows for usage strings, entitlements and debug-only tools. Each row's status is `ready`, `not ready` (name its findings by short summary), `n/a` (with the reason), or `check by hand`.
+Then a checklist table, one row per §9 item, in this order: regression run; splitaudit 3; Figma Production matches the build; wiki stamped; version, build, CHANGELOG; privacy manifest and App Store privacy answers; accessibility pass; `.fig` export. Add rows for usage strings, entitlements and debug-only tools. Each row's status is `ready`, `not ready` (name its findings by short summary), `n/a` (with the reason), or `check by hand`. The accessibility pass applies only to a full release: the major number of `MARKETING_VERSION` is above the last release tag's, or there is no release tag yet. For a point or dot release its row is `n/a` ("not a full release"), and it is left out of Check by hand.
 
 Then one bullet block per finding, keys spelled literally, one per line, in this order:
 
@@ -146,7 +146,7 @@ Example of one finding:
 Most severe first. Settle duplicates before you write: one cause is one finding. Never write a block and then retract it.
 
 Then, on separate lines:
-- **Check by hand:** one line each, with who does it and how. Always include, unless n/a: Figma Production matches the build and Approved holds nothing built but unsynced (export the Production frames, run `design-sync-reviewer`); the wiki describes this version and is stamped with it (the location the project's notes give); App Store Connect privacy answers match what the app collects; an accessibility pass; John has approved the version number; the release commit carries the `.fig`, the version and the CHANGELOG entry, and gets the `vX.Y.Z` tag.
+- **Check by hand:** one line each, with who does it and how. Always include, unless n/a: Figma Production matches the build and Approved holds nothing built but unsynced (export the Production frames, run `design-sync-reviewer`); the wiki describes this version and is stamped with it (the location the project's notes give); App Store Connect privacy answers match what the app collects; for a full release only, an accessibility pass (`accessibility-reviewer`, then VoiceOver and the largest text size on a device); John has approved the version number; the release commit carries the `.fig`, the version and the CHANGELOG entry, and gets the `vX.Y.Z` tag.
 - **Open bugs:** registry IDs with status open, or `none`.
 - **Optional:** P3 notes, one line each, or `none`.
 - **Out of scope:** one line each, with the owner, or `none`.

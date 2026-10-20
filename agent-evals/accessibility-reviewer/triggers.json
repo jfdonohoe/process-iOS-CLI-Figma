@@ -25,6 +25,10 @@
     {
       "prompt": "why does the progress dial show 0% after I log pages?",
       "expect": false
+    },
+    {
+      "prompt": "we're cutting a dot release today, 2.3.1, just bug fixes. what do we need to check?",
+      "expect": false
     }
   ]
 }

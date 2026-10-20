@@ -1,6 +1,6 @@
 {
   "case": "06-p2-only",
-  "description": "Only P2 problems: a 34×34 info button (P2 band 30–43) and a count and its unit read as two elements. Overall must be PASS (NEEDS-WORK only on P1).",
+  "description": "Only P2 problems, light appearance only (no dark-mode support stated): a 34×34 info button (P2 band 30–43) and a count and its unit read as two elements. Overall must be PASS (NEEDS-WORK only on P1).",
   "prompt": "Do the accessibility pass on this app's screens and report your findings.",
   "exhaustive": false,
   "read_only": true,
@@ -11,8 +11,8 @@
         {
           "file": "Puffin/Views/StatsView.swift",
           "lines": [
-            25,
-            32
+            28,
+            35
           ]
         }
       ],
@@ -44,11 +44,23 @@
       "id": "list-row-text",
       "file": "Puffin/Views/StatsView.swift",
       "lines": [
-        24,
-        24
+        27,
+        27
       ],
       "categories": [],
       "why": "Plain list row text."
+    },
+    {
+      "id": "moss-dark-unsupported",
+      "file": "Puffin/Views/StatsView.swift",
+      "lines": [
+        21,
+        23
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "Moss passes on white (6.39:1) and fails only on black; the project doesn't state dark-mode support, so dark isn't checked."
     }
   ],
   "forbidden_strings": [],

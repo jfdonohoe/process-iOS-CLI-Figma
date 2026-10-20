@@ -18,6 +18,9 @@ struct StatsView: View {
                     Spacer()
                 }
                 .padding()
+                Link("How stats are counted", destination: URL(string: "https://example.org/stats")!)
+                    .font(.subheadline)
+                    .foregroundStyle(Color.moss)
                 List {
                     Section {
                         HStack {

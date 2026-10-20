@@ -616,11 +616,12 @@ def case03():
         }
         """)
     N, G = "Puffin/Views/NowReadingView.swift", "Puffin/Views/GoalCelebration.swift"
-    repo = base_repo([("NowReadingView", "Now", "book"), ("GoalCelebration", "Goals", "flag")]) | {N: now, G: goal}
+    repo = base_repo([("NowReadingView", "Now", "book"), ("GoalCelebration", "Goals", "flag")]) | {N: now, G: goal,
+            "CLAUDE.md": CLAUDE_MD + "- The app supports light and dark appearance; check both.\n"}
     r = lambda a, b: round(ratio(a, b), 2)
     write_case("03-contrast-motion", repo, {
         "description": (
-            f"Contrast and motion: Color.mist footnote on white {r(_m, WHITE)}:1; Moss link (no dark variant) on black {r(hexrgb(MOSS), BLACK)}:1 in dark mode; "
+            f"Contrast and motion (CLAUDE.md states dark-mode support): Color.mist footnote on white {r(_m, WHITE)}:1; Moss link (no dark variant) on black {r(hexrgb(MOSS), BLACK)}:1 in dark mode; "
             f"white label on the Apricot fill {r(WHITE, hexrgb(APRICOT))}:1; an overdue/on-time dot shown only by colour; a repeatForever pulse with no Reduce Motion check. "
             f"Decoys: a 28 pt title in Color.slate ({r(_s, WHITE)}:1 white, {r(_s, BLACK)}:1 black, passes the large-text bar); Ink text both ways; a seal icon with a Finished label; "
             f"a repeating spin gated on accessibilityReduceMotion; a one-shot spring on tap; a Plum-tinted borderedProminent button."),
@@ -914,6 +915,9 @@ def case06():
                             Spacer()
                         }
                         .padding()
+                        Link("How stats are counted", destination: URL(string: "https://example.org/stats")!)
+                            .font(.subheadline)
+                            .foregroundStyle(Color.moss)
                         List {
                             Section {
                                 HStack {
@@ -939,7 +943,7 @@ def case06():
     S = "Puffin/Views/StatsView.swift"
     repo = base_repo([("StatsView", "Stats", "chart.bar")]) | {S: stats}
     write_case("06-p2-only", repo, {
-        "description": "Only P2 problems: a 34×34 info button (P2 band 30–43) and a count and its unit read as two elements. Overall must be PASS (NEEDS-WORK only on P1).",
+        "description": "Only P2 problems, light appearance only (no dark-mode support stated): a 34×34 info button (P2 band 30–43) and a count and its unit read as two elements. Overall must be PASS (NEEDS-WORK only on P1).",
         "prompt": prompt_all(),
         "exhaustive": False,
         "read_only": True,
@@ -952,6 +956,8 @@ def case06():
         "must_not_flag": [
             {"id": "list-row-text", "file": S, "lines": rng(stats, 'Text("Pages this month")'), "categories": [],
              "why": "Plain list row text."},
+            {"id": "moss-dark-unsupported", "file": S, "lines": rng(stats, 'Link("How stats are counted"', ".foregroundStyle(Color.moss)"), "categories": ["contrast"],
+             "why": f"Moss passes on white ({round(ratio(hexrgb(MOSS), WHITE), 2)}:1) and fails only on black; the project doesn't state dark-mode support, so dark isn't checked."},
         ],
         "forbidden_strings": [],
         "expected_overall": "PASS",

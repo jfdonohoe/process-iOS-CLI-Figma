@@ -1,6 +1,6 @@
 {
   "case": "03-contrast-motion",
-  "description": "Contrast and motion: Color.mist footnote on white 2.46:1; Moss link (no dark variant) on black 3.29:1 in dark mode; white label on the Apricot fill 2.07:1; an overdue/on-time dot shown only by colour; a repeatForever pulse with no Reduce Motion check. Decoys: a 28 pt title in Color.slate (3.95:1 white, 5.32:1 black, passes the large-text bar); Ink text both ways; a seal icon with a Finished label; a repeating spin gated on accessibilityReduceMotion; a one-shot spring on tap; a Plum-tinted borderedProminent button.",
+  "description": "Contrast and motion (CLAUDE.md states dark-mode support): Color.mist footnote on white 2.46:1; Moss link (no dark variant) on black 3.29:1 in dark mode; white label on the Apricot fill 2.07:1; an overdue/on-time dot shown only by colour; a repeatForever pulse with no Reduce Motion check. Decoys: a 28 pt title in Color.slate (3.95:1 white, 5.32:1 black, passes the large-text bar); Ink text both ways; a seal icon with a Finished label; a repeating spin gated on accessibilityReduceMotion; a one-shot spring on tap; a Plum-tinted borderedProminent button.",
   "prompt": "Do the accessibility pass on this app's screens and report your findings.",
   "exhaustive": false,
   "read_only": true,

@@ -22,3 +22,4 @@ agent:accessibility-reviewer built 2026-10-20; John: build it (tag as built in �
 tool:contrast-ratio added 2026-10-20 (§3.3, for accessibility-reviewer)
 process:accessibility-figma-first added 2026-10-20 (§2.3; visual accessibility fixes get a labelled before/after WIP section; John: yes)
 process:accessibility-pass-uses-reviewer added 2026-10-20 (§9; John: yes)
+rule:accessibility-dark-mode-only-if-stated added 2026-10-20 (§3.3 accessibility-reviewer; John: don't check dark mode unless the project says it supports it)

@@ -19,8 +19,8 @@ The project wiki is a Google Doc (the repository is private, standard §11): [iO
 | `claude/CLAUDE.md` | Global rules loaded in every session (kept short; procedures live in the files above) |
 | `skills/ios-project-standard/` | `/ios-project-standard [check\|figma\|agents\|device\|release\|cost]`: gap check, reads only the sections it needs |
 | `skills/ios-version/` | `/ios-version`: suggests the next SemVer number before a release |
-| `hooks/` | SessionStart and PostToolUse hooks that keep the standard in view; `settings-hooks.json` is the settings fragment |
-| `tools/` | Simulator driver, SF Symbol vector pipeline, the Figma frame-spec export for `design-sync-reviewer` and the contrast-ratio helper for `accessibility-reviewer` (see `tools/README.md`) |
+| `hooks/` | SessionStart, PreToolUse, PostToolUse and Stop hooks that keep the standard in view and enforce its gates (§13); `settings-hooks.json` is the settings fragment |
+| `tools/` | Simulator driver, SF Symbol vector pipeline, the Figma frame-spec export for `design-sync-reviewer`, the contrast-ratio helper for `accessibility-reviewer` and the preview-tracker report (see `tools/README.md`) |
 | `agents/global/` | Cross-project agents: `dead-code-finder`, `review-agent-evaluator` |
 | `agents/ios-baseline/` | The §3.1 baseline reviewer set to copy into a new app's `.claude/agents/`, plus the built §3.3 additions (`schema-migration-reviewer`, `design-sync-reviewer`, `release-readiness-checker`, `accessibility-reviewer`) |
 | `agent-evals/` | Seeded-defect benchmarks for the agents (run outputs are not committed) |

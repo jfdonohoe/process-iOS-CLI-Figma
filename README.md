@@ -4,6 +4,10 @@ John's working standard for designing and building iOS apps with Claude Code fro
 
 Proven on two apps: **Sets** (WorkoutApp) and **Breathe** (Senstream Meditation). Tags in the standard say where each practice came from: [Sets], [Breathe], [Senstream], [general], [suggested].
 
+## Wiki
+
+The project wiki is a Google Doc (the repository is private, standard §11): [iOS Best Practices Wiki](https://docs.google.com/document/d/1-fMXRE5m4DntsOJJ0TaVhLv_NMZ-4MiyQqIFL5B6Bxo/edit), at the top level of My Drive. Every change merged to `main` updates the pages it touches, re-derived from these files, and restamps the commit on its first line.
+
 ## Layout
 
 | Path | What it is |

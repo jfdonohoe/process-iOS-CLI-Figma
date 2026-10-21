@@ -25,7 +25,7 @@ The [project wiki](../../wiki) is a readable synthesis of this repository. Every
 | `hooks/` | SessionStart, PreToolUse, PostToolUse and Stop hooks that keep the standard in view and enforce its gates (§13); `settings-hooks.json` is the settings fragment |
 | `tools/` | Simulator driver, SF Symbol vector pipeline, the Figma frame-spec export for `design-sync-reviewer`, the contrast-ratio helper for `accessibility-reviewer`, the preview-tracker report and the tool-usage audit (see `tools/README.md`) |
 | `agents/global/` | Cross-project agents: `dead-code-finder`, `review-agent-evaluator` |
-| `agents/ios-baseline/` | The §3.1 baseline reviewer set to copy into a new app's `.claude/agents/`, plus the built §3.3 additions (`schema-migration-reviewer`, `design-sync-reviewer`, `release-readiness-checker`, `accessibility-reviewer`) |
+| `agents/ios/` | The iOS agents every app project gets, linked into `~/.claude/agents/ios/`: the §3.1 set (`swift-reviewer`, `regression-reviewer`, `ios-codebase-auditor`, `ios-codebase-refactorer`) and the §3.3 additions (`schema-migration-reviewer`, `design-sync-reviewer`, `release-readiness-checker`, `accessibility-reviewer`). Apps supply their facts through the README and `.claude/agent-context.md` |
 | `agent-evals/` | Seeded-defect benchmarks for the agents (run outputs are not committed) |
 | `tests/hooks-test.sh` | Fixed-input tests for every hook (standard §14.1) |
 

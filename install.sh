@@ -20,8 +20,10 @@ link hooks hooks
 link tools tools
 link agent-evals agent-evals
 for f in agents/global/*.md; do link "$f" "agents/$(basename "$f")"; done
-# The built §3.3 additions are user-level; the rest of agents/ios-baseline is copied per app (§3.1).
-for a in schema-migration-reviewer design-sync-reviewer release-readiness-checker accessibility-reviewer; do link "agents/ios-baseline/$a.md" "agents/$a.md"; done
+# Every iOS agent is user-level, in ~/.claude/agents/ios/ (§3.1). Remove old flat links to them first:
+# two definitions with the same name load one of them at random.
+for l in "$C"/agents/*.md; do [ -L "$l" ] && case "$(readlink "$l")" in *"/agents/ios-baseline/"*|*"/agents/ios/"*) rm "$l"; echo "removed old link ~/.claude/agents/$(basename "$l")";; esac; done
+for f in agents/ios/*.md; do [ "$(basename "$f")" = README.md ] || link "$f" "agents/ios/$(basename "$f")"; done
 # Per-developer values (standard "Your setup"); never overwritten, never in the repo.
 [ -e "$C/ios-setup.local.md" ] || { cp "$REPO/standard/ios-setup.template.md" "$C/ios-setup.local.md"; echo "created ~/.claude/ios-setup.local.md: fill in your values"; }
 (cd "$REPO/tools" && swiftc -O -o sf-symbol-match sf-symbol-match.swift && swiftc -O -o sf-symbol-export sf-symbol-export.swift) && echo "built tools"

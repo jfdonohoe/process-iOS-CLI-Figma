@@ -80,7 +80,7 @@ To show a *modified* file in a later commit, put its earlier version at the same
 
 ## Project agents
 
-Agents in a project's `.claude/agents/` are not found by name inside the temp repo. Pass the file: `run_case.py --agent <name> --agent-file <project>/.claude/agents/<name>.md` (or a snapshot of it). `trigger_check.py` takes the same `--agent-file` and installs the agent in each temp repo's `.claude/agents/`. `swift-reviewer` and `regression-reviewer` (WorkoutApp) are benchmarked this way.
+Agents in a project's `.claude/agents/` are not found by name inside the temp repo. Pass the file: `run_case.py --agent <name> --agent-file <project>/.claude/agents/<name>.md` (or a snapshot of it). `trigger_check.py` takes the same `--agent-file` and installs the agent in each temp repo's `.claude/agents/`. Installed user-level agents are found by name anywhere under `~/.claude/agents/`, subfolders included (`ios/`).
 
 `regression-reviewer`'s fixtures are Swift packages, so the agent really builds and runs their tests (`swift test --scratch-path "$TMPDIR/…"`, documented in each fixture's README so build output stays out of the repo). Each run takes about 2 minutes and costs about $0.30.
 

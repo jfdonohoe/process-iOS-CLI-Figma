@@ -34,6 +34,16 @@ from pathlib import Path
 AGENTS_DIR = Path.home() / ".claude" / "agents"
 
 
+def installed_agent(name):
+    """The installed definition of `name`, in ~/.claude/agents/ or a subfolder of it (agents/ios/)."""
+    hits = sorted(p for p in AGENTS_DIR.rglob(f"{name}.md"))
+    if not hits:
+        sys.exit(f"no installed agent {name}.md under {AGENTS_DIR}")
+    if len(hits) > 1:
+        sys.exit(f"{name}.md is installed more than once: {', '.join(map(str, hits))}")
+    return hits[0]
+
+
 def load_agent(path):
     """Frontmatter + prompt body of an agent .md file."""
     import yaml
@@ -202,7 +212,7 @@ def main():
 
     case_dir = Path(args.case).expanduser().resolve()
     expected = json.loads((case_dir / "expected.json").read_text())
-    agent_path = Path(args.agent_file).expanduser() if args.agent_file else AGENTS_DIR / f"{args.agent}.md"
+    agent_path = Path(args.agent_file).expanduser() if args.agent_file else installed_agent(args.agent)
     fm, body, tools = load_agent(agent_path)
     run_agent, inline = args.agent, None
     if args.agent_file:

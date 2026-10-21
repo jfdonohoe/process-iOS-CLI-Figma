@@ -29,7 +29,7 @@ You evaluate custom reviewer agents: are they **valid** (the definition is sound
 ## Inputs
 
 From the prompt that invoked you, determine:
-- **Agents** — named agent(s); if none named, every `~/.claude/agents/*.md` except yourself.
+- **Agents** — named agent(s); if none named, every agent under `~/.claude/agents/`, subfolders included (`ios/`), except yourself.
 - **Mode** — `full` (default: validity + effectiveness + trigger routing) or `static` (validity only, no model calls). Full mode spends real money: each benchmark run is a full headless session. Report the cost.
 - **Runs per case** — default 3. Fewer than 3 cannot measure consistency; say so if asked for fewer.
 - **Baseline** — if the invoking prompt names a snapshot or earlier results directory to compare against, or the agent was just edited and `snapshots/` has a pre-change copy, do the before/after comparison in step 2.6.
@@ -56,7 +56,7 @@ Run `python3 ~/.claude/agent-evals/bin/selftest.py`. If anything fails, stop and
 - **V3 Instruction/tool consistency** — every action the prompt tells the agent to take is possible with its tools (e.g., "run knip" needs Bash; "check git blame" needs Bash; "use ReportFindings if available" needs a fallback, since subagents usually don't have it).
 - **V4 Output contract** — fields line up with the shared report shape: `file`, `line`, `category`, `short_summary` (≤60 chars), `summary`, `failure_scenario`, `verdict` (`CONFIRMED`/`PLAUSIBLE`). The category list is closed and **covers every kind of finding the prompt demands** — an instruction to "report X as a finding" with no category for X is a defect. Extract the category list; you pass it to `score.py`.
 - **V5 Internal contradictions** — conflicting instructions, undefined thresholds, "report everything" vs. "don't pad".
-- **V6 Trigger description** — has concrete positive examples and a clear scope; compare against every other agent description in `~/.claude/agents/` for overlapping triggers that would cause double-reporting or mis-routing.
+- **V6 Trigger description** — has concrete positive examples and a clear scope; compare against every other agent description in `~/.claude/agents/` (subfolders included) and in the project's `.claude/agents/` for overlapping triggers that would cause double-reporting or mis-routing.
 - **V7 Safety discipline** — for agents that read untrusted code: treats code comments/strings as data (prompt-injection handling), masks secrets.
 - **V8 Benchmark coverage** — every category and every "do not report" rule in the spec has at least one `must_find` or `must_not_flag` in the benchmark. List uncovered ones as `benchmark-gap`.
 - **V9 Benchmark contamination** — the agent's definition must not contain benchmark specifics: fixture file names, planted symbol names, distinctive fixture comment text, or trigger prompts quoted verbatim in its description examples. Search the agent `.md` for identifiers from `cases/*/repo/` and for the prompts in the trigger spec. An agent tuned on its own answer key will score well and prove nothing; report any overlap beyond generic vocabulary as `benchmark-gap` with severity above every effectiveness finding.

@@ -73,11 +73,11 @@ git clone https://github.com/<owner>/process-ios-cli-figma.git
 cd process-ios-cli-figma && ./install.sh
 ```
 
-Clone it anywhere. `install.sh` first checks the prerequisites in §2–3 and warns about any that are missing. It then links into `~/.claude`: the standard, splash standard, ledger and `splitaudit.md`; `CLAUDE.md`; the two skills (`/ios-project-standard`, `/ios-version`); `hooks/`; `tools/`; `agent-evals/`; the global agents (`dead-code-finder`, `review-agent-evaluator`); and the four built §3.3 reviewers (`schema-migration-reviewer`, `design-sync-reviewer`, `release-readiness-checker`, `accessibility-reviewer`). It builds `tools/sf-symbol-match` and `tools/sf-symbol-export`, and creates `~/.claude/ios-setup.local.md` from `standard/ios-setup.template.md` if you don't have one.
+Clone it anywhere. `install.sh` first checks the prerequisites in §2–3 and warns about any that are missing. It then links into `~/.claude`: the standard, splash standard, ledger and `splitaudit.md`; `CLAUDE.md`; the two skills (`/ios-project-standard`, `/ios-version`); `hooks/`; `tools/`; `agent-evals/`; the global agents (`dead-code-finder`, `review-agent-evaluator`) into `~/.claude/agents/`; and every iOS agent in `agents/ios/` into `~/.claude/agents/ios/`, removing any older flat links to them. It builds `tools/sf-symbol-match` and `tools/sf-symbol-export`, and creates `~/.claude/ios-setup.local.md` from `standard/ios-setup.template.md` if you don't have one.
 
 **`claude/CLAUDE.md` replaces your global `~/.claude/CLAUDE.md`** (the old one is backed up to `~/.claude/.pre-repo-backup/`). It is written in the first person, as the reference developer's own rules; edit it into yours, or skip that link and copy the iOS lines you want into your own file.
 
-The rest of `agents/ios-baseline/` (`swift-reviewer`, `ios-codebase-auditor`, `ios-codebase-refactorer`, `regression-reviewer`) is copied into each app's `.claude/agents/` and adapted (§3.1). The installer does not touch settings or MCP servers.
+Nothing is copied into apps: each app gives the agents its facts through its README and an optional `.claude/agent-context.md` (template in `standard/agent-context.template.md`; §3.1). If an app still has its own copies of these agents in `.claude/agents/`, delete them, or they silently replace the shared ones. The installer does not touch settings or MCP servers.
 
 ## 8. Your setup
 

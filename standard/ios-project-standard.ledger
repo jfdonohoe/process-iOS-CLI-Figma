@@ -24,3 +24,6 @@ hook:preview-candidate added 2026-10-20 (§13.6, §14.4; tools/preview-candidate
 process:wiki-changelog added 2026-10-20 (§11.1 starting pages, §11.2; CHANGELOG.md entry per merge, wiki Changelog page derived from it; developer: add CHANGELOG.md, every app's wiki)
 process:wiki-no-names added 2026-10-20 (§11.2; wiki says "the developer" / "the author", never a name; repo wording unchanged; developer: yes)
 process:schema-fixture-store added 2026-10-20 (§4; checked-in fixture store per schema version, synthetic rows, opened every run; V1-is-live-types warning beside the models; developer: yes)
+agent:PHYSICAL_RING_CHECKLIST added 2026-10-20 (§3.4 [RingKit]; in-repo physical-device checklist, run conversationally after audit-driven fixes; developer: yes)
+agent:RUN_SYNC added 2026-10-20 (§3.4 [RingKit]; two-step run-then-approve doc for the upstream-sync agent; developer: yes)
+process:ios-agents-user-level added 2026-10-20 (§3.1 [general]; all iOS agents in agents/ios/ linked user-level to ~/.claude/agents/ios/, apps supply facts via README + .claude/agent-context.md, no per-app copies; developer: approved three-tier plan — global / iOS in process repo / one shared set for the RingKit family, linked per project)

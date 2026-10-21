@@ -14,10 +14,12 @@ check() { # kind name path
   grep -qE "^$1:$2 " "$LEDGER" "$LOCAL_LEDGER" 2>/dev/null && return
   new+=("$1 '$2' ($3)")
 }
-for f in "$HOME"/.claude/agents/*.md "$dir"/.claude/agents/*.md; do
-  [ -f "$f" ] && [ "$(basename "$f")" != README.md ] || continue
-  n=$(sed -n 's/^name:[[:space:]]*//p' "$f" | head -1); check agent "${n:-$(basename "$f" .md)}" "$f"
-done
+# Agents may sit in subfolders (agents/ios/, a linked project-family folder); -L follows the links.
+# Only files with a `name:` line are agents; READMEs and checklists kept alongside are not.
+while IFS= read -r f; do
+  n=$(sed -n '1,15s/^name:[[:space:]]*//p' "$f" | head -1); [ -n "$n" ] || continue
+  check agent "$n" "$f"
+done < <(find -L "$HOME/.claude/agents" "$dir/.claude/agents" -maxdepth 3 -name '*.md' 2>/dev/null)
 for f in "$HOME"/.claude/skills/*/SKILL.md "$dir"/.claude/skills/*/SKILL.md; do
   [ -f "$f" ] || continue
   case "$f" in */skills/synced/*) continue ;; esac

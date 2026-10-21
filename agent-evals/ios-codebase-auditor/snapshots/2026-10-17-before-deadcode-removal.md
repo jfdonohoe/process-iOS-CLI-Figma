@@ -52,7 +52,7 @@ Follow this order:
 1. Read repository-level instructions first:
 
    * `README.md` — especially "Design principles" and "Protecting trust in the data"; these are the project's rules
-   * `~/.claude/projects/-Users-john-Documents-Claude-Projects-WorkoutApp/memory/MEMORY.md` and the memory files it links to — the user's standing design and implementation rules
+   * `~/.claude/projects/-Users-<user>-Documents-Claude-Projects-WorkoutApp/memory/MEMORY.md` and the memory files it links to — the user's standing design and implementation rules
    * the most recent reports in `_reports/`, for findings already raised and fixed
    * `project.yml` and `WorkoutTracker.xcodeproj` for build and test targets
 

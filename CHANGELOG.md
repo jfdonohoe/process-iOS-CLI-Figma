@@ -5,6 +5,8 @@ Every merge to `main` adds an entry here, in the same merge, and the wiki's Chan
 ## 2026-10-20
 
 ### Added
+- `standard/agent-context.template.md`: the per-app `.claude/agent-context.md` (preserve list, domain terms, known pitfalls, extra stop conditions, memory location) that the iOS agents read at run time.
+- `hooks/refactorer-git-guard.py`: the refactorer's git-state guard, moved from the reference app so the shared refactorer can use it (`$HOME/.claude/hooks/`).
 - Standard §4: check in a fixture store for every schema version (synthetic rows, opened through the versioned container on every test run), and mark a V1 that points at the live model types beside the models. From Breathe.
 - `tools/tool-usage-report.py`: counts what a Claude Code setup actually uses, from its session transcripts.
 - `SETUP.md`: everything a fresh Mac needs for the process (accounts, apps, CLI tools, MCP servers, claude.ai connectors, plugins, hooks, permissions), each marked required, situational or optional from transcript usage. Linked from the README. (7495f4d)
@@ -15,6 +17,9 @@ Every merge to `main` adds an entry here, in the same merge, and the wiki's Chan
 - `design-sync-reviewer` (6-case benchmark), which compares built SwiftUI with a Figma frame spec, and `tools/figma-frame-spec.js`, the read-only export it reads (§2.3 step 4). (d8f6575)
 
 ### Changed
+- iOS agents are all user-level now: `agents/ios-baseline/` is `agents/ios/`, and `install.sh` links every agent in it into `~/.claude/agents/ios/` (removing older flat links) instead of apps copying four of them (§3.1). `swift-reviewer`, `regression-reviewer`, `ios-codebase-auditor` and `ios-codebase-refactorer` carry method only and read the app's README and agent context for its rules, pitfalls and build commands. A project agent with the same name replaces a shared one on purpose (§3.4). The reference app's own copies were removed.
+- `regression-reviewer` checks that a fix holds at every site its shape governs, not just the registry row's location; applies the declared → assigned → called check to every hook, with the extra checks for apps split into modules; and, where `FEATURES.md` exists, derives the feature inventory from the code's controls.
+- `hooks/standard-unreviewed-scan.sh` scans agent subfolders (following links) and counts only files with a `name:` line. `run_case.py` and `review-agent-evaluator` find installed agents in subfolders.
 - Made public as `process-ios-cli-figma` (renamed from `ios-best-practices`). Every file now speaks of "the developer" rather than a named person, and says they/them; per-developer values (bundle prefix, projects folder, apps, GitHub owner, wiki location) move to a `Your setup` block in the standard, kept in `~/.claude/ios-setup.local.md` from `standard/ios-setup.template.md`. The case-study apps are Sets, Breathe and RingKit, a Bluetooth wearable SDK (tag `[RingKit]`).
 - The wiki moved from a Google Doc to the GitHub wiki (§11.1: public repository).
 - `SETUP.md` describes a generic fresh setup with the reference setup's usage figures, and a procedure for auditing an existing machine; the reference machine's own inventory moved to its private setup file.

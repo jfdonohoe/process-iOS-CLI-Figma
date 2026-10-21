@@ -26,7 +26,7 @@ The standard is in **`~/.claude/ios-project-standard.md`**. That file is the sin
 
 4. **Report a gap table** in the terminal with these columns: item · status (✅ in place / ⚠️ partial / ❌ missing / n/a) · evidence (file:line, or what you looked at) · proposed action. Cite evidence for every ✅ and ⚠️. Mark anything you couldn't verify as unverified.
 5. **Ask which gaps to set up.** Don't create files, agents, Figma pages or commits until the developer picks them. This is a recommendation, not an installer.
-6. When setting up agents, copy them from the repository's `agents/ios-baseline/` and adapt the app name, README rules and pitfalls. Afterwards, offer a benchmark with `review-agent-evaluator`.
+6. When setting up agents, don't copy them: the iOS agents are user-level (`~/.claude/agents/ios/`). Give the app what they read instead: product rules and build commands in the README, and `.claude/agent-context.md` from `standard/agent-context.template.md` (preserve list, domain terms, pitfalls, stop conditions). Flag any old agent copies in the app's `.claude/agents/`, since they shadow the shared ones. Propose a project-specific agent only for a subsystem with its own failure modes (§3.4); offer a benchmark with `review-agent-evaluator` for any new one.
 
 ## Keeping it current
 

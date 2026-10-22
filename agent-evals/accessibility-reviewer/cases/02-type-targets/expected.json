@@ -151,6 +151,18 @@
         "hit-target"
       ],
       "why": "44×44 with a content shape."
+    },
+    {
+      "id": "heather-card-fill",
+      "file": "Puffin/Views/ShelfView.swift",
+      "lines": [
+        17,
+        17
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "Decorative cover placeholder (1.39:1 on white). It is a card background, not a state indicator or a field's only boundary, and the link is spoken by its label. EVALUATOR-WRITTEN (2026-10-22): review whether the developer agrees this fill is not a needed indicator."
     }
   ],
   "forbidden_strings": [],

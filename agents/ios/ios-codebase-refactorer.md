@@ -208,6 +208,8 @@ xcodebuild \
 
 Only use the actual project name, scheme, simulator, and test target discovered in the repository.
 
+**Builds and disk.** Several batches may run at once, each in its own worktree, and every extra build copy costs hundreds of MB. Run `df -h` before the first build; under ~10 GB free, say so and don't start extra copies. Build a Swift package in the worktree's own `.build` (no extra `--scratch-path` copies), and give `xcodebuild` at most one `-derivedDataPath`, under the session scratchpad, deleted when the batch is done. Name logs after the worktree, since other batches may share the scratchpad. If the disk fills (ENOSPC), stop writing at once, delete nothing but your own build output, and report it. (Added after parallel batches filled a developer's disk and two stopped mid-run.)
+
 ### Step 6: Leave committing to the user
 
 Never run `git commit`, `git add`, `git stash` or anything else that changes Git state: the user commits, in their own session, when they choose to. A PreToolUse hook (`~/.claude/hooks/refactorer-git-guard.py`) blocks those commands as well; if it fires, do not look for another way around it. After a batch has passed its planned checks:

@@ -60,6 +60,16 @@ def classify_all(parsed, expected):
     order = sorted((i for i in range(len(parsed)) if cands[i]), key=lambda i: cands[i][0][0], reverse=True)
     for i in order:
         best_key = cands[i][0][0]
+        if best_key[0] == 0:
+            # Only a wrong-category must_find fits here; a decoy that names this exact category at this location is
+            # the better match (2026-10-22: a colour-only finding on the seal line must score as the colour-only decoy,
+            # not as a wrong-category hit on the seal's voiceover-element item).
+            decoy = next((d for d in expected["must_not_flag"]
+                          if d["categories"] and parsed[i].get("category") in d["categories"]
+                          and _in_loc(parsed[i], d["file"], d["lines"])), None)
+            if decoy:
+                results[i] = {"kind": "decoy", "id": decoy["id"]}
+                continue
         tied = [c for c in cands[i] if c[0] == best_key]
         key, item_id, cat_ok = next((c for c in tied if c[1] not in hit), tied[0])
         hit.add(item_id)

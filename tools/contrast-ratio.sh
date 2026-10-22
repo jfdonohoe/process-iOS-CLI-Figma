@@ -18,6 +18,11 @@ rgb() { # -> "r g b" in 0–255
   if [[ $c == *.* ]]; then
     awk -v a="$a" -v b="$b" -v d="$d" 'BEGIN { printf "%.4f %.4f %.4f\n", a*255, b*255, d*255 }'
   else
+    # 0-255 integers. All of them 0 or 1 is almost always a float colour typed without decimals (1,1,1 meaning white),
+    # which this reads as near-black; warn rather than guess (added 2026-10-22 after a wrong quoted ratio).
+    if [[ $a =~ ^[01]$ && $b =~ ^[01]$ && $d =~ ^[01]$ && "$a$b$d" == *1* ]]; then
+      echo "warning: '$1' is read as 0-255 integers (near-black). For white write #FFFFFF or 1.0,1.0,1.0" >&2
+    fi
     echo "$((a)) $((b)) $((d))"
   fi
 }

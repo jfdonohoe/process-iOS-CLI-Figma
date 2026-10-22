@@ -61,6 +61,10 @@ def hexrgb(h):
 WHITE, BLACK = hexrgb("#FFFFFF"), hexrgb("#000000")
 
 
+def _blend(fg, bg, a):  # .opacity(a) over bg, as contrast-ratio.sh's third argument does
+    return tuple(a * f + (1 - a) * b for f, b in zip(fg, bg))
+
+
 def colorset(light, dark=None):
     def entry(h, appearance=None):
         r, g, b = hexrgb(h)
@@ -94,6 +98,7 @@ assert ratio(WHITE, hexrgb(PLUM)) >= 4.5
 _m = tuple(round(c * 255) for c in MIST)
 assert ratio(_m, WHITE) < 4.5 and ratio(_m, BLACK) >= 4.5
 _s = tuple(round(c * 255) for c in SLATE)
+_mf = tuple(c * 255 for c in MIST)  # what contrast-ratio.sh computes from the Theme literal (0.62,0.65,0.69)
 assert 3 <= ratio(_s, WHITE) < 4.5 and ratio(_s, BLACK) >= 3
 
 
@@ -507,6 +512,10 @@ def case02():
              "why": "Fixed size on a decorative symbol, hidden from VoiceOver."},
             {"id": "clear-44", "file": S, "lines": rng(shelf, 'Image(systemName: "star.slash")', ".contentShape(Rectangle())"), "categories": ["hit-target"],
              "why": "44×44 with a content shape."},
+            {"id": "heather-card-fill", "file": S, "lines": rng(shelf, ".fill(Color.heather.opacity(0.2))"), "categories": ["contrast"],
+             "why": (f"Decorative cover placeholder ({round(ratio(_blend(hexrgb(HEATHER[0]), WHITE, 0.2), WHITE), 2)}:1 on white). It is a card "
+                     "background, not a state indicator or a field's only boundary, and the link is spoken by its label. "
+                     "EVALUATOR-WRITTEN (2026-10-22): review whether the developer agrees this fill is not a needed indicator.")},
         ],
         "forbidden_strings": [],
         "expected_overall": "NEEDS-WORK",
@@ -514,7 +523,7 @@ def case02():
 
 
 # ================================================================== 03 contrast, colour alone, motion
-def case03():
+def case03_sources():
     now = d("""
         import SwiftUI
         import SwiftData
@@ -615,43 +624,70 @@ def case03():
             }
         }
         """)
-    N, G = "Puffin/Views/NowReadingView.swift", "Puffin/Views/GoalCelebration.swift"
-    repo = base_repo([("NowReadingView", "Now", "book"), ("GoalCelebration", "Goals", "flag")]) | {N: now, G: goal,
+    return now, goal
+
+
+N3, G3 = "Puffin/Views/NowReadingView.swift", "Puffin/Views/GoalCelebration.swift"
+
+
+def case03_repo(now, goal):
+    return base_repo([("NowReadingView", "Now", "book"), ("GoalCelebration", "Goals", "flag")]) | {N3: now, G3: goal,
             "CLAUDE.md": CLAUDE_MD + "- The app supports light and dark appearance; check both.\n"}
+
+
+def case03_key(now, goal):
+    """must_find and must_not_flag shared by 03 and the declined-items cases built on it."""
+    N, G = N3, G3
+    r = lambda a, b: round(ratio(a, b), 2)
+    must_find = {
+        "mist-footnote": {"id": "mist-footnote", "locations": [loc(N, rng(now, '.font(.footnote)', ".foregroundStyle(Color.mist)")), loc("Puffin/Theme.swift", rng(THEME, "static let mist"))],
+             "categories": ["contrast"], "expected_verdict": "CONFIRMED", "why": f"Color.mist on white is {r(_m, WHITE)}:1, below 4.5:1 for footnote text."},
+        "moss-dark": {"id": "moss-dark", "locations": [loc(N, rng(now, 'Link("Find your local library"', ".foregroundStyle(Color.moss)")), loc("Puffin/Theme.swift", rng(THEME, "static let moss"))],
+             "categories": ["contrast"], "expected_verdict": "CONFIRMED", "why": f"Moss has no dark value; on the dark background it is {r(hexrgb(MOSS), BLACK)}:1."},
+        "apricot-button": {"id": "apricot-button", "locations": [loc(N, rng(now, 'Text("Log Reading")', ".background(Capsule().fill(Color.apricot))"))],
+             "categories": ["contrast"], "expected_verdict": "CONFIRMED", "why": f"White 17 pt Semibold on Apricot is {r(WHITE, hexrgb(APRICOT))}:1."},
+        "overdue-dot": {"id": "overdue-dot", "locations": [loc(N, rng(now, ".fill(book.isOverdue ? Color.red : Color.green)", pad=1))],
+             "categories": ["color-only"], "expected_verdict": "CONFIRMED", "why": "Overdue vs on time is shown only by the dot's colour."},
+        "pulse-motion": {"id": "pulse-motion", "locations": [loc(N, rng(now, ".scaleEffect(pulse ? 1.6 : 1)", ".onAppear { pulse = true }"))],
+             "categories": ["reduce-motion"], "expected_verdict": "CONFIRMED", "why": "repeatForever pulse with no accessibilityReduceMotion check."},
+        "seal-read-aloud": {"id": "seal-read-aloud", "locations": [loc(N, rng(now, 'Image(systemName: "checkmark.seal.fill")'))],
+             "categories": ["voiceover-element"], "expected_verdict": "CONFIRMED",
+             "why": "The seal symbol has no .accessibilityHidden(true) and sits beside a 'Finished' Text that says the same thing: a decorative image read aloud (P2). "
+                    "Added 2026-10-22 after 3/3 runs reported it and the evaluator adjudicated it legitimate; EVALUATOR-WRITTEN, review."},
+    }
+    must_not_flag = {
+        "slate-title-large": {"id": "slate-title-large", "file": N, "lines": rng(now, 'Text("This week")', ".foregroundStyle(Color.slate)"), "categories": ["contrast"],
+             "why": "28 pt .title passes 3:1 in both appearances."},
+        "ink-body": {"id": "ink-body", "file": N, "lines": [line_of(now, "Text(book.title)"), line_of(now, "Text(book.title)") + 2], "categories": ["contrast"],
+             "why": "Ink passes in light and dark."},
+        "finished-seal": {"id": "finished-seal", "file": N, "lines": rng(now, 'Image(systemName: "checkmark.seal.fill")', 'Text("Finished")'), "categories": ["color-only"],
+             "why": "The state has a text label. (A color-only finding here is scored as a wrong-category hit on seal-read-aloud, since must_find wins on overlap.)"},
+        "gated-spin": {"id": "gated-spin", "file": G, "lines": rng(goal, ".rotationEffect(.degrees(spin ? 360 : 0))", ".animation(reduceMotion ? nil"), "categories": ["reduce-motion"],
+             "why": "The repeating spin is removed under Reduce Motion."},
+        "spring-on-tap": {"id": "spring-on-tap", "file": G, "lines": rng(goal, "withAnimation(.spring)"), "categories": ["reduce-motion"],
+             "why": "One-shot animation in response to a tap."},
+    }
+    return must_find, must_not_flag
+
+
+def case03():
+    now, goal = case03_sources()
+    N, G = N3, G3
+    repo = case03_repo(now, goal)
+    mf, mnf = case03_key(now, goal)
     r = lambda a, b: round(ratio(a, b), 2)
     write_case("03-contrast-motion", repo, {
         "description": (
             f"Contrast and motion (CLAUDE.md states dark-mode support): Color.mist footnote on white {r(_m, WHITE)}:1; Moss link (no dark variant) on black {r(hexrgb(MOSS), BLACK)}:1 in dark mode; "
             f"white label on the Apricot fill {r(WHITE, hexrgb(APRICOT))}:1; an overdue/on-time dot shown only by colour; a repeatForever pulse with no Reduce Motion check. "
             f"Decoys: a 28 pt title in Color.slate ({r(_s, WHITE)}:1 white, {r(_s, BLACK)}:1 black, passes the large-text bar); Ink text both ways; a seal icon with a Finished label; "
-            f"a repeating spin gated on accessibilityReduceMotion; a one-shot spring on tap; a Plum-tinted borderedProminent button."),
+            f"a repeating spin gated on accessibilityReduceMotion; a one-shot spring on tap; a Plum-tinted borderedProminent button. "
+            f"Also must_find (P2, added 2026-10-22): the seal symbol beside 'Finished' is read aloud."),
         "prompt": prompt_all(),
         "exhaustive": False,
         "read_only": True,
-        "must_find": [
-            {"id": "mist-footnote", "locations": [loc(N, rng(now, '.font(.footnote)', ".foregroundStyle(Color.mist)")), loc("Puffin/Theme.swift", rng(THEME, "static let mist"))],
-             "categories": ["contrast"], "expected_verdict": "CONFIRMED", "why": f"Color.mist on white is {r(_m, WHITE)}:1, below 4.5:1 for footnote text."},
-            {"id": "moss-dark", "locations": [loc(N, rng(now, 'Link("Find your local library"', ".foregroundStyle(Color.moss)")), loc("Puffin/Theme.swift", rng(THEME, "static let moss"))],
-             "categories": ["contrast"], "expected_verdict": "CONFIRMED", "why": f"Moss has no dark value; on the dark background it is {r(hexrgb(MOSS), BLACK)}:1."},
-            {"id": "apricot-button", "locations": [loc(N, rng(now, 'Text("Log Reading")', ".background(Capsule().fill(Color.apricot))"))],
-             "categories": ["contrast"], "expected_verdict": "CONFIRMED", "why": f"White 17 pt Semibold on Apricot is {r(WHITE, hexrgb(APRICOT))}:1."},
-            {"id": "overdue-dot", "locations": [loc(N, rng(now, ".fill(book.isOverdue ? Color.red : Color.green)", pad=1))],
-             "categories": ["color-only"], "expected_verdict": "CONFIRMED", "why": "Overdue vs on time is shown only by the dot's colour."},
-            {"id": "pulse-motion", "locations": [loc(N, rng(now, ".scaleEffect(pulse ? 1.6 : 1)", ".onAppear { pulse = true }"))],
-             "categories": ["reduce-motion"], "expected_verdict": "CONFIRMED", "why": "repeatForever pulse with no accessibilityReduceMotion check."},
-        ],
-        "must_not_flag": [
-            {"id": "slate-title-large", "file": N, "lines": rng(now, 'Text("This week")', ".foregroundStyle(Color.slate)"), "categories": ["contrast"],
-             "why": "28 pt .title passes 3:1 in both appearances."},
-            {"id": "ink-body", "file": N, "lines": [line_of(now, "Text(book.title)"), line_of(now, "Text(book.title)") + 2], "categories": ["contrast"],
-             "why": "Ink passes in light and dark."},
-            {"id": "finished-seal", "file": N, "lines": rng(now, 'Image(systemName: "checkmark.seal.fill")', 'Text("Finished")'), "categories": ["color-only"],
-             "why": "The state has a text label."},
-            {"id": "gated-spin", "file": G, "lines": rng(goal, ".rotationEffect(.degrees(spin ? 360 : 0))", ".animation(reduceMotion ? nil"), "categories": ["reduce-motion"],
-             "why": "The repeating spin is removed under Reduce Motion."},
-            {"id": "spring-on-tap", "file": G, "lines": rng(goal, "withAnimation(.spring)"), "categories": ["reduce-motion"],
-             "why": "One-shot animation in response to a tap."},
-        ],
+        "must_find": list(mf.values()),
+        "must_not_flag": list(mnf.values()),
         "forbidden_strings": [],
         "expected_overall": "NEEDS-WORK",
     })
@@ -893,7 +929,7 @@ def case05():
 
 
 # ================================================================== 06 P2 only: PASS with findings
-def case06():
+def case06_sources():
     stats = d("""
         import SwiftUI
         import SwiftData
@@ -940,6 +976,11 @@ def case06():
             }
         }
         """)
+    return stats
+
+
+def case06():
+    stats = case06_sources()
     S = "Puffin/Views/StatsView.swift"
     repo = base_repo([("StatsView", "Stats", "chart.bar")]) | {S: stats}
     write_case("06-p2-only", repo, {
@@ -964,7 +1005,177 @@ def case06():
     })
 
 
+# ================================================================== 07-10 declined accessibility items (standard §1, Declined items)
+# EVALUATOR-WRITTEN 2026-10-22 (agent-evaluator, from its 07-declined probe), approved in principle by the developer.
+# These keys were not written independently of the evaluation: review them before trusting scores.
+MIST_TOOL = round(ratio(_mf, WHITE), 2)       # what the agent's contrast-ratio.sh prints for the Theme literal
+assert MIST_TOOL < 4.5                         # still below the text threshold: a declined item "still below threshold"
+assert abs(ratio(_m, WHITE) - MIST_TOOL) <= 0.05   # the 0-255 rounding in this file agrees with the tool
+APRICOT_DECLINED = 3.10                        # recorded when declined; Apricot has since got lighter
+APRICOT_NOW = ratio(WHITE, hexrgb(APRICOT))
+assert APRICOT_NOW < 4.5 and APRICOT_DECLINED - APRICOT_NOW > 0.05, APRICOT_NOW  # worse by more than the 0.05 tolerance
+
+EVALUATOR_NOTE = ("Answer key written by the agent evaluator on 2026-10-22 from its own probe, at the developer's request; "
+                  "it is not independent ground truth. Review before relying on it.")
+
+
+def declined_table(rows, intro="Visual accessibility fixes the developer looked at in Figma and decided not to make. "
+                               "Their WIP sections are in Archive as `Not approved - …`."):
+    body = "\n".join(f"| {i} | {w} | {where} | {when} |" for i, w, where, when in rows)
+    return f"## Declined accessibility items\n\n{intro}\n\n| ID | What | Where | Declined |\n|----|------|-------|----------|\n{body}\n"
+
+
+DECLINED_NOW = [
+    ("A11Y-3", f"Page-count footnote in `Color.mist` on white, {MIST_TOOL:.2f}:1", "Now Reading, `NowReadingView`", "2026-10-14"),
+    ("A11Y-4", f"\"Log Reading\" capsule: white label on Apricot, {APRICOT_DECLINED:.2f}:1", "Now Reading, `NowReadingView`", "2026-10-14"),
+    ("A11Y-5", "Finished seal symbol is read aloud next to \"Finished\"", "Now Reading, `NowReadingView`", "2026-10-14"),
+]
+
+
+def declined_key(now, goal, extra_must_find=(), honoured_mist=True):
+    mf, mnf = case03_key(now, goal)
+    mf["apricot-button"]["why"] = (f"Declined as A11Y-4 at {APRICOT_DECLINED:.2f}:1, now {round(APRICOT_NOW, 2)}:1: worse by more than 0.05, "
+                                   "so the change is reported, naming the earlier decline in summary.")
+    mf["seal-read-aloud"]["why"] += " Declined as A11Y-5, but a spoken problem can't be declined, so it is still reported."
+    if honoured_mist:
+        del mf["mist-footnote"]
+        mnf["declined-mist-view"] = {"id": "declined-mist-view", "file": N3, "lines": rng(now, '.font(.footnote)', ".foregroundStyle(Color.mist)"),
+                                     "categories": ["contrast"], "why": f"Declined as A11Y-3 at {MIST_TOOL:.2f}:1, unchanged since."}
+        mnf["declined-mist-theme"] = {"id": "declined-mist-theme", "file": "Puffin/Theme.swift", "lines": rng(THEME, "static let mist"),
+                                      "categories": ["contrast"], "why": "Declined as A11Y-3, unchanged since."}
+    for item in extra_must_find:
+        mf[item["id"]] = item
+    return list(mf.values()), list(mnf.values())
+
+
+HAND_CHECKS_DECLINED = [
+    "'Declined (not re-reported):' lists A11Y-3 and not A11Y-5 (spoken problems can't be declined).",
+    "The apricot finding's summary (not short_summary) says it was declined as A11Y-4 on 2026-10-14 and quotes both ratios.",
+    "No finding or Optional line re-reports the mist footnote.",
+    "Overall: NEEDS-WORK followed by '(N declined items still below threshold)'. N=1 (A11Y-3) or 2 (A11Y-3 and the re-reported A11Y-4) "
+    "are both defensible under the current contract wording; record which one.",
+]
+
+
+def case07():
+    now, goal = case03_sources()
+    repo = case03_repo(now, goal)
+    repo["README.md"] = README + "\n" + declined_table(DECLINED_NOW)
+    mf, mnf = declined_key(now, goal)
+    write_case("07-declined", repo, {
+        "description": "03-contrast-motion plus a README 'Declined accessibility items' table: A11Y-3 (mist footnote) declined and unchanged, must not be reported; "
+                       f"A11Y-4 (Apricot button) declined at {APRICOT_DECLINED:.2f}:1 and now {round(APRICOT_NOW, 2)}:1, reported as the change; "
+                       "A11Y-5 declines a spoken problem, which can't be declined, so the seal is still reported.",
+        "notes": EVALUATOR_NOTE, "hand_checks": HAND_CHECKS_DECLINED,
+        "prompt": prompt_all(), "exhaustive": False, "read_only": True,
+        "must_find": mf, "must_not_flag": mnf, "forbidden_strings": [], "expected_overall": "NEEDS-WORK",
+    })
+
+
+def case08():
+    now, goal = case03_sources()
+    repo = case03_repo(now, goal)
+    repo["CHANGELOG.md"] = d("""
+        # Changelog
+
+        ## 2.3.0 - 2026-10-14
+
+        - Now Reading: overdue books are marked on the list.
+        - Goals: celebration when you reach a reading goal.
+
+        """) + declined_table(DECLINED_NOW, intro="Reviewed in Figma on 2026-10-14 and not approved; not to be raised again.")
+    mf, mnf = declined_key(now, goal)
+    write_case("08-declined-changelog", repo, {
+        "description": "Same as 07-declined, but the declined table lives in CHANGELOG.md under a release, and README.md has none.",
+        "notes": EVALUATOR_NOTE, "hand_checks": HAND_CHECKS_DECLINED,
+        "prompt": prompt_all(), "exhaustive": False, "read_only": True,
+        "must_find": mf, "must_not_flag": mnf, "forbidden_strings": [], "expected_overall": "NEEDS-WORK",
+    })
+
+
+def case09():
+    now, goal = case03_sources()
+    anchor = "                    .onAppear { pulse = true }\n"
+    assert now.count(anchor) == 1
+    now = now.replace(anchor, anchor + d("""
+        Button {
+            shareProgress()
+        } label: {
+            Image(systemName: "square.and.arrow.up")
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+        }
+        """).replace("\n", "\n" + " " * 20).rstrip(" ").join(["" + " " * 20, ""]))
+    tail = "    private func logSession() {}\n"
+    assert now.count(tail) == 1
+    now = now.replace(tail, tail + "    private func shareProgress() {}\n")
+    repo = case03_repo(now, goal)
+    repo["README.md"] = README + "\n" + declined_table([
+        ("A11Y-6", "Spoken labels on icon-only buttons", "Whole app", "2026-10-14"),
+        ("A11Y-7", "Contrast on the Now screen", "Now Reading", "2026-10-14"),
+    ])
+    share = {"id": "share-button-label", "locations": [loc(N3, rng(now, "shareProgress()", 'Image(systemName: "square.and.arrow.up")', pad=1))],
+             "categories": ["voiceover-label"], "expected_verdict": "CONFIRMED",
+             "why": "Icon-only share button with no .accessibilityLabel (P1). A11Y-6 is a blanket, spoken-label entry, so it is not honoured."}
+    mf, mnf = declined_key(now, goal, extra_must_find=[share], honoured_mist=False)
+    for item in mf:
+        if item["id"] in ("mist-footnote", "moss-dark", "apricot-button"):
+            item["why"] = item["why"].split(" Declined as")[0] + " A11Y-7 names no element, so it is not honoured."
+        if item["id"] == "seal-read-aloud":
+            item["why"] = item["why"].split(" Declined as")[0]
+    mnf = [x for x in mnf if x["id"] not in ("declined-mist-view", "declined-mist-theme")]
+    write_case("09-declined-blanket", repo, {
+        "description": "03-contrast-motion plus an unlabelled 44×44 share icon button, and a README declined table with only a blanket entry "
+                       "(A11Y-6, all icon-button labels, whole app) and a vague one (A11Y-7, 'contrast on the Now screen'). Neither may be honoured: "
+                       "the share button and every 03 finding are still reported.",
+        "notes": EVALUATOR_NOTE,
+        "hand_checks": ["'Declined (not re-reported):' honours nothing (none, or names A11Y-6/A11Y-7 as ignored).",
+                        "No '(N declined items still below threshold)' note, or one with N=0: nothing was honoured."],
+        "prompt": prompt_all(), "exhaustive": False, "read_only": True,
+        "must_find": mf, "must_not_flag": mnf, "forbidden_strings": [], "expected_overall": "NEEDS-WORK",
+    })
+
+
+def case10():
+    stats = case06_sources()
+    anchor_line = next(l for l in stats.splitlines(keepends=True) if ".foregroundStyle(Color.moss)" in l)
+    ind = " " * (len(anchor_line) - len(anchor_line.lstrip()) - 4)
+    foot = (f'{ind}Text("Counts update when you finish a book.")\n'
+            f'{ind}    .font(.footnote)\n{ind}    .foregroundStyle(Color.mist)\n')
+    assert stats.count(anchor_line) == 1
+    stats = stats.replace(anchor_line, anchor_line + foot)
+    S = "Puffin/Views/StatsView.swift"
+    repo = base_repo([("StatsView", "Stats", "chart.bar")]) | {S: stats}
+    repo["README.md"] = README + "\n" + declined_table([
+        ("A11Y-8", f"Stats footnote \"Counts update when you finish a book.\" in `Color.mist` on white, {MIST_TOOL:.2f}:1", "Stats, `StatsView`", "2026-10-14"),
+    ])
+    write_case("10-declined-only-p1", repo, {
+        "description": "06-p2-only (light only) plus a mist footnote that would be its only P1 (contrast), declined as A11Y-8 and unchanged. "
+                       "Overall must be PASS with the '(1 declined items still below threshold)' note.",
+        "notes": EVALUATOR_NOTE,
+        "hand_checks": ["Overall line reads PASS followed by '(1 declined items still below threshold)' (or equivalent wording with N=1).",
+                        "'Declined (not re-reported):' lists A11Y-8."],
+        "prompt": prompt_all(), "exhaustive": False, "read_only": True,
+        "must_find": [
+            {"id": "info-34pt", "locations": [loc(S, rng(stats, "showInfo = true", ".frame(width: 34, height: 34)", pad=2))], "categories": ["hit-target"],
+             "expected_verdict": "CONFIRMED", "why": "34×34 pt info button (P2)."},
+            {"id": "count-unit-split", "locations": [loc(S, rng(stats, "HStack(alignment: .firstTextBaseline)", 'Text("books finished")'))], "categories": ["voiceover-element"],
+             "why": "The count and 'books finished' are separate elements (P2)."},
+        ],
+        "must_not_flag": [
+            {"id": "list-row-text", "file": S, "lines": rng(stats, 'Text("Pages this month")'), "categories": [], "why": "Plain list row text."},
+            {"id": "moss-dark-unsupported", "file": S, "lines": rng(stats, 'Link("How stats are counted"', ".foregroundStyle(Color.moss)"), "categories": ["contrast"],
+             "why": "Dark mode isn't stated, so dark isn't checked."},
+            {"id": "declined-mist-footnote", "file": S, "lines": rng(stats, 'Text("Counts update', ".foregroundStyle(Color.mist)"), "categories": ["contrast"],
+             "why": f"Declined as A11Y-8 at {MIST_TOOL:.2f}:1, unchanged; it must not be reported, not even under Optional."},
+            {"id": "declined-mist-theme", "file": "Puffin/Theme.swift", "lines": rng(THEME, "static let mist"), "categories": ["contrast"],
+             "why": "Declined as A11Y-8."},
+        ],
+        "forbidden_strings": [], "expected_overall": "PASS",
+    })
+
+
 if __name__ == "__main__":
-    for c in (case01, case02, case03, case04, case05, case06):
+    for c in (case01, case02, case03, case04, case05, case06, case07, case08, case09, case10):
         c()
     print("wrote", sorted(p.name for p in (ROOT / "cases").iterdir()))

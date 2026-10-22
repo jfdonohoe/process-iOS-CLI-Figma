@@ -1,0 +1,97 @@
+{
+  "case": "10-declined-only-p1",
+  "description": "06-p2-only (light only) plus a mist footnote that would be its only P1 (contrast), declined as A11Y-8 and unchanged. Overall must be PASS with the '(1 declined items still below threshold)' note.",
+  "notes": "Answer key written by the agent evaluator on 2026-10-22 from its own probe, at the developer's request; it is not independent ground truth. Review before relying on it.",
+  "hand_checks": [
+    "Overall line reads PASS followed by '(1 declined items still below threshold)' (or equivalent wording with N=1).",
+    "'Declined (not re-reported):' lists A11Y-8."
+  ],
+  "prompt": "Do the accessibility pass on this app's screens and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "info-34pt",
+      "locations": [
+        {
+          "file": "Puffin/Views/StatsView.swift",
+          "lines": [
+            31,
+            38
+          ]
+        }
+      ],
+      "categories": [
+        "hit-target"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "34×34 pt info button (P2)."
+    },
+    {
+      "id": "count-unit-split",
+      "locations": [
+        {
+          "file": "Puffin/Views/StatsView.swift",
+          "lines": [
+            11,
+            15
+          ]
+        }
+      ],
+      "categories": [
+        "voiceover-element"
+      ],
+      "why": "The count and 'books finished' are separate elements (P2)."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "list-row-text",
+      "file": "Puffin/Views/StatsView.swift",
+      "lines": [
+        30,
+        30
+      ],
+      "categories": [],
+      "why": "Plain list row text."
+    },
+    {
+      "id": "moss-dark-unsupported",
+      "file": "Puffin/Views/StatsView.swift",
+      "lines": [
+        21,
+        23
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "Dark mode isn't stated, so dark isn't checked."
+    },
+    {
+      "id": "declined-mist-footnote",
+      "file": "Puffin/Views/StatsView.swift",
+      "lines": [
+        24,
+        26
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "Declined as A11Y-8 at 2.47:1, unchanged; it must not be reported, not even under Optional."
+    },
+    {
+      "id": "declined-mist-theme",
+      "file": "Puffin/Theme.swift",
+      "lines": [
+        9,
+        9
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "Declined as A11Y-8."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "PASS"
+}

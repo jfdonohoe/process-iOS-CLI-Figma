@@ -1,6 +1,6 @@
 {
   "case": "03-contrast-motion",
-  "description": "Contrast and motion (CLAUDE.md states dark-mode support): Color.mist footnote on white 2.46:1; Moss link (no dark variant) on black 3.29:1 in dark mode; white label on the Apricot fill 2.07:1; an overdue/on-time dot shown only by colour; a repeatForever pulse with no Reduce Motion check. Decoys: a 28 pt title in Color.slate (3.95:1 white, 5.32:1 black, passes the large-text bar); Ink text both ways; a seal icon with a Finished label; a repeating spin gated on accessibilityReduceMotion; a one-shot spring on tap; a Plum-tinted borderedProminent button.",
+  "description": "Contrast and motion (CLAUDE.md states dark-mode support): Color.mist footnote on white 2.46:1; Moss link (no dark variant) on black 3.29:1 in dark mode; white label on the Apricot fill 2.07:1; an overdue/on-time dot shown only by colour; a repeatForever pulse with no Reduce Motion check. Decoys: a 28 pt title in Color.slate (3.95:1 white, 5.32:1 black, passes the large-text bar); Ink text both ways; a seal icon with a Finished label; a repeating spin gated on accessibilityReduceMotion; a one-shot spring on tap; a Plum-tinted borderedProminent button. Also must_find (P2, added 2026-10-22): the seal symbol beside 'Finished' is read aloud.",
   "prompt": "Do the accessibility pass on this app's screens and report your findings.",
   "exhaustive": false,
   "read_only": true,
@@ -103,6 +103,23 @@
       ],
       "expected_verdict": "CONFIRMED",
       "why": "repeatForever pulse with no accessibilityReduceMotion check."
+    },
+    {
+      "id": "seal-read-aloud",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            41,
+            41
+          ]
+        }
+      ],
+      "categories": [
+        "voiceover-element"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The seal symbol has no .accessibilityHidden(true) and sits beside a 'Finished' Text that says the same thing: a decorative image read aloud (P2). Added 2026-10-22 after 3/3 runs reported it and the evaluator adjudicated it legitimate; EVALUATOR-WRITTEN, review."
     }
   ],
   "must_not_flag": [
@@ -140,7 +157,7 @@
       "categories": [
         "color-only"
       ],
-      "why": "The state has a text label."
+      "why": "The state has a text label. (A color-only finding here is scored as a wrong-category hit on seal-read-aloud, since must_find wins on overlap.)"
     },
     {
       "id": "gated-spin",

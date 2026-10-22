@@ -1,0 +1,196 @@
+{
+  "case": "07-declined",
+  "description": "03-contrast-motion plus a README 'Declined accessibility items' table: A11Y-3 (mist footnote) declined and unchanged, must not be reported; A11Y-4 (Apricot button) declined at 3.10:1 and now 2.07:1, reported as the change; A11Y-5 declines a spoken problem, which can't be declined, so the seal is still reported.",
+  "notes": "Answer key written by the agent evaluator on 2026-10-22 from its own probe, at the developer's request; it is not independent ground truth. Review before relying on it.",
+  "hand_checks": [
+    "'Declined (not re-reported):' lists A11Y-3 and not A11Y-5 (spoken problems can't be declined).",
+    "The apricot finding's summary (not short_summary) says it was declined as A11Y-4 on 2026-10-14 and quotes both ratios.",
+    "No finding or Optional line re-reports the mist footnote.",
+    "Overall: NEEDS-WORK followed by '(N declined items still below threshold)'. N=1 (A11Y-3) or 2 (A11Y-3 and the re-reported A11Y-4) are both defensible under the current contract wording; record which one."
+  ],
+  "prompt": "Do the accessibility pass on this app's screens and report your findings.",
+  "exhaustive": false,
+  "read_only": true,
+  "must_find": [
+    {
+      "id": "moss-dark",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            49,
+            51
+          ]
+        },
+        {
+          "file": "Puffin/Theme.swift",
+          "lines": [
+            6,
+            6
+          ]
+        }
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Moss has no dark value; on the dark background it is 3.29:1."
+    },
+    {
+      "id": "apricot-button",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            55,
+            59
+          ]
+        }
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Declined as A11Y-4 at 3.10:1, now 2.07:1: worse by more than 0.05, so the change is reported, naming the earlier decline in summary."
+    },
+    {
+      "id": "overdue-dot",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            28,
+            30
+          ]
+        }
+      ],
+      "categories": [
+        "color-only"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "Overdue vs on time is shown only by the dot's colour."
+    },
+    {
+      "id": "pulse-motion",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            19,
+            25
+          ]
+        }
+      ],
+      "categories": [
+        "reduce-motion"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "repeatForever pulse with no accessibilityReduceMotion check."
+    },
+    {
+      "id": "seal-read-aloud",
+      "locations": [
+        {
+          "file": "Puffin/Views/NowReadingView.swift",
+          "lines": [
+            41,
+            41
+          ]
+        }
+      ],
+      "categories": [
+        "voiceover-element"
+      ],
+      "expected_verdict": "CONFIRMED",
+      "why": "The seal symbol has no .accessibilityHidden(true) and sits beside a 'Finished' Text that says the same thing: a decorative image read aloud (P2). Added 2026-10-22 after 3/3 runs reported it and the evaluator adjudicated it legitimate; EVALUATOR-WRITTEN, review. Declined as A11Y-5, but a spoken problem can't be declined, so it is still reported."
+    }
+  ],
+  "must_not_flag": [
+    {
+      "id": "slate-title-large",
+      "file": "Puffin/Views/NowReadingView.swift",
+      "lines": [
+        12,
+        14
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "28 pt .title passes 3:1 in both appearances."
+    },
+    {
+      "id": "ink-body",
+      "file": "Puffin/Views/NowReadingView.swift",
+      "lines": [
+        32,
+        34
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "Ink passes in light and dark."
+    },
+    {
+      "id": "finished-seal",
+      "file": "Puffin/Views/NowReadingView.swift",
+      "lines": [
+        41,
+        43
+      ],
+      "categories": [
+        "color-only"
+      ],
+      "why": "The state has a text label. (A color-only finding here is scored as a wrong-category hit on seal-read-aloud, since must_find wins on overlap.)"
+    },
+    {
+      "id": "gated-spin",
+      "file": "Puffin/Views/GoalCelebration.swift",
+      "lines": [
+        13,
+        14
+      ],
+      "categories": [
+        "reduce-motion"
+      ],
+      "why": "The repeating spin is removed under Reduce Motion."
+    },
+    {
+      "id": "spring-on-tap",
+      "file": "Puffin/Views/GoalCelebration.swift",
+      "lines": [
+        20,
+        20
+      ],
+      "categories": [
+        "reduce-motion"
+      ],
+      "why": "One-shot animation in response to a tap."
+    },
+    {
+      "id": "declined-mist-view",
+      "file": "Puffin/Views/NowReadingView.swift",
+      "lines": [
+        36,
+        37
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "Declined as A11Y-3 at 2.47:1, unchanged since."
+    },
+    {
+      "id": "declined-mist-theme",
+      "file": "Puffin/Theme.swift",
+      "lines": [
+        9,
+        9
+      ],
+      "categories": [
+        "contrast"
+      ],
+      "why": "Declined as A11Y-3, unchanged since."
+    }
+  ],
+  "forbidden_strings": [],
+  "expected_overall": "NEEDS-WORK"
+}

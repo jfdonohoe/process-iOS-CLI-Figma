@@ -7,6 +7,7 @@ Benchmarks and harness used by the `review-agent-evaluator` agent (`~/.claude/ag
 ```
 bin/
   selftest.py        offline test of parser, scorer, and every answer key. Run after any change here.
+                     [<agent folder> ...]          also check agent folders kept outside agent-evals/
   run_case.py        run an agent headless N times on one case (fresh temp git copy per run)
                      --context user|isolated   with or without the global CLAUDE.md
                      --agent-file <snapshot>   evaluate a saved/candidate definition instead of the installed one
@@ -22,6 +23,7 @@ bin/
     expected.json    the answer key (never visible to the agent under test)
     history.json     optional commit history for the fixture (for recency rules)
     base/            optional earlier versions of files a history.json commit modifies (so HEAD shows a real diff)
+    outer/           optional files placed around the repo in the run's temp folder (see repo_path)
   results/<timestamp>/<case>/run<i>/{result.md, raw.json, tools.jsonl, modified/, meta.json}, score.json
 ```
 
@@ -55,6 +57,15 @@ bin/
 - A finding may carry an optional `severity` (P0–P3). It is not a required field, but false positives are also counted as `false_positives_p0p1` (rated P0/P1, or with no severity): the ones that could change a verdict. A P3 nit on clean code still counts in `false_positives`.
 - Scope a decoy to the pitfall it imitates by listing that category, so an unrelated finding on the same code is scored as unlabeled, not a decoy hit.
 - `forbidden_strings` are checked in the output and in any files the agent wrote. A run of `leak_window` characters beyond the public prefix (e.g. after `ghp_`) counts as a partial leak.
+- `overall_choices` (optional): the agent's own verdict words, e.g. `["REQUEST CHANGES", "APPROVE WITH FOLLOW-UPS", "APPROVE"]` for a remediation gate. The last one on a line containing "verdict" is the run's overall verdict (else the last anywhere). `expected_overall` may then be a list of acceptable verdicts.
+- `scoped_writes` (optional, with `read_only: false`): a marker such as `"gate-mut."` for an agent allowed one scratch copy under `$TMPDIR`. `run_case.py` gives each run its own `$TMPDIR` and records any `<marker>*` left in it (`scratch_left_behind_runs`); `score.py` flags writes, deletes and redirects outside a path containing the marker, and any `git` run with its working directory in the copy (`scoped_violation_runs`). Installs, network and git state changes stay forbidden. It reads the commands, so treat a hit as something to check, not proof.
+- `text_checks` (optional): `[{"id", "pattern", "near": [...], "expect": true|false}]`. A regex that must (or must not) appear in the output; with `near`, only an occurrence whose line, or the nearest heading, list item or table row above it, names one of the tokens counts. For labels that aren't findings (e.g. the gate's `PASSES WITHOUT FIX` per pin). Scored as `text_check_pass_rate`.
+- `repo_path` (optional, default `repo`): where `run_case.py` puts the fixture inside the run's temp folder, e.g. `Acme/WidgetKit`. The case's `outer/` folder (if any) is copied to the temp folder around it, for files that sit next to the repo in real use. `score.py` passes the case's `repo_path` to `findings.py`, which strips `<tmp>/agent-eval-*/<repo_path>/` from cited paths (as it does `<tmp>/agent-eval-*/repo/`).
+- `outer_required` (optional): paths under the case's `outer/` that must exist (e.g. `["Acme/CLAUDE.md"]`, a rules file the agent is told to read beside the repo). `selftest.py` checks them.
+- `confine_reads: true` (optional): the workspace carries everything the agent needs, so any tool call that reaches into the home folder (other than `~/.claude`) or searches the disk (`mdfind`, `find /`) is flagged (`outside_read_runs`). The harness can't block such reads, only report them.
+- `notes: "EVALUATOR-WRITTEN key - developer to review"` marks a key nobody but its author has checked yet.
+
+**Class + status reports.** Some agents report a finding class (`BLOCKER`, `BUG`, `REGRESSION`, `ARCHITECTURE`, `DRIFT`, `OBSERVATION`) and a status (`CONFIRMED BROKEN`, `POSSIBLE ISSUE`, `NEEDS USER DECISION`, …; the full list is `REPORT_STATUSES` in `findings.py`) instead of a category and a verdict. The parser reads `Class`/`Status`/`Where` keys and table columns, and class words and status phrases in headings, into `category`/`verdict`; a status stays whole (`CONFIRMED BROKEN`). So `categories` lists classes and `expected_verdict` a status. Pass the statuses to `score.py --verdicts` for format compliance.
 
 ## history.json
 
@@ -62,6 +73,8 @@ bin/
 { "base_message": "initial", "base_days_ago": 420, "base_tag": "v1.0.0",
   "commits": [{ "days_ago": 2, "message": "wip: …", "paths": ["lib/new.js"], "tag": "v1.1.0" }] }
 ```
+
+`"uncommitted": [paths]` (optional) leaves those paths as working-tree changes after the last commit: a `base/` version is committed, `repo/`'s is left on disk, and a new file is left untracked.
 
 `base_tag` and a commit's `tag` (both optional) create an annotated tag on that commit with the same date, for agents that compare against the last release (`release-readiness-checker`).
 
@@ -80,9 +93,21 @@ To show a *modified* file in a later commit, put its earlier version at the same
 
 ## Project agents
 
-Agents in a project's `.claude/agents/` are not found by name inside the temp repo. Pass the file: `run_case.py --agent <name> --agent-file <project>/.claude/agents/<name>.md` (or a snapshot of it). `trigger_check.py` takes the same `--agent-file` and installs the agent in each temp repo's `.claude/agents/`. Installed user-level agents are found by name anywhere under `~/.claude/agents/`, subfolders included (`ios/`).
+Agents in a project's `.claude/agents/` are not found by name inside the temp repo. Pass the file: `run_case.py --agent <name> --agent-file <project>/.claude/agents/<name>.md` (or a snapshot of it). The definition's `model` and `effort` are passed on (`effort` also as `--effort`).
+
+`trigger_check.py` takes the same `--agent-file` and installs the agent in each temp repo's `.claude/agents/`. Installed user-level agents are found by name anywhere under `~/.claude/agents/`, subfolders included (`ios/`).
 
 `regression-reviewer`'s fixtures are Swift packages, so the agent really builds and runs their tests (`swift test --scratch-path "$TMPDIR/…"`, documented in each fixture's README so build output stays out of the repo). Each run takes about 2 minutes and costs about $0.30.
+
+## Agent folders outside agent-evals/
+
+A benchmark for a private or project-specific agent can live in that project's own repo instead of here, with the same layout (`<agent-name>/cases/…`, `make_cases.py`, `results/`). The harness takes paths, so nothing is copied in:
+
+- `run_case.py --case <folder>/cases/<case>` and `score.py --case <folder>/cases/<case>` accept a case anywhere. Usually with `--agent-file`, since such agents are rarely installed under `~/.claude/agents/`.
+- `selftest.py <folder> [<folder> ...]` checks those folders' answer keys along with the ones here. It fails if a path given has no `cases/`.
+- `trigger_check.py --bench <folder>` likewise.
+- Keep `results/` out of git in that repo too (e.g. `agent-evals/*/results/` in its `.gitignore`).
+- Files several of its agent folders share (e.g. fixture copies of the project's rules files for `outer/`) can sit in a sibling folder that each `make_cases.py` reads relative to itself.
 
 ## Evaluating a change to an agent
 

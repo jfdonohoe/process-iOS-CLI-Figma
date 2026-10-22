@@ -3,7 +3,9 @@
 
 Each run gets a fresh copy of <case>/repo in a system temp dir (outside the
 benchmark tree, so the agent under test can never see expected.json), turned
-into a git repo so git log/blame work. If the case has history.json, the repo
+into a git repo so git log/blame work. With "repo_path" in expected.json the
+repo goes at <tmp>/<repo_path> instead of <tmp>/repo, and the case's outer/
+folder (if any) is copied to <tmp> around it. If the case has history.json, the repo
 gets that commit history (for rules about recently added code); otherwise one
 commit. The agent runs via `claude -p --agent <name>` with only the tools its
 frontmatter grants.
@@ -86,7 +88,8 @@ def build_history(repo, case_dir):
         git(repo, "commit", "-q", "-m", "fixture", days_ago=0)
         return
     hist = json.loads(hist_file.read_text())
-    later = [p for c in hist["commits"] for p in c["paths"]]
+    # "uncommitted": paths left as working-tree changes after the last commit (base/ version committed, if any)
+    later = [p for c in hist["commits"] for p in c["paths"]] + hist.get("uncommitted", [])
     git(repo, "add", "-A")
     for p in later:
         git(repo, "reset", "-q", "--", p)
@@ -102,7 +105,7 @@ def build_history(repo, case_dir):
     if hist.get("base_tag"):
         git(repo, "tag", "-a", hist["base_tag"], "-m", hist["base_tag"], days_ago=hist.get("base_days_ago", 365))
     for rel in base_files:
-        shutil.copyfile(case_dir / "repo" / rel, repo / rel)
+        shutil.copyfile(case_dir / "repo" / rel, repo / rel)  # uncommitted paths stay as working-tree changes
     for c in hist["commits"]:
         git(repo, "add", "--", *c["paths"])
         git(repo, "commit", "-q", "-m", c["message"], days_ago=c["days_ago"])
@@ -110,12 +113,19 @@ def build_history(repo, case_dir):
             git(repo, "tag", "-a", c["tag"], "-m", c["tag"], days_ago=c["days_ago"])
 
 
-def one_run(agent, case_dir, prompt, run_dir, tools, timeout, keep, context, inline_agents=None):
+def one_run(agent, case_dir, prompt, run_dir, tools, timeout, keep, context, inline_agents=None,
+            scoped_writes=None, effort=None, repo_path="repo"):
     if run_dir.exists():
         shutil.rmtree(run_dir)
     run_dir.mkdir(parents=True)
     tmp = Path(tempfile.mkdtemp(prefix="agent-eval-"))
-    repo = tmp / "repo"
+    # A case's outer/ holds files that sit around the repo in real use (e.g. Acme/CLAUDE.md and
+    # Acme/DATA_SAFETY.md, with the repo at "repo_path": "Acme/WidgetKit"), so the agent finds
+    # them inside the workspace instead of on the real filesystem.
+    if (case_dir / "outer").is_dir():
+        shutil.copytree(case_dir / "outer", tmp, dirs_exist_ok=True)
+    repo = tmp / repo_path
+    repo.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(case_dir / "repo", repo)
     build_history(repo, case_dir)
     before = tree_hashes(repo)
@@ -129,11 +139,19 @@ def one_run(agent, case_dir, prompt, run_dir, tools, timeout, keep, context, inl
     ]
     if inline_agents:
         cmd += ["--agents", json.dumps(inline_agents)]
+    if effort:
+        cmd += ["--effort", str(effort)]
     if tools:
         cmd += ["--allowedTools", ",".join(tools)]
     env = dict(os.environ)
     if context == "isolated":
         env["CLAUDE_CODE_DISABLE_CLAUDE_MDS"] = "1"
+    run_tmp = None
+    if scoped_writes:
+        # a per-run $TMPDIR, so the agent's scratch copies (e.g. gate-mut.*) can be checked for cleanup
+        run_tmp = tmp / "T"
+        run_tmp.mkdir()
+        env["TMPDIR"] = str(run_tmp) + "/"
 
     start = time.time()
     timed_out = False
@@ -145,7 +163,7 @@ def one_run(agent, case_dir, prompt, run_dir, tools, timeout, keep, context, inl
         timed_out = True
     duration = time.time() - start
 
-    raw, tool_calls = None, []
+    raw, tool_calls, texts = None, [], []
     for line in stdout.splitlines():
         try:
             ev = json.loads(line)
@@ -155,6 +173,8 @@ def one_run(agent, case_dir, prompt, run_dir, tools, timeout, keep, context, inl
             for b in ev.get("message", {}).get("content", []):
                 if b.get("type") == "tool_use":
                     tool_calls.append({"name": b.get("name"), "input": b.get("input")})
+                elif b.get("type") == "text" and b.get("text", "").strip():
+                    texts.append(b["text"])
         elif ev.get("type") == "result":
             raw = ev
     if raw is None:
@@ -170,6 +190,9 @@ def one_run(agent, case_dir, prompt, run_dir, tools, timeout, keep, context, inl
 
     (run_dir / "raw.json").write_text(json.dumps(raw, indent=2))
     (run_dir / "result.md").write_text(raw.get("result") or "")
+    # every assistant text block: when a late tool result triggers a follow-up message, the final `result` is only
+    # that follow-up and the full report is here
+    (run_dir / "assistant_text.md").write_text("\n\n---\n\n".join(texts))
     (run_dir / "tools.jsonl").write_text("".join(json.dumps(t) + "\n" for t in tool_calls))
     meta = {
         "agent": agent,
@@ -178,6 +201,8 @@ def one_run(agent, case_dir, prompt, run_dir, tools, timeout, keep, context, inl
         "agent_source": "inline snapshot" if inline_agents else "installed",
         "run_dir": str(run_dir),
         "workspace": str(repo) if keep else None,
+        # the run's whole temp tree (repo, outer/ files, $TMPDIR); score.py's confine_reads check allows it
+        "workspace_root": str(tmp),
         "timed_out": timed_out,
         "is_error": bool(raw.get("is_error")),
         "duration_s": round(duration, 1),
@@ -189,7 +214,12 @@ def one_run(agent, case_dir, prompt, run_dir, tools, timeout, keep, context, inl
         "modified_files": modified,
         "deleted_files": deleted,
         "allowed_tools": tools,
+        "effort": effort,
     }
+    if scoped_writes:
+        meta["run_tmpdir"] = str(run_tmp)
+        # scratch dirs the agent should have removed before finishing
+        meta["scoped_leftovers"] = sorted(p.name for p in run_tmp.glob(f"{scoped_writes}*"))
     (run_dir / "meta.json").write_text(json.dumps(meta, indent=2))
     if not keep:
         shutil.rmtree(tmp, ignore_errors=True)
@@ -223,13 +253,18 @@ def main():
             spec["tools"] = tools
         if fm.get("model"):
             spec["model"] = fm["model"]
+        if fm.get("effort"):
+            spec["effort"] = fm["effort"]
         inline = {run_agent: spec}
     out = Path(args.out).expanduser() / case_dir.name
+    # an installed agent gets its frontmatter effort from Claude Code; a snapshot gets it passed explicitly
+    effort = fm.get("effort") if args.agent_file else None
 
     with cf.ThreadPoolExecutor(max_workers=max(1, args.concurrency)) as ex:
         futures = [
             ex.submit(one_run, run_agent, case_dir, expected["prompt"], out / f"run{i}", tools,
-                      args.timeout, args.keep, args.context, inline)
+                      args.timeout, args.keep, args.context, inline, expected.get("scoped_writes"), effort,
+                      expected.get("repo_path", "repo"))
             for i in range(1, args.runs + 1)
         ]
         metas = [f.result() for f in futures]
@@ -238,8 +273,9 @@ def main():
         flag = " TIMEOUT" if m["timed_out"] else (" ERROR" if m["is_error"] else "")
         mod = f" MODIFIED={m['modified_files']}" if m["modified_files"] else ""
         dele = f" DELETED={m['deleted_files']}" if m["deleted_files"] else ""
+        left = f" LEFT-BEHIND={m['scoped_leftovers']}" if m.get("scoped_leftovers") else ""
         print(f"{m['case']} {Path(m['run_dir']).name} [{m['context']}]: {m['duration_s']}s ${m['cost_usd']} "
-              f"turns={m['num_turns']} tools={m['tool_calls']}{flag}{mod}{dele}")
+              f"turns={m['num_turns']} tools={m['tool_calls']}{flag}{mod}{dele}{left}")
 
 
 if __name__ == "__main__":

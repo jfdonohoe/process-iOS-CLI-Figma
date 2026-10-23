@@ -95,5 +95,8 @@ Return a Markdown report the orchestrating session can save verbatim as `_report
 3. **Scoreboard** — one table row per case: recall (mean/min), precision (scored/adjudicated), FPs, category accuracy, format compliance, consistency, leaks, modifications, cost. Then the trigger results table.
 4. **Findings** — every validity and effectiveness problem in the shared report shape: `file` (the agent `.md`, or the fixture/result file for effectiveness evidence), `line`, `category` (`agent-validity`, `agent-effectiveness`, `agent-safety`, or `benchmark-gap`), `short_summary`, `summary`, `failure_scenario` (the concrete input → wrong behavior, with the run it was observed in), `verdict` (`CONFIRMED` if observed in runs or directly visible in the definition; `PLAUSIBLE` if inferred). Most severe first. If `ReportFindings` is available to you, also emit them through it.
 5. **Misses and false positives** — per item, with the agent's own reasoning quoted where it gave any.
-6. **Recommended changes** — to the agent definition and to the benchmark, described precisely, not applied.
+6. **Recommended changes** — to the agent definition and to the benchmark, described precisely, not applied, in two
+   groups: **Act now** (only lost recall, a safety violation or an invalid definition) and **Backlog** (wording, format,
+   new or better benchmark cases, cost). Say whether a re-evaluation is warranted: only when an Act-now change is made.
+   Never recommend re-running this evaluation for Backlog items. One evaluation per definition change.
 7. **Limits of this evaluation** — always include: the benchmark is small and synthetic; headless `--agent` runs the agent as the main thread, while in real audits it runs as a subagent with an orchestrator-written prompt; LLM output varies between runs.

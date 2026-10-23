@@ -175,7 +175,8 @@ These are user-level: `install.sh` links them from this repository's `agents/ios
 
 Global agents that come along automatically:
 - `dead-code-finder`: owns dead code. It runs alongside every whole-app audit.
-- `review-agent-evaluator`: benchmarks a reviewer agent after it is created or edited.
+- `review-agent-evaluator`: benchmarks a reviewer agent after it is created, or after an edit that can change what it
+  finds or its safety. One evaluation per change (§12.20).
 
 ### 3.2 Infrastructure that makes agents work
 - **Shared finding scheme:** P0–P3 severity and a CONFIRMED/PLAUSIBLE verdict, using the same keys in every agent. Reports from different agents and different apps then merge and compare. It is written in `agents/ios/README.md`. [Sets]
@@ -413,6 +414,7 @@ Added 2026-10-19 after two expensive days of Figma and standard work. In rough o
 17. **Keep what investigations prove.** [RingKit] When a read-only investigation proves a change in a temporary copy, it saves the patch and the implementing agent starts from it. Parallel batches don't edit the shared top entries of `BUGS.md`/`CHANGELOG.md`; they put proposed text in their report and the docs are written once at integration.
 18. **Short hand-backs, detail in a file.** [RingKit] An agent's reply is the verdict, one line per finding, what needs the developer or a device, and the path of its full report; inventories and mutation lists live in the report. Paste file paths, not large payloads, into the main session.
 19. **Model per call.** [RingKit] An agent's model is fixed when it starts (its definition, or the `model` the caller passes), so routing rules live with the orchestrator: judgement work on the strongest model, mechanical passes (a docs-only regression re-run, wiki edits, cleanup, release checks) on a cheaper one, plain searches on the cheapest. A new routing is a trial until the cost ledger (§14.2) shows it costs no escapes.
+20. **No recursive agent work.** [RingKit] Only the approved flow runs without asking (implement -> domain review -> gate -> regression -> release on the developer's word); before launching an agent, name the approved step it fulfils. An agent's "next step" or recommendations are proposals for the developer, not tasks. Process work (agent definitions, benchmarks, this standard) gets one change and at most one evaluation per request; findings that show no lost recall or safety problem go to a backlog for §14.4. If process work for one request passes two agent runs, stop and check in. Process work never blocks product work.
 
 ---
 
@@ -457,7 +459,9 @@ The process is a product too: measure it, and change it on evidence. Three level
 
 ### 14.1 Mechanical checks (every change to the process)
 - `tests/hooks-test.sh` passes after any hook edit (18 checks today).
-- `review-agent-evaluator` benchmarks any reviewer agent after its prompt changes (§3.2).
+- `review-agent-evaluator` benchmarks a reviewer agent after a prompt change that can affect what it finds or its
+  safety (§3.2); edits to report wording go to the next §14.4 review. One evaluation per change; only Act-now findings
+  (lost recall, safety, invalid definition) are fixed and re-evaluated, the rest go to a backlog (§12.20).
 - After editing an always-loaded file, `/context` in a fresh session shows its size; it should not grow without a reason.
 
 ### 14.2 A per-task log (every piece of work)

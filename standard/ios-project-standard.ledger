@@ -44,3 +44,4 @@ process:keep-investigation-patches-docs-at-integration added 2026-10-23 (§12.17
 process:short-handbacks added 2026-10-23 (§12.18 [RingKit]; developer: y)
 process:model-per-call-routing added 2026-10-23 (§12.19 [RingKit]; developer: y)
 process:subagent-cost-ledger added 2026-10-23 (§14.2 [RingKit]; baseline + per-release comparison; developer: y)
+process:no-recursive-agent-work added 2026-10-23 (§12.20, §3.2, §14.1 [RingKit]; approved flow only, recommendations are proposals, one evaluation per change, Act-now vs backlog, 2-run check-in; developer: "review agents and process and instructions to prevent this recursive behavior from happening again")

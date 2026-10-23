@@ -407,6 +407,12 @@ Added 2026-10-19 after two expensive days of Figma and standard work. In rough o
 11. **Accessibility reviews only for full releases.** `accessibility-reviewer` and the device VoiceOver and large-text pass run before a full (major) release, not for point or dot releases or on each new screen. Accessibility fixes found then still go through the Figma loop (§2.3). (the developer, 2026-10-20)
 12. **Parallel sessions for independent work.** Two pieces of work that don't touch the same files run in separate sessions on separate git worktrees (`claude --worktree` or `git worktree add`), each with its own small context, rather than one long session. Name sessions with `/rename` so they can be resumed. Worktrees are temporary: when their work reaches `main`, they are removed as part of the merge (§11.2).
 13. **Measure it** (§14).
+14. **One full test run per stage, logs passed on.** [RingKit] The implementing agent runs the targeted pinning tests before its change and the full suite once after, and reports the log path plus the exact tree (HEAD and a diff hash). The gate reuses that log for the identical tree and runs only the pins with and without the fix and its own mutations; the regression reviewer runs the full suite once on the integrated commit. No re-run on `main` after a fast-forward to that commit plus release-only docs. One owner per check: the domain reviewer owns numerical correctness and input-range sweeps, the gate the diff against its plan, the regression reviewer the whole repo.
+15. **Domain review before the gate.** [RingKit] A change to analysis, DSP or Bluetooth behaviour gets its specialist review first, and the verdict goes into the gate's brief; a gate without it stops early instead of running in full.
+16. **Group releases.** [RingKit] Collect finished batches and release when the developer asks to push, so the regression on `main`, the version step (§10) and the wiki update (§11) happen once, not per batch.
+17. **Keep what investigations prove.** [RingKit] When a read-only investigation proves a change in a temporary copy, it saves the patch and the implementing agent starts from it. Parallel batches don't edit the shared top entries of `BUGS.md`/`CHANGELOG.md`; they put proposed text in their report and the docs are written once at integration.
+18. **Short hand-backs, detail in a file.** [RingKit] An agent's reply is the verdict, one line per finding, what needs the developer or a device, and the path of its full report; inventories and mutation lists live in the report. Paste file paths, not large payloads, into the main session.
+19. **Model per call.** [RingKit] An agent's model is fixed when it starts (its definition, or the `model` the caller passes), so routing rules live with the orchestrator: judgement work on the strongest model, mechanical passes (a docs-only regression re-run, wiki edits, cleanup, release checks) on a cheaper one, plain searches on the cheapest. A new routing is a trial until the cost ledger (§14.2) shows it costs no escapes.
 
 ---
 
@@ -458,6 +464,8 @@ The process is a product too: measure it, and change it on evidence. Three level
 Append one line per finished task to `_reports/process-log.md` in the app repo:
 
 `date | task | session tokens (/cost or /context) | turns | corrections by the developer | rework (reverted changes) | escaped defects found later | rule or hook that fired`
+
+**Subagent cost ledger** [RingKit]: a script reads the session transcripts and records each subagent run (date, role, model, tokens, tool uses, minutes, hand-back length) plus the main session's own usage. Take a baseline before a process change and compare after each release: tokens per batch, full test runs per batch, hand-back length, releases per day, escapes past a gate or review.
 
 From it, track the four numbers that matter: **tokens per task**, **corrections per task**, **rework events**, and **escaped defects** (bugs found after the developer was told "done"). A rule earns its place when the related number improves; a rule that never fires and never would have prevented anything is a candidate to cut.
 
